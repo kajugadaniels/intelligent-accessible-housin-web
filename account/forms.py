@@ -116,3 +116,74 @@ class UserProfileForm(forms.ModelForm):
         if User.objects.filter(phone_number=phone_number).exclude(pk=self.instance.pk).exists():
             raise forms.ValidationError(_('This phone number is already in use. Please use a different one.'))
         return phone_number
+
+class PasswordChangeForm(forms.Form):
+    """
+    Form for changing user password.
+    """
+    current_password = forms.CharField(
+        widget=forms.PasswordInput(attrs={
+            'class': 'form-control',
+            'placeholder': 'Enter your current password',
+            'required': 'required',
+            'id': 'current_password',
+        }),
+        label=_('Current Password'),
+        error_messages={
+            'required': _('Please enter your current password.'),
+        }
+    )
+    new_password = forms.CharField(
+        widget=forms.PasswordInput(attrs={
+            'class': 'form-control',
+            'placeholder': 'Enter your new password',
+            'required': 'required',
+            'id': 'new_password',
+        }),
+        label=_('New Password'),
+        help_text=_('Your password must contain at least 8 characters, including a mix of letters, numbers, and symbols.'),
+        error_messages={
+            'required': _('Please enter a new password.'),
+        }
+    )
+    confirm_new_password = forms.CharField(
+        widget=forms.PasswordInput(attrs={
+            'class': 'form-control',
+            'placeholder': 'Confirm your new password',
+            'required': 'required',
+            'id': 'confirm_new_password',
+        }),
+        label=_('Confirm New Password'),
+        error_messages={
+            'required': _('Please confirm your new password.'),
+        }
+    )
+
+    def __init__(self, user, *args, **kwargs):
+        """
+        Initialize the form with the current user.
+        """
+        self.user = user
+        super().__init__(*args, **kwargs)
+
+    def clean_current_password(self):
+        current_password = self.cleaned_data.get('current_password')
+        if not self.user.check_password(current_password):
+            raise forms.ValidationError(_('Your current password was entered incorrectly. Please enter it again.'))
+        return current_password
+
+    def clean_new_password(self):
+        new_password = self.cleaned_data.get('new_password')
+        validate_password(new_password, self.user)
+        return new_password
+
+    def clean(self):
+        cleaned_data = super().clean()
+        new_password = cleaned_data.get('new_password')
+        confirm_new_password = cleaned_data.get('confirm_new_password')
+
+        if new_password and confirm_new_password:
+            if new_password != confirm_new_password:
+                self.add_error('confirm_new_password', _('The new passwords do not match. Please enter them again.'))
+
+        return cleaned_data
