@@ -32,3 +32,9 @@ def userLogin(request):
     }
 
     return render(request, 'pages/auth/login.html', context)
+
+def userLogout(request):
+    logout(request)
+    messages.success(request, _("You have been successfully logged out."))
+    return redirect('auth:login')
+
