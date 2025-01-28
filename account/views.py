@@ -52,3 +52,21 @@ def user_login(request):
 def user_logout(request):
     logout(request)
     return redirect('auth:login')
+
+@login_required
+def editProfile(request):
+    if request.method == 'POST':
+        form = UserProfileForm(request.POST, request.FILES, instance=request.user)
+        if form.is_valid():
+            form.save()
+            messages.success(request, 'Your profile has been updated successfully.')
+            return redirect('auth:editProfile')
+    else:
+        form = UserProfileForm(instance=request.user)
+    
+    context = {
+        'form': form,
+        'logged_in_user': request.user
+    }
+
+    return render(request, 'pages/auth/profile.html', context)
