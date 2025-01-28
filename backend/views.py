@@ -75,3 +75,6 @@ def userProfile(request):
     }
 
     return render(request, 'pages/auth/profile.html', context)
+
+def dashboard(request):
+    return render(request, 'pages/dashboard.html')
