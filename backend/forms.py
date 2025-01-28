@@ -1,5 +1,5 @@
 from django import forms
-from account.models import *
+from backend.models import *
 from django.contrib.auth import authenticate
 from django.utils.translation import gettext_lazy as _
 from django.contrib.auth.password_validation import validate_password, get_password_validators

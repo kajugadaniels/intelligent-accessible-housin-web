@@ -172,4 +172,4 @@ CKEDITOR_CONFIGS = {
     },
 }
 
-AUTH_USER_MODEL = 'account.User'
+AUTH_USER_MODEL = 'backend.User'
