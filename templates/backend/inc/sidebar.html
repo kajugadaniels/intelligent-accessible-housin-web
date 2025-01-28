@@ -1,0 +1,56 @@
+{% load static %}
+<div class="sidebar-wrapper" data-layout="stroke-svg">
+    <div>
+        <div class="logo-wrapper">
+            <a href="{% url 'base:dashboard' %}" class="text-white fw-bold">
+                IAH
+            </a>
+            <div class="back-btn"><i class="fa fa-angle-left"></i></div>
+            <div class="toggle-sidebar">
+                <svg class="stroke-icon sidebar-toggle status_toggle middle">
+                    <use href="{% static 'svg/icon-sprite.svg#toggle-icon' %}"></use>
+                </svg>
+                <svg class="fill-icon sidebar-toggle status_toggle middle">
+                    <use href="{% static 'svg/icon-sprite.svg#fill-toggle-icon' %}"></use>
+                </svg>
+            </div>
+        </div>
+        <div class="logo-icon-wrapper">
+            <a href="{% url 'base:dashboard' %}">
+                <img class="img-fluid" src="{% static 'images/logo/logo-icon.png' %}" alt="">
+            </a>
+        </div>
+        <nav class="sidebar-main">
+            <div class="left-arrow" id="left-arrow"><i data-feather="arrow-left"></i></div>
+            <div id="sidebar-menu">
+                <ul class="sidebar-links" id="simple-bar">
+                    <li class="back-btn">
+                        <a href="{% url 'base:dashboard' %}">
+                            <img class="img-fluid" src="{% static 'images/logo/logo-icon.png' %}" alt="">
+                        </a>
+                        <div class="mobile-back text-end"><span>Back</span><i class="fa fa-angle-right ps-2"
+                                aria-hidden="true"></i></div>
+                    </li>
+                    <li class="pin-title sidebar-main-title">
+                        <div>
+                            <h6>Pinned</h6>
+                        </div>
+                    </li>
+                    <li class="sidebar-main-title">
+                        <div>
+                            <h6 class="lan-1">General</h6>
+                        </div>
+                    </li>
+                    <li class="sidebar-list">
+                        <i class="fa fa-thumb-tack"></i>
+                        <a class="sidebar-link sidebar-title link-nav" href="{% url 'base:dashboard' %}">
+                            <svg xmlns="http://www.w3.org/2000/svg" width="1.4rem" height="1.4rem" viewBox="0 0 24 24"><path fill="white" d="m12.857 4.06l5.866 4.817c.33.27.527.686.527 1.13v8.803c0 .814-.638 1.44-1.383 1.44H15.25V15.5a2.75 2.75 0 0 0-2.75-2.75h-1a2.75 2.75 0 0 0-2.75 2.75v4.75H6.133c-.745 0-1.383-.626-1.383-1.44v-8.802c0-.445.197-.86.527-1.13l5.866-4.819a1.34 1.34 0 0 1 1.714 0m5.01 17.69c1.61 0 2.883-1.335 2.883-2.94v-8.802a2.96 2.96 0 0 0-1.075-2.29L13.81 2.9a2.84 2.84 0 0 0-3.618 0L4.325 7.718a2.96 2.96 0 0 0-1.075 2.29v8.802c0 1.605 1.273 2.94 2.883 2.94z"/></svg>
+                            <span>Dashboard</span>
+                        </a>
+                    </li>
+                </ul>
+            </div>
+            <div class="right-arrow" id="right-arrow"><i data-feather="arrow-right"></i></div>
+        </nav>
+    </div>
+</div>

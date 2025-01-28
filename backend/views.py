@@ -17,7 +17,7 @@ def userLogin(request):
             user = form.cleaned_data.get('user')
             auth_login(request, user)
             messages.success(request, _("Welcome back! You have successfully logged in."))
-            return redirect(reverse('base:dashboard'))  # Ensure 'base:dashboard' is the correct URL name
+            return redirect(reverse('backend:dashboard'))  # Ensure 'backend:dashboard' is the correct URL name
         else:
             # Extract form errors and display them as individual messages
             for field, errors in form.errors.items():
@@ -36,7 +36,7 @@ def userLogin(request):
 def userLogout(request):
     logout(request)
     messages.success(request, _("You have been successfully logged out."))
-    return redirect('auth:login')
+    return redirect('backend:login')
 
 @login_required
 def userProfile(request):
@@ -53,7 +53,7 @@ def userProfile(request):
                     user.image.delete(save=False)
                 profile_form.save()
                 messages.success(request, _("Your profile has been updated successfully."))
-                return redirect('auth:userProfile')
+                return redirect('backend:userProfile')
             else:
                 messages.error(request, _("Please correct the errors in the profile form and try again."))
 
@@ -65,7 +65,7 @@ def userProfile(request):
                 user.save()
                 update_session_auth_hash(request, user)  # Important to keep the user logged in after password change
                 messages.success(request, _("Your password has been changed successfully."))
-                return redirect('auth:userProfile')
+                return redirect('backend:userProfile')
             else:
                 messages.error(request, _("Please correct the errors in the password form and try again."))
 
