@@ -31,7 +31,7 @@ def userLogin(request):
         'form': form,
     }
 
-    return render(request, 'pages/auth/login.html', context)
+    return render(request, 'backend/pages/auth/login.html', context)
 
 def userLogout(request):
     logout(request)
@@ -74,7 +74,7 @@ def userProfile(request):
         'password_form': password_form,
     }
 
-    return render(request, 'pages/auth/profile.html', context)
+    return render(request, 'backend/pages/auth/profile.html', context)
 
 def dashboard(request):
-    return render(request, 'pages/dashboard.html')
+    return render(request, 'backend/pages/dashboard.html')
