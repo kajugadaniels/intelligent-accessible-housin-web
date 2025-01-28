@@ -1,6 +1,6 @@
 import os
 from django.db import models
-from account.managers import *
+from backend.managers import *
 from django.utils import timezone
 from django.utils.text import slugify
 from imagekit.processors import ResizeToFill

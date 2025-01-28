@@ -1,4 +1,4 @@
-from account.forms import *
+from backend.forms import *
 from django.urls import reverse
 from django.contrib import messages
 from django.shortcuts import render, redirect
