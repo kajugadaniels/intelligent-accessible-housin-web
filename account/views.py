@@ -38,3 +38,40 @@ def userLogout(request):
     messages.success(request, _("You have been successfully logged out."))
     return redirect('auth:login')
 
+@login_required
+def userProfile(request):
+    user = request.user
+    profile_form = UserProfileForm(instance=user)
+    password_form = PasswordChangeForm(user=user)
+
+    if request.method == 'POST':
+        if 'update_profile' in request.POST:
+            profile_form = UserProfileForm(request.POST, request.FILES, instance=user)
+            if profile_form.is_valid():
+                # Handle image deletion if a new image is uploaded
+                if 'image' in request.FILES and user.image:
+                    user.image.delete(save=False)
+                profile_form.save()
+                messages.success(request, _("Your profile has been updated successfully."))
+                return redirect('auth:userProfile')
+            else:
+                messages.error(request, _("Please correct the errors in the profile form and try again."))
+
+        elif 'change_password' in request.POST:
+            password_form = PasswordChangeForm(user, request.POST)
+            if password_form.is_valid():
+                new_password = password_form.cleaned_data.get('new_password')
+                user.set_password(new_password)
+                user.save()
+                update_session_auth_hash(request, user)  # Important to keep the user logged in after password change
+                messages.success(request, _("Your password has been changed successfully."))
+                return redirect('auth:userProfile')
+            else:
+                messages.error(request, _("Please correct the errors in the password form and try again."))
+
+    context = {
+        'profile_form': profile_form,
+        'password_form': password_form,
+    }
+
+    return render(request, 'pages/auth/profile.html', context)
