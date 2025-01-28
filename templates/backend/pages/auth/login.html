@@ -39,7 +39,7 @@
                             </a>
                         </div>
                         <div class="login-main">
-                            <form class="theme-form" method="POST" action="{% url 'auth:login' %}">
+                            <form class="theme-form" method="POST" action="{% url 'backend:login' %}">
                                 {% csrf_token %}
                                 <h4>Log in to account</h4>
                                 <p>by entering the user's email and password</p>
