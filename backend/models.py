@@ -107,3 +107,12 @@ class User(AbstractBaseUser, PermissionsMixin):
         Returns the user's short name.
         """
         return self.name.split()[0] if self.name else self.email
+
+class Amenity(models.Model):
+    name = models.CharField(max_length=100, unique=True)
+
+    def __str__(self):
+        return self.name
+
+    class Meta:
+        verbose_name_plural = "Amenities"
