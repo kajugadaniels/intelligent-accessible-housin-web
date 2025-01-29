@@ -198,3 +198,26 @@ class Property(models.Model):
 
     class Meta:
         verbose_name_plural = "Properties"
+
+def property_add_on_image_path(instance, filename):
+    base_filename, file_extension = os.path.splitext(filename)
+    random_number = random.randint(1000, 9999)
+    return f'properties/add_on/{random_number}_{instance.created_at}{file_extension}'
+
+class PropertyImage(models.Model):
+    property = models.ForeignKey(Property, related_name='images', on_delete=models.CASCADE)
+    image = ProcessedImageField(
+        upload_to=property_add_on_image_path,
+        # processors=[ResizeToFill(1340, 894)],
+        format='JPEG',
+        options={'quality': 90},
+        null=True,
+        blank=True,
+    )
+    created_at = models.DateTimeField(auto_now_add=True)
+
+    def __str__(self):
+        return f"Image for {self.property.name} - {self.created_at}"
+
+    class Meta:
+        verbose_name_plural = "Property Images"
