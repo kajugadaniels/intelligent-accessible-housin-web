@@ -17,7 +17,7 @@ def userLogin(request):
             user = form.cleaned_data.get('user')
             auth_login(request, user)
             messages.success(request, _("Welcome back! You have successfully logged in."))
-            return redirect(reverse('backend:dashboard'))
+            return redirect(reverse('base:dashboard'))  # Ensure 'base:dashboard' is the correct URL name
         else:
             # Extract form errors and display them as individual messages
             for field, errors in form.errors.items():
@@ -36,7 +36,7 @@ def userLogin(request):
 def userLogout(request):
     logout(request)
     messages.success(request, _("You have been successfully logged out."))
-    return redirect('backend:login')
+    return redirect('auth:login')
 
 @login_required
 def userProfile(request):
@@ -53,7 +53,7 @@ def userProfile(request):
                     user.image.delete(save=False)
                 profile_form.save()
                 messages.success(request, _("Your profile has been updated successfully."))
-                return redirect('backend:userProfile')
+                return redirect('auth:userProfile')
             else:
                 messages.error(request, _("Please correct the errors in the profile form and try again."))
 
@@ -63,9 +63,9 @@ def userProfile(request):
                 new_password = password_form.cleaned_data.get('new_password')
                 user.set_password(new_password)
                 user.save()
-                update_session_auth_hash(request, user)  # Important to keep the user logged in after password change
+                update_session_auth_hash(request, user)
                 messages.success(request, _("Your password has been changed successfully."))
-                return redirect('backend:userProfile')
+                return redirect('auth:userProfile')
             else:
                 messages.error(request, _("Please correct the errors in the password form and try again."))
 
@@ -75,6 +75,3 @@ def userProfile(request):
     }
 
     return render(request, 'backend/pages/auth/profile.html', context)
-
-def dashboard(request):
-    return render(request, 'backend/pages/dashboard.html')
