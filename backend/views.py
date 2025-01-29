@@ -17,7 +17,7 @@ def userLogin(request):
             user = form.cleaned_data.get('user')
             auth_login(request, user)
             messages.success(request, _("Welcome back! You have successfully logged in."))
-            return redirect(reverse('backend:dashboard'))  # Ensure 'backend:dashboard' is the correct URL name
+            return redirect(reverse('backend:dashboard'))
         else:
             # Extract form errors and display them as individual messages
             for field, errors in form.errors.items():
