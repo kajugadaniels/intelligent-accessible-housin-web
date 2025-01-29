@@ -28,11 +28,8 @@ INSTALLED_APPS = [
     'django.contrib.staticfiles',
     
     # Third party
-    'taggit',
     'django.contrib.humanize',
     'whitenoise.runserver_nostatic',
-    'ckeditor',
-    'ckeditor_uploader',
 
     #Custom apps
     'backend',
@@ -74,6 +71,7 @@ WSGI_APPLICATION = 'isc.wsgi.application'
 # https://docs.djangoproject.com/en/5.0/ref/settings/#databases
 
 if str(os.getenv("NODE_ENV"))=="production":
+
     DATABASES =  {
         'default': {
             'ENGINE': 'django.db.backends.postgresql',
@@ -130,47 +128,11 @@ USE_TZ = True
 # Static files (CSS, JavaScript, Images)
 # https://docs.djangoproject.com/en/5.0/howto/static-files/
 
-BASE_DIR = Path(__file__).resolve().parent.parent
-STATIC_URL = '/static/'
-STATIC_ROOT = os.path.join(BASE_DIR, 'staticfiles')
-STATICFILES_DIRS = [
-    os.path.join(BASE_DIR, 'static'),
-]
-
-MEDIA_URL = '/media/'
-MEDIA_ROOT = os.path.join(BASE_DIR, "media")
-
-STATICFILES_STORAGE = 'whitenoise.storage.CompressedManifestStaticFilesStorage'
-WHITENOISE_AUTOREFRESH = True
+STATIC_URL = 'static/'
 
 # Default primary key field type
 # https://docs.djangoproject.com/en/5.0/ref/settings/#default-auto-field
 
 DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
-
-CKEDITOR_UPLOAD_PATH = "uploads/"
-CKEDITOR_IMAGE_BACKEND = "pillow"
-
-CKEDITOR_CONFIGS = {
-    'default': {
-        'toolbar': 'Custom',
-        'toolbar_Custom': [
-            ['Bold', 'Italic', 'Underline'],
-            ['NumberedList', 'BulletedList', '-', 'Outdent', 'Indent', '-', 'JustifyLeft', 'JustifyCenter', 'JustifyRight', 'JustifyBlock'],
-            ['Link', 'Unlink'],
-            ['RemoveFormat', 'Source'],
-            ['Image', 'Table', 'HorizontalRule', 'SpecialChar'],
-            ['Format', 'FontSize'],
-            ['TextColor', 'BGColor'],
-            ['Maximize', 'ShowBlocks'],
-        ],
-        'width': '100%',
-        'height': 300,
-        'removePlugins': 'stylesheetparser',
-        'extraPlugins': 'image2',
-        'image2_alignClasses': ['image-left', 'image-center', 'image-right'],
-        'image2_disableResizer': False,
-    },
-}
 
 AUTH_USER_MODEL = 'backend.User'
