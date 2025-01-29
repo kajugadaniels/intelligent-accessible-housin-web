@@ -221,3 +221,24 @@ class PropertyImage(models.Model):
 
     class Meta:
         verbose_name_plural = "Property Images"
+
+class PropertyReview(models.Model):
+    property = models.ForeignKey(Property, on_delete=models.CASCADE, null=True, blank=True)
+    name = models.CharField(max_length=100, null=True, blank=True)
+    email = models.EmailField(null=True, blank=True)
+    comment = models.TextField(null=True, blank=True)
+    location = models.IntegerField(default=5, null=True, blank=True)
+    staff = models.IntegerField(default=5, null=True, blank=True)
+    cleanliness = models.IntegerField(default=5, null=True, blank=True)
+    value_for_money = models.IntegerField(default=5, null=True, blank=True)
+    comfort = models.IntegerField(default=5, null=True, blank=True)
+    facilities = models.IntegerField(default=5, null=True, blank=True)
+    free_wifi = models.IntegerField(default=5, null=True, blank=True)
+    status = models.BooleanField(default=1, null=True, blank=True)
+    created_at = models.DateTimeField(default=timezone.now)
+
+    def __str__(self):
+        return f"Review by {self.name} for {self.property.name}"
+
+    class Meta:
+        verbose_name_plural = "Property Reviews"
