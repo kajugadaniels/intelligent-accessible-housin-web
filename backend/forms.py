@@ -38,12 +38,16 @@ class LoginForm(forms.Form):
         password = cleaned_data.get('password')
 
         if email and password:
-            user = authenticate(email=email, password=password)
-            if not user:
+            try:
+                user = User.objects.get(email=email)  # Get user by email
+                user = authenticate(phone_number=user.phone_number, password=password)  # Authenticate using phone_number
+                if not user:
+                    raise forms.ValidationError(_('The email or password you entered is incorrect. Please try again.'))
+                if not user.is_active:
+                    raise forms.ValidationError(_('Your account is currently inactive. Please contact support for assistance.'))
+                cleaned_data['user'] = user
+            except User.DoesNotExist:
                 raise forms.ValidationError(_('The email or password you entered is incorrect. Please try again.'))
-            if not user.is_active:
-                raise forms.ValidationError(_('Your account is currently inactive. Please contact support for assistance.'))
-            cleaned_data['user'] = user
         else:
             if not email:
                 self.add_error('email', _('Email address is required.'))
