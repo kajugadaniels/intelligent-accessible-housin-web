@@ -19,7 +19,7 @@
                             <h4 class="card-title mb-0">User Profile</h4>
                         </div>
                         <div class="card-body">
-                            <form method="post" enctype="multipart/form-data" action="{% url 'auth:userProfile' %}">
+                            <form method="post" enctype="multipart/form-data" action="{% url 'backend:userProfile' %}">
                                 {% csrf_token %}
                                 <h5 class="mb-3">Update Profile</h5>
                                 <div class="mb-3">
@@ -73,7 +73,7 @@
                             <h4 class="card-title mb-0">Change Password</h4>
                         </div>
                         <div class="card-body">
-                            <form method="post" action="{% url 'auth:userProfile' %}">
+                            <form method="post" action="{% url 'backend:userProfile' %}">
                                 {% csrf_token %}
                                 <h5 class="mb-3">Change Password</h5>
                                 <div class="mb-3">
