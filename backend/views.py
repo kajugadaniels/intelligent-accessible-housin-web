@@ -202,3 +202,16 @@ def deleteAmenity(request, id):
     }
 
     return render(request, 'backend/pages/amenities/delete.html', context)
+
+@login_required
+def getProperties(request):
+    if request.user.is_superuser or request.user.role == 'Admin':
+        properties = Property.objects.all().order_by('-created_at')
+    else:
+        properties = Property.objects.filter(created_by=request.user).order_by('-created_at')
+
+    context = {
+        'properties': properties
+    }
+
+    return render(request, 'backend/pages/properties/index.html', context)
