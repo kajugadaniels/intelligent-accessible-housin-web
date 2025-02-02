@@ -1,0 +1,66 @@
+{% extends 'backend/layouts/app.html' %}
+{% load static %}
+{% load humanize %}
+{% block content %}
+
+<div class="container-fluid">
+    <div class="row">
+        <div class="col-sm-12">
+            <div class="card">
+                <div class="card-body">
+                    <div class="list-product-header">
+                        <div class="d-flex justify-content-between">
+                            <h4>Details on Property</h4>
+                            <a class="btn btn-primary" href="{% url 'backend:propertyList' %}"><i class="fa fa-arrow-left"></i> Go Back</a>
+                        </div>
+                    </div>
+                    <hr>
+                    <div class="row">
+                        <div class="col-md-12">
+                            <table class="table table-striped mb-3">
+                                <tr>
+                                    <th>Name:</th>
+                                    <td>{{ property.name }}</td>
+                                </tr>
+                                <tr>
+                                    <th>Description:</th>
+                                    <td>{{ property.description }}</td>
+                                </tr>
+                                <tr>
+                                    <th>Price (USD):</th>
+                                    <td>{{ property.price_usd }}</td>
+                                </tr>
+                                <tr>
+                                    <th>Price (RWF):</th>
+                                    <td>{{ property.price_rwf }}</td>
+                                </tr>
+                                <tr>
+                                    <th>Capacity:</th>
+                                    <td>{{ property.capacity }}</td>
+                                </tr>
+                                <tr>
+                                    <th>Size:</th>
+                                    <td>{{ property.size }}</td>
+                                </tr>
+                                <tr>
+                                    <th>Created At:</th>
+                                    <td>{{ property.created_at|naturaltime }}</td>
+                                </tr>
+                                <tr>
+                                    <th>Updated At:</th>
+                                    <td>{{ property.updated_at|naturaltime }}</td>
+                                </tr>
+                            </table>
+                            <div class="text-end">
+                                <a class="btn btn-primary" href="{% url 'backend:editProperty' property.id %}"><i class="fa fa-edit"></i> Edit</a>
+                                <a class="btn btn-danger" href="{% url 'backend:deleteProperty' property.id %}"><i class="fa fa-trash"></i> Delete</a>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+{% endblock %}
