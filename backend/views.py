@@ -97,6 +97,30 @@ def getHouseProvider(request):
     return render(request, 'backend/pages/houseProviders/index.html', context)
 
 @login_required
+def addHouseProvider(request):
+    if not (request.user.is_superuser or request.user.role == 'Admin'):
+        messages.error(request, _("You are not authorized to perform this action."))
+        return redirect('backend:dashboard')
+
+    if request.method == 'POST':
+        form = HouseProviderUserCreationForm(request.POST, request.FILES)
+        if form.is_valid():
+            user_instance = form.save()
+            messages.success(request, _("House Provider '%(name)s' has been created successfully.") % {'name': user_instance.name})
+            return redirect(reverse('backend:getHouseProvider'))
+        else:
+            messages.error(request, _("Please correct the errors below."))
+    else:
+        form = HouseProviderUserCreationForm()
+
+    context = {
+        'form': form,
+        'title': _('Add House Provider')
+    }
+
+    return render(request, 'backend/pages/houseProviders/create.html', context)
+
+@login_required
 def getAmenities(request):
     """
     Retrieve and display all amenities instances.
