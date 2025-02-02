@@ -136,6 +136,32 @@ def showHouseProvider(request, id):
     return render(request, 'backend/pages/houseProviders/show.html', context)
 
 @login_required
+def editHouseProvider(request, id):
+    if not (request.user.is_superuser or request.user.role == 'Admin'):
+        messages.error(request, _("You are not authorized to perform this action."))
+        return redirect('backend:dashboard')
+
+    houseProviders = get_object_or_404(User, id=id, role='House Provider')
+
+    if request.method == 'POST':
+        form = UserProfileForm(request.POST, request.FILES, instance=houseProviders)
+        if form.is_valid():
+            form.save()
+            messages.success(request, _("House Provider '%(name)s' has been updated successfully.") % {'name': houseProviders.name})
+            return redirect(reverse('backend:getHouseProvider'))
+        else:
+            messages.error(request, _("Please correct the errors below."))
+    else:
+        form = UserProfileForm(instance=houseProviders)
+
+    context = {
+        'form': form,
+        'title': _("Edit House Provider: %(name)s") % {'name': houseProviders.name}
+    }
+
+    return render(request, 'backend/pages/houseProviders/edit.html', context)
+
+@login_required
 def getAmenities(request):
     """
     Retrieve and display all amenities instances.
