@@ -104,17 +104,14 @@ def addAmenity(request):
     if request.method == 'POST':
         form = AmenityForm(request.POST)
         if form.is_valid():
-            amenity = form.save()
+            amenity = form.save(commit=False)
+            amenity.created_by = request.user
+            amenity.save()
+            form.save_m2m()
             if request.headers.get('x-requested-with') == 'XMLHttpRequest':
-                return JsonResponse({
-                    'id': amenity.id,
-                    'name': amenity.name
-                })
+                return JsonResponse({'id': amenity.id, 'name': amenity.name})
             else:
-                messages.success(
-                    request, 
-                    _("The amenity '%(amenity)s' has been created successfully.") % {'amenity': amenity.name}
-                )
+                messages.success(request, _("The amenity '%(amenity)s' has been created successfully.") % {'amenity': amenity.name})
                 return redirect(reverse('backend:getAmenities'))
         else:
             if request.headers.get('x-requested-with') == 'XMLHttpRequest':
@@ -126,7 +123,7 @@ def addAmenity(request):
 
     context = {
         'form': form,
-        'title': _('Add New Amenity'),
+        'title': _('Add New Amenity')
     }
 
     return render(request, 'backend/pages/amenities/create.html', context)
