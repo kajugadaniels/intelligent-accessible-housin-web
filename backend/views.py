@@ -136,7 +136,10 @@ def showAmenity(request, id):
     """
     Show an existing Amenity instance identified by its ID.
     """
-    amenity = get_object_or_404(Amenity, id=id)
+    if request.user.is_superuser or request.user.role == 'Admin':
+        amenity = get_object_or_404(Amenity, id=id)
+    else:
+        amenity = get_object_or_404(Amenity, id=id, created_by=request.user)
 
     context = {
         'amenity': amenity,
