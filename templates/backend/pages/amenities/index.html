@@ -1,4 +1,4 @@
-{% extends 'layouts/app.html' %}
+{% extends 'backend/layouts/app.html' %}
 {% load static %}
 {% load humanize %}
 {% block content %}
@@ -11,7 +11,7 @@
                         <div class="d-flex justify-content-between">
                             <h4>Amenities</h4>
                             <div>
-                                <a class="btn btn-primary" href="{% url 'base:addAmenity' %}"><i class="fa fa-plus"></i> Add Amenity</a>
+                                <a class="btn btn-primary" href="{% url 'backend:addAmenity' %}"><i class="fa fa-plus"></i> Add Amenity</a>
                                 <a class="btn btn-outline-primary mx-3" href="#"><i class="fa fa-file-o"></i> Report</a>
                             </div>
                         </div>
@@ -43,10 +43,10 @@
                                     <td><p class="f-light">{{ amenity.created_at|naturaltime }}</p></td>
                                     <td>
                                         <div class="client-action">
-                                            <a href="{% url 'base:editAmenity' amenity.id %}" class="btn btn-primary">
+                                            <a href="{% url 'backend:editAmenity' amenity.id %}" class="btn btn-primary">
                                                 Edit
                                             </a>
-                                            <a href="{% url 'base:deleteAmenity' amenity.id %}" class="btn btn-danger" onclick="return confirm('Are you sure you want to delete the amenity \'{{ amenity.name }}\'?');">
+                                            <a href="{% url 'backend:deleteAmenity' amenity.id %}" class="btn btn-danger" onclick="return confirm('Are you sure you want to delete the amenity \'{{ amenity.name }}\'?');">
                                                 Delete
                                             </a>
                                         </div>

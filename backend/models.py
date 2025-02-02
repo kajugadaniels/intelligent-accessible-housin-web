@@ -110,6 +110,8 @@ class User(AbstractBaseUser, PermissionsMixin):
 
 class Amenity(models.Model):
     name = models.CharField(max_length=100, unique=True)
+    created_at = models.DateTimeField(default=timezone.now)
+    updated_at = models.DateTimeField(auto_now=True)
 
     def __str__(self):
         return self.name
