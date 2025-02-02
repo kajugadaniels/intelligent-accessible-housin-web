@@ -83,7 +83,7 @@ def dashboard(request):
     return render(request, 'backend/pages/dashboard.html')
 
 @login_required
-def getHouseProvider(request):
+def getHouseProviders(request):
     if not (request.user.is_superuser or request.user.role == 'Admin'):
         messages.error(request, _("You are not authorized to access this page."))
         return redirect('backend:dashboard')
@@ -107,7 +107,7 @@ def addHouseProvider(request):
         if form.is_valid():
             user_instance = form.save()
             messages.success(request, _("House Provider '%(name)s' has been created successfully.") % {'name': user_instance.name})
-            return redirect(reverse('backend:getHouseProvider'))
+            return redirect(reverse('backend:getHouseProviders'))
         else:
             messages.error(request, _("Please correct the errors below."))
     else:
@@ -148,7 +148,7 @@ def editHouseProvider(request, id):
         if form.is_valid():
             form.save()
             messages.success(request, _("House Provider '%(name)s' has been updated successfully.") % {'name': houseProvider.name})
-            return redirect(reverse('backend:getHouseProvider'))
+            return redirect(reverse('backend:getHouseProviders'))
         else:
             messages.error(request, _("Please correct the errors below."))
     else:
@@ -172,7 +172,7 @@ def deleteHouseProvider(request, id):
     if request.method == 'POST':
         houseProvider.delete()
         messages.success(request, _("House Provider '%(name)s' has been deleted successfully.") % {'name': houseProvider.name})
-        return redirect(reverse('backend:getHouseProvider'))
+        return redirect(reverse('backend:getHouseProviders'))
 
     context = {
         'houseProvider': houseProvider

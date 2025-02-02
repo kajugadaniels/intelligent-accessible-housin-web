@@ -12,6 +12,12 @@ urlpatterns = [
 
     path('dashboard/', dashboard, name="dashboard"),
 
+    path('house-providers/', getHouseProviders, name="getHouseProviders"),
+    path('house-provider/add/', addHouseProvider, name="addHouseProvider"),
+    path('house-provider/<int:id>/', showHouseProvider, name="showHouseProvider"),
+    path('house-provider/edit/<int:id>/', editHouseProvider, name="editHouseProvider"),
+    path('house-provider/delete/<int:id>/', deleteHouseProvider, name="deleteHouseProvider"),
+
     path('amenities/', getAmenities, name="getAmenities"),
     path('amenity/add/', addAmenity, name="addAmenity"),
     path('amenity/<int:id>/', showAmenity, name="showAmenity"),
