@@ -33,12 +33,9 @@ class User(AbstractBaseUser, PermissionsMixin):
     )
     role = models.CharField(max_length=30, choices=ROLE_CHOICES)
     slug = models.SlugField(unique=True, max_length=255, null=True, blank=True)
-
     added_by = models.ForeignKey('self', on_delete=models.CASCADE, null=True, blank=True, related_name='added_users')
-
     is_active = models.BooleanField(default=True)
     is_staff = models.BooleanField(default=False)
-
     created_at = models.DateTimeField(default=timezone.now)
     updated_at = models.DateTimeField(auto_now=True)
 
@@ -51,43 +48,34 @@ class User(AbstractBaseUser, PermissionsMixin):
         return self.email
 
     def save(self, *args, **kwargs):
-        # Handle image deletion and permissions assignment
+        # Handle image deletion and update slug on name change
         try:
             orig = User.objects.get(pk=self.pk)
         except User.DoesNotExist:
             orig = None
 
         if orig:
-            # Handle image deletion if image has changed
             if orig.image and self.image != orig.image:
                 orig.image.delete(save=False)
-            # Handle role change
             if orig.role != self.role:
-                self.set_permissions()
-            # Handle name change to update slug
+                self.setPermissions()
             if orig.name != self.name:
                 self.slug = self.generate_unique_slug()
         else:
-            # New instance; generate slug if not provided
             if not self.slug:
                 self.slug = self.generate_unique_slug()
 
         super(User, self).save(*args, **kwargs)
+        self.setPermissions()
 
-        # Assign permissions based on role after saving
-        self.set_permissions()
-
-    def set_permissions(self):
-        if self.role:
-            self.user_permissions.set(self.role.permissions.all())
-        else:
-            self.user_permissions.clear()
+    def setPermissions(self):
+        """
+        Since role does not have associated permissions,
+        simply clear any assigned user permissions.
+        """
+        self.user_permissions.clear()
 
     def generate_unique_slug(self):
-        """
-        Generates a unique slug from the user's name.
-        If the slug already exists, appends a numerical suffix to make it unique.
-        """
         base_slug = slugify(self.name)
         slug = base_slug
         counter = 1
@@ -97,15 +85,9 @@ class User(AbstractBaseUser, PermissionsMixin):
         return slug
 
     def get_full_name(self):
-        """
-        Returns the user's full name.
-        """
         return self.name
 
     def get_short_name(self):
-        """
-        Returns the user's short name.
-        """
         return self.name.split()[0] if self.name else self.email
 
 class Amenity(models.Model):
