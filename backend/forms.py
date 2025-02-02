@@ -187,3 +187,27 @@ class PasswordChangeForm(forms.Form):
                 self.add_error('confirm_new_password', _('The new passwords do not match. Please enter them again.'))
 
         return cleaned_data
+
+class AmenityForm(forms.ModelForm):
+    """
+    Form for creating and updating Amenity instances.
+    """
+    class Meta:
+        model = Amenity
+        fields = ['name']
+        widgets = {
+            'name': forms.TextInput(attrs={
+                'class': 'form-control',
+                'placeholder': 'Enter amenity name',
+                'required': 'required',
+            }),
+        }
+        labels = {
+            'name': _('Amenity Name'),
+        }
+        error_messages = {
+            'name': {
+                'required': _('Please enter the amenity name.'),
+                'max_length': _('Amenity name cannot exceed 255 characters.'),
+            },
+        }
