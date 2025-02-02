@@ -76,5 +76,19 @@ def userProfile(request):
 
     return render(request, 'backend/pages/auth/profile.html', context)
 
+@login_required
 def dashboard(request):
     return render(request, 'backend/pages/dashboard.html')
+
+@login_required
+def getAmenities(request):
+    """
+    Retrieve and display all amenitie instances.
+    """
+    amenities = Amenity.objects.all().order_by('-created_at')
+
+    context = {
+        'amenities': amenities,
+    }
+
+    return render(request, 'backend/pages/amenities/index.html', context)
