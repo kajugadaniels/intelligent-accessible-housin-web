@@ -121,6 +121,21 @@ def addHouseProvider(request):
     return render(request, 'backend/pages/houseProviders/create.html', context)
 
 @login_required
+def showHouseProvider(request, id):
+    if not (request.user.is_superuser or request.user.role == 'Admin'):
+        messages.error(request, _("You are not authorized to access this page."))
+        return redirect('backend:dashboard')
+
+    houseProviders = get_object_or_404(User, id=id, role='House Provider')
+
+    context = {
+        'houseProviders': houseProviders,
+        'title': _("House Provider: %(name)s") % {'name': houseProviders.name}
+    }
+
+    return render(request, 'backend/pages/houseProviders/show.html', context)
+
+@login_required
 def getAmenities(request):
     """
     Retrieve and display all amenities instances.
