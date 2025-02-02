@@ -216,7 +216,7 @@ def addProperty(request):
             property_instance.save()
             form.save_m2m()
             messages.success(request, _("The property '%(property)s' has been created successfully.") % {'property': property_instance.name})
-            return redirect(reverse('backend:propertyList'))
+            return redirect(reverse('backend:getProperties'))
         else:
             messages.error(request, _("Please correct the errors below and try again."))
     else:
@@ -249,12 +249,13 @@ def editProperty(request, id):
         property_instance = get_object_or_404(Property, id=id)
     else:
         property_instance = get_object_or_404(Property, id=id, created_by=request.user)
+
     if request.method == 'POST':
         form = PropertyForm(request.POST, request.FILES, instance=property_instance)
         if form.is_valid():
             property_instance = form.save()
             messages.success(request, _("The property '%(property)s' has been updated successfully.") % {'property': property_instance.name})
-            return redirect(reverse('backend:propertyList'))
+            return redirect(reverse('backend:getProperties'))
         else:
             messages.error(request, _("Please correct the errors below and try again."))
     else:
@@ -266,3 +267,21 @@ def editProperty(request, id):
     }
 
     return render(request, 'backend/pages/properties/edit.html', context)
+
+@login_required
+def deleteProperty(request, id):
+    if request.user.is_superuser or request.user.role == 'Admin':
+        property_instance = get_object_or_404(Property, id=id)
+    else:
+        property_instance = get_object_or_404(Property, id=id, created_by=request.user)
+
+    if request.method == 'POST':
+        property_instance.delete()
+        messages.success(request, _("The property '%(property)s' has been deleted successfully.") % {'property': property_instance.name})
+        return redirect(reverse('backend:getProperties'))
+
+    context = {
+        'property': property_instance
+    }
+
+    return render(request, 'backend/pages/properties/delete.html', context)
