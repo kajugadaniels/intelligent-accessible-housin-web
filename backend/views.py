@@ -126,14 +126,14 @@ def showHouseProvider(request, id):
         messages.error(request, _("You are not authorized to access this page."))
         return redirect('backend:dashboard')
 
-    houseProviders = get_object_or_404(User, id=id, role='House Provider')
+    houseProvider = get_object_or_404(User, id=id, role='House Provider')
 
     context = {
-        'houseProviders': houseProviders,
-        'title': _("House Provider: %(name)s") % {'name': houseProviders.name}
+        'houseProvider': houseProvider,
+        'title': _("House Provider: %(name)s") % {'name': houseProvider.name}
     }
 
-    return render(request, 'backend/pages/houseProviders/show.html', context)
+    return render(request, 'backend/pages/houseProvider/show.html', context)
 
 @login_required
 def editHouseProvider(request, id):
@@ -141,25 +141,44 @@ def editHouseProvider(request, id):
         messages.error(request, _("You are not authorized to perform this action."))
         return redirect('backend:dashboard')
 
-    houseProviders = get_object_or_404(User, id=id, role='House Provider')
+    houseProvider = get_object_or_404(User, id=id, role='House Provider')
 
     if request.method == 'POST':
-        form = UserProfileForm(request.POST, request.FILES, instance=houseProviders)
+        form = UserProfileForm(request.POST, request.FILES, instance=houseProvider)
         if form.is_valid():
             form.save()
-            messages.success(request, _("House Provider '%(name)s' has been updated successfully.") % {'name': houseProviders.name})
+            messages.success(request, _("House Provider '%(name)s' has been updated successfully.") % {'name': houseProvider.name})
             return redirect(reverse('backend:getHouseProvider'))
         else:
             messages.error(request, _("Please correct the errors below."))
     else:
-        form = UserProfileForm(instance=houseProviders)
+        form = UserProfileForm(instance=houseProvider)
 
     context = {
         'form': form,
-        'title': _("Edit House Provider: %(name)s") % {'name': houseProviders.name}
+        'title': _("Edit House Provider: %(name)s") % {'name': houseProvider.name}
     }
 
     return render(request, 'backend/pages/houseProviders/edit.html', context)
+
+@login_required
+def deleteHouseProvider(request, id):
+    if not (request.user.is_superuser or request.user.role == 'Admin'):
+        messages.error(request, _("You are not authorized to perform this action."))
+        return redirect('backend:dashboard')
+
+    houseProvider = get_object_or_404(User, id=id, role='House Provider')
+
+    if request.method == 'POST':
+        houseProvider.delete()
+        messages.success(request, _("House Provider '%(name)s' has been deleted successfully.") % {'name': houseProvider.name})
+        return redirect(reverse('backend:getHouseProvider'))
+
+    context = {
+        'houseProvider': houseProvider
+    }
+
+    return render(request, 'backend/pages/houseProviders/delete.html', context)
 
 @login_required
 def getAmenities(request):
