@@ -1,0 +1,26 @@
+{% extends 'backend/layouts/app.html' %}
+{% load static %}
+{% load humanize %}
+{% block content %}
+
+<div class="container-fluid">
+    <div class="row justify-content-center">
+        <div class="col-md-6">
+            <div class="card">
+                <div class="card-body">
+                    <h4 class="card-title">Delete Property: {{ property.name }}</h4>
+                    <p class="card-text">Are you sure you want to delete the property "{{ property.name }}"? This action cannot be undone.</p>
+                    <form method="post">
+                        {% csrf_token %}
+                        <div class="d-flex justify-content-end">
+                            <a href="{% url 'backend:propertyList' %}" class="btn btn-secondary me-2">Cancel</a>
+                            <button type="submit" class="btn btn-danger">Delete</button>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+{% endblock %}
