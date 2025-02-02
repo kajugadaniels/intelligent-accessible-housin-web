@@ -110,6 +110,7 @@ class User(AbstractBaseUser, PermissionsMixin):
 
 class Amenity(models.Model):
     name = models.CharField(max_length=100, unique=True)
+    created_by = models.ForeignKey(User, on_delete=models.CASCADE, null=True, blank=True, related_name='amenities_created')
     created_at = models.DateTimeField(default=timezone.now)
     updated_at = models.DateTimeField(auto_now=True)
 
@@ -142,6 +143,7 @@ class Property(models.Model):
         blank=True,
     )
     amenities = models.ManyToManyField('Amenity', blank=True)
+    created_by = models.ForeignKey(User, on_delete=models.CASCADE, null=True, blank=True, related_name='properties_created')
     created_at = models.DateTimeField(default=timezone.now)
     updated_at = models.DateTimeField(auto_now=True)
 
