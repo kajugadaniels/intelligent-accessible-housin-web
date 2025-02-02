@@ -228,3 +228,17 @@ def addProperty(request):
     }
 
     return render(request, 'backend/pages/properties/create.html', context)
+
+@login_required
+def showProperty(request, id):
+    if request.user.is_superuser or request.user.role == 'Admin':
+        property_instance = get_object_or_404(Property, id=id)
+    else:
+        property_instance = get_object_or_404(Property, id=id, created_by=request.user)
+
+    context = {
+        'property': property_instance,
+        'title': _('Property: %(property)s') % {'property': property_instance.name}
+    }
+
+    return render(request, 'backend/pages/properties/show.html', context)
