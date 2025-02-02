@@ -11,4 +11,9 @@ urlpatterns = [
     path('profile/', userProfile, name='userProfile'),
 
     path('dashboard/', dashboard, name="dashboard"),
+
+    path('amenities/', getAmenities, name="getAmenities"),
+    path('amenity/add/', addAmenity, name="addAmenity"),
+    path('amenity/edit/<int:id>/', editAmenity, name="editAmenity"),
+    path('amenity/delete/<int:id>/', deleteAmenity, name="deleteAmenity"),
 ]  + static(settings.STATIC_URL, document_root=settings.STATIC_ROOT)+ static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)
