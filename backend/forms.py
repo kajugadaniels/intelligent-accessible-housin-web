@@ -188,6 +188,81 @@ class PasswordChangeForm(forms.Form):
 
         return cleaned_data
 
+class HouseProviderUserCreationForm(forms.ModelForm):
+    password1 = forms.CharField(
+        widget=forms.PasswordInput(attrs={
+            'class': 'form-control',
+            'placeholder': 'Enter password',
+            'required': 'required',
+        }),
+        label=_("Password"),
+        help_text=_("Enter a strong password."),
+    )
+    password2 = forms.CharField(
+        widget=forms.PasswordInput(attrs={
+            'class': 'form-control',
+            'placeholder': 'Confirm password',
+            'required': 'required',
+        }),
+        label=_("Confirm Password"),
+        help_text=_("Enter the same password for confirmation."),
+    )
+
+    class Meta:
+        model = User
+        # Exclude the 'role' field; we only create House Provider users.
+        fields = ['name', 'email', 'phone_number', 'image']
+        widgets = {
+            'name': forms.TextInput(attrs={
+                'class': 'form-control',
+                'placeholder': 'Enter full name',
+                'required': 'required',
+            }),
+            'email': forms.EmailInput(attrs={
+                'class': 'form-control',
+                'placeholder': 'Enter email address',
+                'required': 'required',
+            }),
+            'phone_number': forms.TextInput(attrs={
+                'class': 'form-control',
+                'placeholder': 'Enter phone number',
+                'required': 'required',
+            }),
+            'image': forms.ClearableFileInput(attrs={
+                'class': 'form-control',
+            }),
+        }
+        labels = {
+            'name': _('Full Name'),
+            'email': _('Email Address'),
+            'phone_number': _('Phone Number'),
+            'image': _('Profile Image'),
+        }
+
+    def clean_password2(self):
+        password1 = self.cleaned_data.get("password1")
+        password2 = self.cleaned_data.get("password2")
+        if password1 and password2:
+            if password1 != password2:
+                raise forms.ValidationError(_("The two password fields didn’t match."))
+            validate_password(password1)
+        return password2
+
+    def clean_email(self):
+        email = self.cleaned_data.get('email')
+        if User.objects.filter(email=email).exists():
+            raise forms.ValidationError(_("A user with this email already exists."))
+        return email
+
+    def save(self, commit=True):
+        user = super().save(commit=False)
+        # Force the role to "House Provider"
+        user.role = "House Provider"
+        user.set_password(self.cleaned_data["password1"])
+        if commit:
+            user.save()
+        return user
+
 class AmenityForm(forms.ModelForm):
     """
     Form for creating and updating Amenity instances.
