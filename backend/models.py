@@ -17,6 +17,7 @@ class User(AbstractBaseUser, PermissionsMixin):
     ROLE_CHOICES = (
         ('Admin', 'Admin'),
         ('User', 'User'),
+        ('House Provider', 'House Provider'),
     )
 
     name = models.CharField(max_length=255)
