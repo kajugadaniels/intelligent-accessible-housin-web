@@ -2,10 +2,10 @@ from backend.forms import *
 from django.urls import reverse
 from django.contrib import messages
 from django.http import JsonResponse
-from django.shortcuts import render, redirect
 from django.views.decorators.csrf import csrf_exempt
 from django.utils.translation import gettext_lazy as _
 from django.contrib.auth.decorators import login_required
+from django.shortcuts import render, redirect, get_object_or_404
 from django.contrib.auth import authenticate, login as auth_login, logout, update_session_auth_hash
 
 def userLogin(request):
@@ -127,3 +127,31 @@ def addAmenity(request):
     }
 
     return render(request, 'backend/pages/amenities/create.html', context)
+
+@login_required
+def editAmenity(request, id):
+    """
+    Edit an existing Client instance identified by its ID.
+    """
+    amenity = get_object_or_404(Amenity, id=id)
+    
+    if request.method == 'POST':
+        form = AmenityForm(request.POST, instance=amenity)
+        if form.is_valid():
+            amenity = form.save()
+            messages.success(
+                request, 
+                _("The amenity '%(amenity)s' has been updated successfully.") % {'amenity': amenity.name}
+            )
+            return redirect(reverse('base:getAmenities'))
+        else:
+            messages.error(request, _("Please correct the errors below and try again."))
+    else:
+        form = AmenityForm(instance=amenity)
+
+    context = {
+        'form': form,
+        'title': _('Edit amenity: %(amenity)s') % {'amenity': amenity.name},
+    }
+
+    return render(request, 'backend/pages/amenities/edit.html', context)
