@@ -1,7 +1,9 @@
 from backend.forms import *
 from django.urls import reverse
 from django.contrib import messages
+from django.http import JsonResponse
 from django.shortcuts import render, redirect
+from django.views.decorators.csrf import csrf_exempt
 from django.utils.translation import gettext_lazy as _
 from django.contrib.auth.decorators import login_required
 from django.contrib.auth import authenticate, login as auth_login, logout, update_session_auth_hash
@@ -92,3 +94,36 @@ def getAmenities(request):
     }
 
     return render(request, 'backend/pages/amenities/index.html', context)
+
+@csrf_exempt
+@login_required
+def addAmenity(request):
+    if request.method == 'POST':
+        form = AmenityForm(request.POST)
+        if form.is_valid():
+            amenity = form.save()
+            if request.headers.get('x-requested-with') == 'XMLHttpRequest':
+                return JsonResponse({
+                    'id': amenity.id,
+                    'name': amenity.name
+                })
+            else:
+                messages.success(
+                    request, 
+                    _("The amenity '%(amenity)s' has been created successfully.") % {'amenity': amenity.name}
+                )
+                return redirect(reverse('base:getAmenities'))
+        else:
+            if request.headers.get('x-requested-with') == 'XMLHttpRequest':
+                return JsonResponse({'errors': form.errors}, status=400)
+            else:
+                messages.error(request, _("Please correct the errors below and try again."))
+    else:
+        form = AmenityForm()
+
+    context = {
+        'form': form,
+        'title': _('Add New Amenity'),
+    }
+
+    return render(request, 'backend/pages/amenities/create.html', context)
