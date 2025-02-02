@@ -133,7 +133,7 @@ def showHouseProvider(request, id):
         'title': _("House Provider: %(name)s") % {'name': houseProvider.name}
     }
 
-    return render(request, 'backend/pages/houseProvider/show.html', context)
+    return render(request, 'backend/pages/houseProviders/show.html', context)
 
 @login_required
 def editHouseProvider(request, id):
