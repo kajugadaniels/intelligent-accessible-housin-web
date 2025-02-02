@@ -242,3 +242,27 @@ def showProperty(request, id):
     }
 
     return render(request, 'backend/pages/properties/show.html', context)
+
+@login_required
+def editProperty(request, id):
+    if request.user.is_superuser or request.user.role == 'Admin':
+        property_instance = get_object_or_404(Property, id=id)
+    else:
+        property_instance = get_object_or_404(Property, id=id, created_by=request.user)
+    if request.method == 'POST':
+        form = PropertyForm(request.POST, request.FILES, instance=property_instance)
+        if form.is_valid():
+            property_instance = form.save()
+            messages.success(request, _("The property '%(property)s' has been updated successfully.") % {'property': property_instance.name})
+            return redirect(reverse('backend:propertyList'))
+        else:
+            messages.error(request, _("Please correct the errors below and try again."))
+    else:
+        form = PropertyForm(instance=property_instance)
+
+    context = {
+        'form': form,
+        'title': _('Edit Property: %(property)s') % {'property': property_instance.name}
+    }
+
+    return render(request, 'backend/pages/properties/edit.html', context)
