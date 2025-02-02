@@ -215,3 +215,26 @@ def getProperties(request):
     }
 
     return render(request, 'backend/pages/properties/index.html', context)
+
+@login_required
+def addProperty(request):
+    if request.method == 'POST':
+        form = PropertyForm(request.POST, request.FILES)
+        if form.is_valid():
+            property_instance = form.save(commit=False)
+            property_instance.created_by = request.user
+            property_instance.save()
+            form.save_m2m()
+            messages.success(request, _("The property '%(property)s' has been created successfully.") % {'property': property_instance.name})
+            return redirect(reverse('backend:propertyList'))
+        else:
+            messages.error(request, _("Please correct the errors below and try again."))
+    else:
+        form = PropertyForm()
+
+    context = {
+        'form': form,
+        'title': _('Add New Property')
+    }
+
+    return render(request, 'backend/pages/properties/create.html', context)
