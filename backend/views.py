@@ -129,7 +129,7 @@ def addAmenity(request):
     return render(request, 'backend/pages/amenities/create.html', context)
 
 @login_required
-def ShowAmenity(request, id):
+def showAmenity(request, id):
     """
     Show an existing Amenity instance identified by its ID.
     """

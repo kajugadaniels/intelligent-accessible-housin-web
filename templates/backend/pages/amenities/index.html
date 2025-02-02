@@ -43,6 +43,9 @@
                                     <td><p class="f-light">{{ amenity.created_at|naturaltime }}</p></td>
                                     <td>
                                         <div class="client-action">
+                                            <a href="{% url 'backend:showAmenity' amenity.id %}" class="btn btn-warning">
+                                                View
+                                            </a>
                                             <a href="{% url 'backend:editAmenity' amenity.id %}" class="btn btn-primary">
                                                 Edit
                                             </a>

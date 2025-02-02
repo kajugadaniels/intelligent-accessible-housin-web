@@ -1,0 +1,48 @@
+{% extends 'backend/layouts/app.html' %}
+{% load static %}
+{% load humanize %}
+{% block content %}
+
+<div class="container-fluid">
+    <div class="row">
+        <div class="col-sm-12">
+            <div class="card">
+                <div class="card-body">
+                    <div class="list-product-header">
+                        <div class="d-flex justify-content-between">
+                            <h4>Details on Amenity</h4>
+                            <a class="btn btn-primary" href="{% url 'backend:getAmenities' %}"><i class="fa fa-arrow-left"></i> Go Back</a>
+                        </div>
+                    </div>
+                    <hr>
+                    <div class="row">
+                        <div class="col-md-12">
+                            <table class="table table-striped mb-3">
+                                <tr>
+                                    <th>Name:</th>
+                                    <td>{{ amenity.name }}</td>
+                                </tr>
+                                <tr>
+                                    <th>Created At:</th>
+                                    <td>{{ amenity.created_at|naturaltime }}</td>
+                                </tr>
+                                <tr>
+                                    <th>Updated At:</th>
+                                    <td>{{ amenity.updated_at|naturaltime }}</td>
+                                </tr>
+                            </table>
+                            {% if request.user.is_superuser %}
+                            <div class="text-end">
+                                <a class="btn btn-primary" href="{% url 'backend:editAmenity' amenity.id %}"><i class="fa fa-edit"></i> Edit</a>
+                                <a class="btn btn-danger" href="{% url 'backend:deleteAmenity' amenity.id %}"><i class="fa fa-trash"></i> Delete</a>
+                            </div>
+                            {% endif %}
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+{% endblock %}
