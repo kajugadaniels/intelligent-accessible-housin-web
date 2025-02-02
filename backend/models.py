@@ -16,9 +16,7 @@ def user_image_path(instance, filename):
 class User(AbstractBaseUser, PermissionsMixin):
     ROLE_CHOICES = (
         ('Admin', 'Admin'),
-        ('Director', 'Director'),
-        ('Teacher', 'Teacher'),
-        ('Student', 'Student'),
+        ('User', 'User'),
     )
 
     name = models.CharField(max_length=255)
