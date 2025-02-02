@@ -1,0 +1,74 @@
+{% extends 'backend/layouts/app.html' %}
+{% load static %}
+{% load humanize %}
+{% block content %}
+
+<div class="container-fluid">
+    <div class="row"> 
+        <div class="col-sm-12"> 
+            <div class="card"> 
+                <div class="card-body">
+                    <div class="list-product-header">
+                        <div class="d-flex justify-content-between">
+                            <h4>Properties</h4>
+                            <a class="btn btn-primary" href="{% url 'backend:addProperty' %}"><i class="fa fa-plus"></i> Add New Property</a>
+                        </div>
+                    </div>
+                    <hr>
+                    <div class="list-product">
+                        <table class="table" id="project-status">
+                            <thead> 
+                                <tr> 
+                                    <th>
+                                        <div class="form-check"> 
+                                            <input class="form-check-input checkbox-primary" type="checkbox">
+                                        </div>
+                                    </th>
+                                    <th><span class="f-light f-w-600">Name</span></th>
+                                    <th><span class="f-light f-w-600">Capacity</span></th>
+                                    <th><span class="f-light f-w-600">Created At</span></th>
+                                    <th><span class="f-light f-w-600">Action</span></th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                {% for property in properties %}
+                                    <tr class="product-removes">
+                                        <td>
+                                            <div class="form-check"> 
+                                                <input class="form-check-input checkbox-primary" type="checkbox">
+                                            </div>
+                                        </td>
+                                        <td>
+                                            <p class="f-light">{{ property.name }}</p>
+                                        </td>
+                                        <td>
+                                            <p class="f-light">{{ property.capacity }}</p>
+                                        </td>
+                                        <td>
+                                            <p class="f-light">{{ property.created_at|naturaltime }}</p>
+                                        </td>
+                                        <td>
+                                            <div class="product-action">
+                                                <a href="{% url 'backend:showProperty' property.id %}" class="btn btn-primary">
+                                                    View
+                                                </a>
+                                                <a href="{% url 'backend:editProperty' property.id %}" class="btn btn-warning">
+                                                    Edit
+                                                </a>
+                                                <a href="{% url 'backend:deleteProperty' property.id %}" class="btn btn-danger" onclick="return confirm('Are you sure you want to delete the property \'{{ property.name }}\'?');">
+                                                    Delete
+                                                </a>
+                                            </div>
+                                        </td>
+                                    </tr>
+                                {% endfor %}
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+{% endblock %}
