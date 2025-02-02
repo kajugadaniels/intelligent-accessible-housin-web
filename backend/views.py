@@ -85,9 +85,12 @@ def dashboard(request):
 @login_required
 def getAmenities(request):
     """
-    Retrieve and display all amenitie instances.
+    Retrieve and display all amenities instances.
     """
-    amenities = Amenity.objects.all().order_by('-created_at')
+    if request.user.is_superuser or request.user.role == 'Admin':
+        amenities = Amenity.objects.all().order_by('-created_at')
+    else:
+        amenities = Amenity.objects.filter(created_by=request.user).order_by('-created_at')
 
     context = {
         'amenities': amenities,
