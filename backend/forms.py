@@ -211,3 +211,65 @@ class AmenityForm(forms.ModelForm):
                 'max_length': _('Amenity name cannot exceed 255 characters.'),
             },
         }
+
+class PropertyForm(forms.ModelForm):
+    class Meta:
+        model = Property
+        fields = ['name', 'description', 'price_usd', 'price_rwf', 'capacity', 'size', 'image', 'amenities']
+        widgets = {
+            'name': forms.TextInput(attrs={
+                'class': 'form-control',
+                'placeholder': 'Enter property name',
+                'required': 'required',
+            }),
+            'description': forms.Textarea(attrs={
+                'class': 'form-control',
+                'placeholder': 'Enter property description',
+                'required': 'required',
+            }),
+            'price_usd': forms.NumberInput(attrs={
+                'class': 'form-control',
+                'placeholder': 'Enter price in USD',
+            }),
+            'price_rwf': forms.NumberInput(attrs={
+                'class': 'form-control',
+                'placeholder': 'Enter price in RWF',
+            }),
+            'capacity': forms.NumberInput(attrs={
+                'class': 'form-control',
+                'placeholder': 'Enter capacity',
+                'required': 'required',
+            }),
+            'size': forms.TextInput(attrs={
+                'class': 'form-control',
+                'placeholder': 'Enter property size',
+            }),
+            'image': forms.ClearableFileInput(attrs={
+                'class': 'form-control',
+            }),
+            'amenities': forms.SelectMultiple(attrs={
+                'class': 'form-control',
+            }),
+        }
+        labels = {
+            'name': _('Property Name'),
+            'description': _('Description'),
+            'price_usd': _('Price (USD)'),
+            'price_rwf': _('Price (RWF)'),
+            'capacity': _('Capacity'),
+            'size': _('Size'),
+            'image': _('Property Image'),
+            'amenities': _('Amenities'),
+        }
+        error_messages = {
+            'name': {
+                'required': _('Please enter the property name.'),
+                'max_length': _('Property name cannot exceed 255 characters.'),
+            },
+            'description': {
+                'required': _('Please enter the property description.'),
+            },
+            'capacity': {
+                'required': _('Please enter the capacity.'),
+            },
+        }
