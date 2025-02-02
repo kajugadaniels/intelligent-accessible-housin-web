@@ -1,0 +1,44 @@
+{% extends 'backend/layouts/app.html' %}
+{% load static %}
+{% load humanize %}
+{% block content %}
+
+<div class="container-fluid">
+    <div class="row">
+        <div class="col-sm-12">
+            <div class="card">
+                <div class="card-body">
+                    <div class="list-client-header">
+                        <div class="d-flex justify-content-between">
+                            <h4>Add New Amenity</h4>
+                            <a class="btn btn-primary" href="{% url 'backend:getAmenities' %}"><i class="fa fa-eye"></i> Go Back</a>
+                        </div>
+                    </div>
+                    <hr>
+                    <div class="form theme-form">
+                        <form method="post">
+                            {% csrf_token %}
+                            {{ form.non_field_errors }}
+                            <div class="mb-3">
+                                <label class="form-label">{{ form.name.label }}</label>
+                                {{ form.name }}
+                                {% for error in form.name.errors %}
+                                    <div class="text-danger">{{ error }}</div>
+                                {% endfor %}
+                            </div>
+                            <div class="row mt-2">
+                                <div class="col">
+                                    <div class="text-end">
+                                        <button type="submit" class="btn btn-primary">Add Amenity</button>
+                                    </div>
+                                </div>
+                            </div>
+                        </form>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+{% endblock %}

@@ -112,7 +112,7 @@ def addAmenity(request):
                     request, 
                     _("The amenity '%(amenity)s' has been created successfully.") % {'amenity': amenity.name}
                 )
-                return redirect(reverse('base:getAmenities'))
+                return redirect(reverse('backend:getAmenities'))
         else:
             if request.headers.get('x-requested-with') == 'XMLHttpRequest':
                 return JsonResponse({'errors': form.errors}, status=400)
@@ -143,7 +143,7 @@ def editAmenity(request, id):
                 request, 
                 _("The amenity '%(amenity)s' has been updated successfully.") % {'amenity': amenity.name}
             )
-            return redirect(reverse('base:getAmenities'))
+            return redirect(reverse('backend:getAmenities'))
         else:
             messages.error(request, _("Please correct the errors below and try again."))
     else:
@@ -169,7 +169,7 @@ def deleteAmenity(request, id):
             request, 
             _("The amenity '%(amenity)s' has been deleted successfully.") % {'amenity': amenity.name}
         )
-        return redirect(reverse('base:getAmenities'))
+        return redirect(reverse('backend:getAmenities'))
     
     context = {
         'amenity': amenity,
