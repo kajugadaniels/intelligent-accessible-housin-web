@@ -147,22 +147,15 @@ def showAmenity(request, id):
 
 @login_required
 def editAmenity(request, id):
-    """
-    Edit an existing Amenity instance identified by its ID.
-    """
     if request.user.is_superuser or request.user.role == 'Admin':
         amenity = get_object_or_404(Amenity, id=id)
     else:
         amenity = get_object_or_404(Amenity, id=id, created_by=request.user)
-
     if request.method == 'POST':
         form = AmenityForm(request.POST, instance=amenity)
         if form.is_valid():
             amenity = form.save()
-            messages.success(
-                request, 
-                _("The amenity '%(amenity)s' has been updated successfully.") % {'amenity': amenity.name}
-            )
+            messages.success(request, _("The amenity '%(amenity)s' has been updated successfully.") % {'amenity': amenity.name})
             return redirect(reverse('backend:getAmenities'))
         else:
             messages.error(request, _("Please correct the errors below and try again."))
@@ -171,7 +164,7 @@ def editAmenity(request, id):
 
     context = {
         'form': form,
-        'title': _('Edit amenity: %(amenity)s') % {'amenity': amenity.name},
+        'title': _('Edit amenity: %(amenity)s') % {'amenity': amenity.name}
     }
 
     return render(request, 'backend/pages/amenities/edit.html', context)
