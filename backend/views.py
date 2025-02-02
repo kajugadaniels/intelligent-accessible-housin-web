@@ -129,9 +129,23 @@ def addAmenity(request):
     return render(request, 'backend/pages/amenities/create.html', context)
 
 @login_required
+def ShowAmenity(request, id):
+    """
+    Show an existing Amenity instance identified by its ID.
+    """
+    amenity = get_object_or_404(Amenity, id=id)
+
+    context = {
+        'amenity': amenity,
+        'title': _('Amenity: %(amenity)s') % {'amenity': amenity.name},
+    }
+
+    return render(request, 'backend/pages/amenities/show.html', context)
+
+@login_required
 def editAmenity(request, id):
     """
-    Edit an existing Client instance identified by its ID.
+    Edit an existing Amenity instance identified by its ID.
     """
     amenity = get_object_or_404(Amenity, id=id)
     
