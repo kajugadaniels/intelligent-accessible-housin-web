@@ -17,4 +17,10 @@ urlpatterns = [
     path('amenity/<int:id>/', showAmenity, name="showAmenity"),
     path('amenity/edit/<int:id>/', editAmenity, name="editAmenity"),
     path('amenity/delete/<int:id>/', deleteAmenity, name="deleteAmenity"),
+
+    path('properties/', getProperties, name="getProperties"),
+    path('property/add/', addProperty, name="addProperty"),
+    path('property/<int:id>/', showProperty, name="showProperty"),
+    path('property/edit/<int:id>/', editProperty, name="editProperty"),
+    path('property/delete/<int:id>/', deleteProperty, name="deleteProperty"),
 ]  + static(settings.STATIC_URL, document_root=settings.STATIC_ROOT)+ static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)
