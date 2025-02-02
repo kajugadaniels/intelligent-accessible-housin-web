@@ -155,3 +155,24 @@ def editAmenity(request, id):
     }
 
     return render(request, 'backend/pages/amenities/edit.html', context)
+
+@login_required
+def deleteAmenity(request, id):
+    """
+    Delete an existing Amenity instance identified by its ID.
+    """
+    amenity = get_object_or_404(Amenity, id=id)
+    
+    if request.method == 'POST':
+        amenity.delete()
+        messages.success(
+            request, 
+            _("The amenity '%(amenity)s' has been deleted successfully.") % {'amenity': amenity.name}
+        )
+        return redirect(reverse('base:getAmenities'))
+    
+    context = {
+        'amenity': amenity,
+    }
+
+    return render(request, 'backend/pages/amenities/delete.html', context)
