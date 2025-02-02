@@ -2,59 +2,61 @@
 {% load static %}
 {% load humanize %}
 {% block content %}
+
 <div class="container-fluid">
-    <div class="row">
-        <div class="col-sm-12">
-            <div class="card">
+    <div class="row"> 
+        <div class="col-sm-12"> 
+            <div class="card"> 
                 <div class="card-body">
-                    <div class="list-client-header">
+                    <div class="list-product-header">
                         <div class="d-flex justify-content-between">
                             <h4>Amenities</h4>
-                            <div>
-                                <a class="btn btn-primary" href="{% url 'backend:addAmenity' %}"><i class="fa fa-plus"></i> Add Amenity</a>
-                                <a class="btn btn-outline-primary mx-3" href="#"><i class="fa fa-file-o"></i> Report</a>
-                            </div>
+                            <a class="btn btn-primary" href="{% url 'backend:addAmenity' %}"><i class="fa fa-plus"></i> Add New Amenity</a>
                         </div>
                     </div>
                     <hr>
-                    <div class="list-client">
-                        <table class="table table-striped" id="amenity-table">
-                            <thead>
-                                <tr>
+                    <div class="list-product">
+                        <table class="table" id="project-status">
+                            <thead> 
+                                <tr> 
                                     <th>
-                                        <div class="form-check">
+                                        <div class="form-check"> 
                                             <input class="form-check-input checkbox-primary" type="checkbox">
                                         </div>
                                     </th>
                                     <th><span class="f-light f-w-600">Name</span></th>
                                     <th><span class="f-light f-w-600">Created At</span></th>
-                                    <th><span class="f-light f-w-600">Actions</span></th>
+                                    <th><span class="f-light f-w-600">Action</span></th>
                                 </tr>
                             </thead>
                             <tbody>
                                 {% for amenity in amenities %}
-                                <tr class="amenity-row">
-                                    <td>
-                                        <div class="form-check">
-                                            <input class="form-check-input checkbox-primary" type="checkbox">
-                                        </div>
-                                    </td>
-                                    <td><p class="f-light">{{ amenity.name }}</p></td>
-                                    <td><p class="f-light">{{ amenity.created_at|naturaltime }}</p></td>
-                                    <td>
-                                        <div class="client-action">
-                                            <a href="{% url 'backend:showAmenity' amenity.id %}" class="btn btn-warning">
-                                                View
-                                            </a>
-                                            <a href="{% url 'backend:editAmenity' amenity.id %}" class="btn btn-primary">
-                                                Edit
-                                            </a>
-                                            <a href="{% url 'backend:deleteAmenity' amenity.id %}" class="btn btn-danger" onclick="return confirm('Are you sure you want to delete the amenity \'{{ amenity.name }}\'?');">
-                                                Delete
-                                            </a>
-                                        </div>
-                                    </td>
-                                </tr>
+                                    <tr class="product-removes">
+                                        <td>
+                                            <div class="form-check"> 
+                                                <input class="form-check-input checkbox-primary" type="checkbox">
+                                            </div>
+                                        </td>
+                                        <td>
+                                            <p class="f-light">{{ amenity.name }}</p>
+                                        </td>
+                                        <td>
+                                            <p class="f-light">{{ amenity.created_at|naturaltime }}</p>
+                                        </td>
+                                        <td>
+                                            <div class="product-action">
+                                                <a href="{% url 'backend:showAmenity' amenity.id %}" class="btn btn-primary">
+                                                    View
+                                                </a>
+                                                <a href="{% url 'backend:editAmenity' amenity.id %}" class="btn btn-warning">
+                                                    Edit
+                                                </a>
+                                                <a href="{% url 'backend:deleteAmenity' amenity.id %}" class="btn btn-danger" onclick="return confirm('Are you sure you want to delete the amenity \'{{ amenity.name }}\'?');">
+                                                    Delete
+                                                </a>
+                                            </div>
+                                        </td>
+                                    </tr>
                                 {% endfor %}
                             </tbody>
                         </table>
@@ -64,4 +66,5 @@
         </div>
     </div>
 </div>
+
 {% endblock %}
