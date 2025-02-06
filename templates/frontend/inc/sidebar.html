@@ -1,5 +1,7 @@
+{% load humanize %}
+
 <div class="col-lg-4">
-	<div class="theme-btn1  open-filter-form">
+	<div class="theme-btn1 open-filter-form">
 		<p class="open-text">
 			Open filter Options
 			<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor">
@@ -25,11 +27,9 @@
 				<div class="input-area m-0">
 					<select name="city" class="nice-select">
 						<option value="">All Cities</option>
-						<option value="Rebero" {% if filter_params.city == "Rebero" %}selected{% endif %}>Rebero</option>
-						<option value="Gacuriro" {% if filter_params.city == "Gacuriro" %}selected{% endif %}>Gacuriro</option>
-						<option value="Nyamirambo" {% if filter_params.city == "Nyamirambo" %}selected{% endif %}>Nyamirambo</option>
-						<option value="Nyamata" {% if filter_params.city == "Nyamata" %}selected{% endif %}>Nyamata</option>
-						<option value="Gisenyi" {% if filter_params.city == "Gisenyi" %}selected{% endif %}>Gisenyi</option>
+						{% for key, value in city_choices %}
+							<option value="{{ key }}" {% if filter_params.city == key %}selected{% endif %}>{{ value }}</option>
+						{% endfor %}
 					</select>
 				</div>
 				<div class="input-area">
@@ -50,6 +50,15 @@
 						<option value="3" {% if filter_params.bathroom == "3" %}selected{% endif %}>03</option>
 						<option value="4" {% if filter_params.bathroom == "4" %}selected{% endif %}>04</option>
 						<option value="5" {% if filter_params.bathroom == "5" %}selected{% endif %}>05</option>
+					</select>
+				</div>
+				<!-- New select for Property Types -->
+				<div class="input-area">
+					<select name="type" class="nice-select">
+						<option value="">All Property Types</option>
+						{% for key, value in property_types %}
+							<option value="{{ key }}" {% if filter_params.type == key %}selected{% endif %}>{{ value }}</option>
+						{% endfor %}
 					</select>
 				</div>
 				<div class="row">
@@ -95,32 +104,35 @@
 		<h3>Amenities</h3>
 		<div class="space12"></div>
 		<div class="row">
-			<div class="col-lg-6 col-md-6">
-				<fieldset class="checkbox-item style-1">
-					<label>
-					<input type="checkbox">
-					<span class="btn-checkbox"></span>
-					<span class="text-4">Air Condition </span>
-					</label>
-				</fieldset>
-				<div class="space32"></div>
-			</div>
-			<div class="col-lg-12">
-				<div class="btn-area1">
-					<a href="{% url 'frontend:home' %}" class="theme-btn1">
-						Find Your Dream Property 
-						<span class="arrow1">
-							<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" width="24" height="24" fill="currentColor">
-								<path d="M12 13H4V11H12V4L20 12L12 20V13Z"></path>
-							</svg>
-						</span>
-						<span class="arrow2">
-							<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" width="24" height="24" fill="currentColor">
-								<path d="M12 13H4V11H12V4L20 12L12 20V13Z"></path>
-							</svg>
-						</span>
-					</a>
+			{% for amenity in amenities_list %}
+				<div class="col-lg-6 col-md-6">
+					<fieldset class="checkbox-item style-1">
+						<label>
+							<input type="checkbox" name="amenity" value="{{ amenity.id }}"
+                            {% if amenity.id|stringformat:"s" in selected_amenities %}checked{% endif %}>
+							<span class="btn-checkbox"></span>
+							<span class="text-4">{{ amenity.name }}</span>
+						</label>
+					</fieldset>
+					<div class="space32"></div>
 				</div>
+			{% endfor %}
+		</div>
+		<div class="col-lg-12">
+			<div class="btn-area1">
+				<a href="{% url 'frontend:home' %}" class="theme-btn1">
+					Find Your Dream Property 
+					<span class="arrow1">
+						<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" width="24" height="24" fill="currentColor">
+							<path d="M12 13H4V11H12V4L20 12L12 20V13Z"></path>
+						</svg>
+					</span>
+					<span class="arrow2">
+						<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" width="24" height="24" fill="currentColor">
+							<path d="M12 13H4V11H12V4L20 12L12 20V13Z"></path>
+						</svg>
+					</span>
+				</a>
 			</div>
 		</div>
 	</div>
@@ -129,32 +141,32 @@
 		<h3>Latest Properties</h3>
 		<div class="space8"></div>
 		{% for prop in latest_properties %}
-			<div class="latest-proprty">
+			<div class="latest-proprty d-flex mb-3">
 				<div class="img1">
 					{% if prop.image %}
-                        <img src="{{ prop.image.url }}" alt="{{ prop.name }}" style="width: 100%;">
-                    {% else %}
-                        <img src="https://via.placeholder.com/100x75.png?text=No+Image" alt="{{ prop.name }}" style="width: 100%;">
-                    {% endif %}
+						<img src="{{ prop.image.url }}" alt="{{ prop.name }}">
+					{% else %}
+						<img src="https://via.placeholder.com/100x75.png?text=No+Image" alt="{{ prop.name }}">
+					{% endif %}
 				</div>
-				<div class="content">
-					<a href="{% url 'frontend:showProperty' prop.slug %}" style="font-size: 14px">{{ prop.name }}</a>
+				<div class="content ms-2">
+					<a href="{% url 'frontend:showProperty' prop.slug %}">{{ prop.name }}</a>
 					<div class="space16"></div>
-					<ul>
+					<ul class="d-flex list-unstyled">
 						{% if prop.capacity %}
-                            <li class="me-2"><a href="#"><img src="https://housebox-html-demo.vercel.app/assets/img/icons/bed1.svg" alt="bed">x{{ prop.capacity }}</a></li>
-                        {% endif %}
-                        {% if prop.bathroom %}
-                            <li><a href="#"><img src="https://housebox-html-demo.vercel.app/assets/img/icons/bath1.svg" alt="bath">x{{ prop.bathroom }}</a></li>
-                        {% endif %}
+							<li class="me-2"><a href="#"><img src="https://housebox-html-demo.vercel.app/assets/img/icons/bed1.svg" alt="bed">x{{ prop.capacity }}</a></li>
+						{% endif %}
+						{% if prop.bathroom %}
+							<li><a href="#"><img src="https://housebox-html-demo.vercel.app/assets/img/icons/bath1.svg" alt="bath">x{{ prop.bathroom }}</a></li>
+						{% endif %}
 					</ul>
 					<div class="space12"></div>
-					<h3 style="font-size: 14px;">
-						{% if prop.price_rwf %}
-                            ${{ prop.price_rwf }} RWF
-                        {% else %}
-                            Contact for Price
-                        {% endif %}
+					<h3 class="fs-6">
+						{% if prop.price_rwf|intcomma %}
+							{{ prop.price_rwf|intcomma }} RWF
+						{% else %}
+							Contact for Price
+						{% endif %}
 					</h3>
 				</div>
 			</div>
