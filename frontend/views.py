@@ -54,10 +54,12 @@ def getProperties(request):
     if price_max:
         properties = properties.filter(price_usd__lte=price_max)
 
-    # Filter by amenity if provided
-    amenity_id = request.GET.get('amenity')
-    if amenity_id:
-        properties = properties.filter(amenities__id=amenity_id)
+    # --- Filtering by Amenities (multiple selection) ---
+    # Get all selected amenity IDs (as strings)
+    selected_amenities = request.GET.getlist('amenity')
+    if selected_amenities:
+        # Filter properties that have at least one of the selected amenities.
+        properties = properties.filter(amenities__id__in=selected_amenities).distinct()
 
     # --- Sorting ---
     sort = request.GET.get('sort')
@@ -100,6 +102,7 @@ def getProperties(request):
         'city_choices': city_choices,
         'property_types': property_types,
         'amenities_list': amenities_list,
+        'selected_amenities': selected_amenities,
         'paginator': paginator,
         'page_obj': properties_page,
     }
