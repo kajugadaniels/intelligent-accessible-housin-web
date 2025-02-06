@@ -2,7 +2,6 @@
 {% load static %}
 {% load humanize %}
 {% block content %}
-
 <div class="container-fluid">
     <div class="row">
         <div class="col-sm-12">
@@ -109,6 +108,29 @@
                                     <div class="text-danger">{{ error }}</div>
                                 {% endfor %}
                             </div>
+                            <!-- Field for uploading additional images -->
+                            <div class="mb-3">
+                                <label class="form-label">Add More Images</label>
+                                <input type="file" name="images" class="form-control" multiple>
+                                <small class="form-text text-muted">You can upload additional images.</small>
+                            </div>
+                            <!-- Section to display current additional images -->
+                            <div class="mb-3">
+                                <label class="form-label">Current Additional Images</label>
+                                <div class="row">
+                                    {% for img in property.images.all %}
+                                        <div class="col-md-3 text-center mb-3">
+                                            <img src="{{ img.image.url }}" alt="Property Image" class="img-thumbnail" style="max-height:150px;">
+                                            <form method="post" action="{% url 'backend:deletePropertyImage' img.id %}">
+                                                {% csrf_token %}
+                                                <button type="submit" class="btn btn-danger btn-sm mt-1">Delete</button>
+                                            </form>
+                                        </div>
+                                    {% empty %}
+                                        <p>No additional images available.</p>
+                                    {% endfor %}
+                                </div>
+                            </div>
                             <div class="mb-3">
                                 <label class="form-label">{{ form.description.label }}</label>
                                 {{ form.description }}
@@ -130,5 +152,4 @@
         </div>
     </div>
 </div>
-
 {% endblock %}
