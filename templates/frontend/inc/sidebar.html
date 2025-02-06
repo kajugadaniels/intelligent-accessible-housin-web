@@ -16,112 +16,114 @@
 	<div class="sidebar1-area filter-options-form">
 		<div class="row">
 			<form method="get" class="col-lg-12">
-				<div class="input-area">
-					<input type="text" name="keyword" placeholder="Type keyword" value="{{ filter_params.keyword }}">
-				</div>
-				<div class="input-area">
-					<input type="text" name="address" placeholder="Address" value="{{ filter_params.address }}">
-				</div>
-				<div class="input-area m-0">
-					<select name="city" class="nice-select">
-						<option value="">All Cities</option>
-						<option value="Rebero" {% if filter_params.city == "Rebero" %}selected{% endif %}>Rebero</option>
-						<option value="Gacuriro" {% if filter_params.city == "Gacuriro" %}selected{% endif %}>Gacuriro</option>
-						<option value="Nyamirambo" {% if filter_params.city == "Nyamirambo" %}selected{% endif %}>Nyamirambo</option>
-						<option value="Nyamata" {% if filter_params.city == "Nyamata" %}selected{% endif %}>Nyamata</option>
-						<option value="Gisenyi" {% if filter_params.city == "Gisenyi" %}selected{% endif %}>Gisenyi</option>
-					</select>
-				</div>
-				<div class="input-area">
-					<select name="capacity" class="nice-select">
-						<option value="">Bedrooms</option>
-						<option value="1" {% if filter_params.capacity == "1" %}selected{% endif %}>01</option>
-						<option value="2" {% if filter_params.capacity == "2" %}selected{% endif %}>02</option>
-						<option value="3" {% if filter_params.capacity == "3" %}selected{% endif %}>03</option>
-						<option value="4" {% if filter_params.capacity == "4" %}selected{% endif %}>04</option>
-						<option value="5" {% if filter_params.capacity == "5" %}selected{% endif %}>05</option>
-					</select>
-				</div>
-				<div class="input-area">
-					<select name="bathroom" class="nice-select">
-						<option value="">Bathrooms</option>
-						<option value="1" {% if filter_params.bathroom == "1" %}selected{% endif %}>01</option>
-						<option value="2" {% if filter_params.bathroom == "2" %}selected{% endif %}>02</option>
-						<option value="3" {% if filter_params.bathroom == "3" %}selected{% endif %}>03</option>
-						<option value="4" {% if filter_params.bathroom == "4" %}selected{% endif %}>04</option>
-						<option value="5" {% if filter_params.bathroom == "5" %}selected{% endif %}>05</option>
-					</select>
-				</div>
-				<div class="row">
-					<div class="col-lg-6">
-						<div class="input-area">
-							<input type="text" name="price_min" placeholder="Min Price" value="{{ filter_params.price_min }}">
-						</div>
-					</div>
-					<div class="col-lg-6">
-						<div class="input-area">
-							<input type="text" name="price_max" placeholder="Max Price" value="{{ filter_params.price_max }}">
-						</div>
-					</div>
-					<div class="col-lg-6">
-						<div class="input-area">
-							<input type="text" name="size_min" placeholder="Min Size" value="{{ filter_params.size_min }}">
-						</div>
-					</div>
-					<div class="col-lg-6">
-						<div class="input-area">
-							<input type="text" name="size_max" placeholder="Max Size" value="{{ filter_params.size_max }}">
-						</div>
-					</div>
-				</div>
-				<div class="mt-3">
-					<button type="submit" class="theme-btn1">
-						Filter
-						<span class="arrow1">
-							<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" width="24" height="24" fill="currentColor">
-								<path d="M12 13H4V11H12V4L20 12L12 20V13Z"></path>
-							</svg>
-						</span>
-						<span class="arrow2">
-							<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" width="24" height="24" fill="currentColor">
-								<path d="M12 13H4V11H12V4L20 12L12 20V13Z"></path>
-							</svg>
-						</span>
-					</button>
-				</div>
-			</form>
-		</div>
-		<div class="space32"></div>
-		<h3>Amenities</h3>
-		<div class="space12"></div>
-		<div class="row">
-			<div class="col-lg-6 col-md-6">
-				<fieldset class="checkbox-item style-1">
-					<label>
-					<input type="checkbox">
-					<span class="btn-checkbox"></span>
-					<span class="text-4">Air Condition </span>
-					</label>
-				</fieldset>
-				<div class="space32"></div>
-			</div>
-			<div class="col-lg-12">
-				<div class="btn-area1">
-					<a href="{% url 'frontend:home' %}" class="theme-btn1">
-						Find Your Dream Property 
-						<span class="arrow1">
-							<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" width="24" height="24" fill="currentColor">
-								<path d="M12 13H4V11H12V4L20 12L12 20V13Z"></path>
-							</svg>
-						</span>
-						<span class="arrow2">
-							<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" width="24" height="24" fill="currentColor">
-								<path d="M12 13H4V11H12V4L20 12L12 20V13Z"></path>
-							</svg>
-						</span>
-					</a>
-				</div>
-			</div>
+                <div class="input-area">
+                    <input type="text" name="keyword" placeholder="Type keyword" value="{{ filter_params.keyword }}">
+                </div>
+                <div class="input-area">
+                    <input type="text" name="address" placeholder="Address" value="{{ filter_params.address }}">
+                </div>
+                <div class="input-area">
+                    <select name="type" class="nice-select">
+                        <option value="">All Property Types</option>
+                        {% for code, name in property_types %}
+                            <option value="{{ code }}" {% if filter_params.type == code %}selected{% endif %}>{{ name }}</option>
+                        {% endfor %}
+                    </select>
+                </div>
+                <div class="input-area">
+                    <select name="category" class="nice-select">
+                        <option value="">All Property Categories</option>
+                        {% for code, name in property_categories %}
+                            <option value="{{ code }}" {% if filter_params.category == code %}selected{% endif %}>{{ name }}</option>
+                        {% endfor %}
+                    </select>
+                </div>
+                <div class="input-area m-0">
+                    <select name="city" class="nice-select">
+                        <option value="">All Cities</option>
+                        {% for code, name in city_choices %}
+                            <option value="{{ code }}" {% if filter_params.city == code %}selected{% endif %}>{{ name }}</option>
+                        {% endfor %}
+                    </select>
+                </div>
+                <div class="input-area">
+                    <select name="capacity" class="nice-select">
+                        <option value="">Bedrooms</option>
+                        <option value="1" {% if filter_params.capacity == "1" %}selected{% endif %}>01</option>
+                        <option value="2" {% if filter_params.capacity == "2" %}selected{% endif %}>02</option>
+                        <option value="3" {% if filter_params.capacity == "3" %}selected{% endif %}>03</option>
+                        <option value="4" {% if filter_params.capacity == "4" %}selected{% endif %}>04</option>
+                        <option value="5" {% if filter_params.capacity == "5" %}selected{% endif %}>05</option>
+                    </select>
+                </div>
+                <div class="input-area">
+                    <select name="bathroom" class="nice-select">
+                        <option value="">Bathrooms</option>
+                        <option value="1" {% if filter_params.bathroom == "1" %}selected{% endif %}>01</option>
+                        <option value="2" {% if filter_params.bathroom == "2" %}selected{% endif %}>02</option>
+                        <option value="3" {% if filter_params.bathroom == "3" %}selected{% endif %}>03</option>
+                        <option value="4" {% if filter_params.bathroom == "4" %}selected{% endif %}>04</option>
+                        <option value="5" {% if filter_params.bathroom == "5" %}selected{% endif %}>05</option>
+                    </select>
+                </div>
+                <div class="row">
+                    <div class="col-lg-6">
+                        <div class="input-area">
+                            <input type="text" name="price_min" placeholder="Min Price" value="{{ filter_params.price_min }}">
+                        </div>
+                    </div>
+                    <div class="col-lg-6">
+                        <div class="input-area">
+                            <input type="text" name="price_max" placeholder="Max Price" value="{{ filter_params.price_max }}">
+                        </div>
+                    </div>
+                    <div class="col-lg-6">
+                        <div class="input-area">
+                            <input type="text" name="size_min" placeholder="Min Size" value="{{ filter_params.size_min }}">
+                        </div>
+                    </div>
+                    <div class="col-lg-6">
+                        <div class="input-area">
+                            <input type="text" name="size_max" placeholder="Max Size" value="{{ filter_params.size_max }}">
+                        </div>
+                    </div>
+                </div>
+                <!-- Multi-select Amenities -->
+                <div class="mt-3">
+                    <div class="space12"></div>
+                    <div class="row">
+                        {% for amenity in amenities_list %}
+                        <div class="col-lg-6 col-md-6">
+                            <fieldset class="checkbox-item style-1">
+                                <label>
+                                    <input type="checkbox" name="amenities" value="{{ amenity.id }}"
+                                    {% if amenity.id|stringformat:"s" in selected_amenities %}checked{% endif %}>
+                                    <span class="btn-checkbox"></span>
+                                    <span class="text-4">{{ amenity.name }}</span>
+                                </label>
+                            </fieldset>
+                            <div class="space32"></div>
+                        </div>
+                        {% endfor %}
+                    </div>
+                </div>
+                <div class="mt-3">
+                    <button type="submit" class="theme-btn1">
+                        Filter
+                        <span class="arrow1">
+                            <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" width="24" height="24" fill="currentColor">
+                                <path d="M12 13H4V11H12V4L20 12L12 20V13Z"></path>
+                            </svg>
+                        </span>
+                        <span class="arrow2">
+                            <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" width="24" height="24" fill="currentColor">
+                                <path d="M12 13H4V11H12V4L20 12L12 20V13Z"></path>
+                            </svg>
+                        </span>
+                    </button>
+                    <a href="{% url 'frontend:getProperties' %}" class="btn btn-secondary ms-2">Reset Filters</a>
+                </div>
+            </form>
 		</div>
 	</div>
 	<div class="space30"></div>
