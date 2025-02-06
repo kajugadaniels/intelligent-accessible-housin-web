@@ -107,6 +107,24 @@ def property_image_path(instance, filename):
     return f'properties/property_{slugify(instance.name)}_{instance.created_at}{file_extension}'
 
 class Property(models.Model):
+    CITY_CHOICES = (
+        ('Rebero', 'Rebero'),
+        ('Gacuriro', 'Gacuriro'),
+        ('Nyamirambo', 'Nyamirambo'),
+        ('Nyamata', 'Nyamata'),
+        ('Gisenyi', 'Gisenyi'),
+    )
+    TYPE_CHOICES = (
+        ('Featured', 'Featured'),
+        ('Rent', 'Rent'),
+        ('Sale', 'Sale'),
+    )
+    CATEGORY_CHOICES = (
+        ('House', 'House'),
+        ('Apartment', 'Apartment'),
+        ('Villa', 'Villa'),
+        ('Office', 'Office'),
+    )
     name = models.CharField(max_length=255)
     slug = models.SlugField(unique=True, blank=True)
     description = models.TextField()
@@ -115,7 +133,11 @@ class Property(models.Model):
     price_usd = models.IntegerField(null=True, blank=True)
     price_rwf = models.IntegerField(null=True, blank=True)
 
-    capacity = models.IntegerField()
+    city = models.CharField(max_length=30, choices=CITY_CHOICES, null=True, blank=True)
+    type = models.CharField(max_length=30, choices=TYPE_CHOICES, null=True, blank=True)
+    category = models.CharField(max_length=30, choices=CATEGORY_CHOICES, null=True, blank=True)
+    bathroom = models.IntegerField(null=True, blank=True)
+    capacity = models.IntegerField(null=True, blank=True)
     size = models.CharField(max_length=255, null=True, blank=True)
     image = ProcessedImageField(
         upload_to=property_image_path,
