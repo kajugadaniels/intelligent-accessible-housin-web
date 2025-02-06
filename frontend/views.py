@@ -54,11 +54,9 @@ def getProperties(request):
     if price_max:
         properties = properties.filter(price_usd__lte=price_max)
 
-    # --- Filtering by Amenities (multiple selection) ---
-    # Get all selected amenity IDs (as strings)
-    selected_amenities = request.GET.getlist('amenity')
+    # --- Filtering by Multiple Amenities ---
+    selected_amenities = request.GET.getlist('amenities')
     if selected_amenities:
-        # Filter properties that have at least one of the selected amenities.
         properties = properties.filter(amenities__id__in=selected_amenities).distinct()
 
     # --- Sorting ---
@@ -73,11 +71,11 @@ def getProperties(request):
     else:
         properties = properties.order_by('-created_at')
 
-    # --- Sidebar & Dynamic Filters ---
-    latest_properties = Property.objects.order_by('-created_at')[:4]
+    # --- Dynamic Filter Options ---
     city_choices = Property.CITY_CHOICES
     property_types = Property.TYPE_CHOICES
     amenities_list = Amenity.objects.all()
+    latest_properties = Property.objects.order_by('-created_at')[:4]
 
     # --- Pagination ---
     limit = request.GET.get('limit', 12)
