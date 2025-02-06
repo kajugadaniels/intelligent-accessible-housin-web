@@ -11,9 +11,9 @@ from django.contrib.auth.decorators import login_required
 from django.shortcuts import render, redirect, get_object_or_404
 from django.contrib.auth import authenticate, login as auth_login, logout, update_session_auth_hash
 
-# -------------------------------
+# --------------------------------
 # Authentication and profile views
-# -------------------------------
+# --------------------------------
 
 def userLogin(request):
     if request.user.is_authenticated:
@@ -435,18 +435,20 @@ def editProperty(request, id):
 
 @login_required
 def deletePropertyImage(request, image_id):
+    """
+    Deletes an additional image via AJAX.
+    Expects a POST request with proper CSRF token.
+    """
     image_instance = get_object_or_404(PropertyImage, id=image_id, property__created_by=request.user)
     if request.method == 'POST':
         property_id = image_instance.property.id
         image_instance.delete()
-        messages.success(request, _("The image has been deleted successfully."))
-        return redirect(reverse('backend:editProperty', kwargs={'id': property_id}))
-
-    context = {
-        'image': image_instance
-    }
-
-    return render(request, 'backend/pages/properties/delete_image.html', context)
+        return JsonResponse({
+            'success': True,
+            'message': _("The image has been deleted successfully."),
+            'property_id': property_id,
+        })
+    return JsonResponse({'error': _('Invalid request.')}, status=400)
 
 @login_required
 def deleteProperty(request, id):
