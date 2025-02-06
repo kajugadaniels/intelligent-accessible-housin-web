@@ -434,6 +434,21 @@ def editProperty(request, id):
     return render(request, 'backend/pages/properties/edit.html', context)
 
 @login_required
+def deletePropertyImage(request, image_id):
+    image_instance = get_object_or_404(PropertyImage, id=image_id, property__created_by=request.user)
+    if request.method == 'POST':
+        property_id = image_instance.property.id
+        image_instance.delete()
+        messages.success(request, _("The image has been deleted successfully."))
+        return redirect(reverse('backend:editProperty', kwargs={'id': property_id}))
+
+    context = {
+        'image': image_instance
+    }
+
+    return render(request, 'backend/pages/properties/delete_image.html', context)
+
+@login_required
 def deleteProperty(request, id):
     if request.user.role != 'House Provider':
         raise PermissionDenied(_("You are not authorized to delete this Property."))
