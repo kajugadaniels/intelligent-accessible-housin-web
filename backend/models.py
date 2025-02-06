@@ -143,6 +143,7 @@ class Property(models.Model):
     image = ProcessedImageField(
         upload_to=property_image_path,
         format='JPEG',
+        processors=[ResizeToFill(1340, 894)],
         options={'quality': 90},
         null=True,
         blank=True,
@@ -217,7 +218,7 @@ class PropertyImage(models.Model):
     property = models.ForeignKey(Property, related_name='images', on_delete=models.CASCADE)
     image = ProcessedImageField(
         upload_to=property_add_on_image_path,
-        # processors=[ResizeToFill(1340, 894)],
+        processors=[ResizeToFill(1340, 894)],
         format='JPEG',
         options={'quality': 90},
         null=True,

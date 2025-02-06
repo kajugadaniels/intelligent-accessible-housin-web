@@ -356,7 +356,6 @@ def getProperties(request):
 
     return render(request, 'backend/pages/properties/index.html', context)
 
-
 @login_required
 def addProperty(request):
     if request.user.role != 'House Provider':
