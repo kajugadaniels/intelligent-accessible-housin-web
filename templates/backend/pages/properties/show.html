@@ -4,63 +4,111 @@
 {% block content %}
 
 <div class="container-fluid">
-    <div class="row">
-        <div class="col-sm-12">
-            <div class="card">
-                <div class="card-body">
-                    <div class="list-product-header">
-                        <div class="d-flex justify-content-between">
-                            <h4>Details on Property</h4>
-                            <a class="btn btn-primary" href="{% url 'backend:getProperties' %}"><i class="fa fa-arrow-left"></i> Go Back</a>
-                        </div>
-                    </div>
-                    <hr>
-                    <div class="row">
-                        <div class="col-md-12">
-                            <table class="table table-striped mb-3">
-                                <tr>
-                                    <th>Name:</th>
-                                    <td>{{ property.name }}</td>
-                                </tr>
-                                <tr>
-                                    <th>Description:</th>
-                                    <td>{{ property.description }}</td>
-                                </tr>
-                                <tr>
-                                    <th>Price (USD):</th>
-                                    <td>{{ property.price_usd }}</td>
-                                </tr>
-                                <tr>
-                                    <th>Price (RWF):</th>
-                                    <td>{{ property.price_rwf }}</td>
-                                </tr>
-                                <tr>
-                                    <th>Capacity:</th>
-                                    <td>{{ property.capacity }}</td>
-                                </tr>
-                                <tr>
-                                    <th>Size:</th>
-                                    <td>{{ property.size }}</td>
-                                </tr>
-                                <tr>
-                                    <th>Created At:</th>
-                                    <td>{{ property.created_at|naturaltime }}</td>
-                                </tr>
-                                <tr>
-                                    <th>Updated At:</th>
-                                    <td>{{ property.updated_at|naturaltime }}</td>
-                                </tr>
-                            </table>
-                            <div class="text-end">
-                                <a class="btn btn-primary" href="{% url 'backend:editProperty' property.id %}"><i class="fa fa-edit"></i> Edit</a>
-                                <a class="btn btn-danger" href="{% url 'backend:deleteProperty' property.id %}"><i class="fa fa-trash"></i> Delete</a>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-            </div>
-        </div>
-    </div>
+	<div>
+		<div class="list-product-header">
+			<div class="d-flex justify-content-between">
+				<h4>Details on Property</h4>
+				<a class="btn btn-primary" href="{% url 'backend:getProperties' %}"><i class="fa fa-arrow-left"></i> Go Back</a>
+			</div>
+		</div>
+		<div class="row product-page-main p-0">
+			<div class="col-md-5 box-col-4">
+				<div class="card">
+					<div class="card-body">
+						<img src="{{ property.image.url }}" alt="" style="width: 100%;">
+					</div>
+				</div>
+			</div>
+			<div class="col-md-7 box-col-8 order-xxl-0 order-1">
+				<div class="card">
+					<div class="card-body">
+						<div class="product-page-details">
+							<h3 class="f-w-600" style="font-size: 18px;">
+								{{ property.name }}
+							</h3>
+						</div>
+						<div class="product-price" style="font-size: 14px;">
+							{{ property.price_rwf|intcomma }} RWF
+						</div>
+						<hr>
+						<p>
+                            {{ property.description|truncatechars:200 }}
+                        </p>
+						<hr>
+						<div>
+							<table class="product-page-width">
+								<tbody>
+									<tr>
+										<td> <b>Rooms &nbsp;&nbsp;&nbsp;:</b></td>
+										<td>{{ property.capacity }}</td>
+                                    </tr>
+									<tr>
+										<td> <b>Size &nbsp;&nbsp;&nbsp;:</b></td>
+										<td>{{ property.size }}</td>
+                                    </tr>
+								</tbody>
+							</table>
+						</div>
+						<hr>
+						<div class="row">
+							<div class="col-md-4">
+								<h5 class="f-w-600 product-title">share it</h5>
+							</div>
+							<div class="col-md-8">
+								<div class="product-icon">
+									<ul class="product-social">
+										<li class="d-inline-block"><a href="https://www.facebook.com/" target="_blank"><i class="fa fa-facebook"></i></a></li>
+										<li class="d-inline-block"><a href="https://accounts.google.com/" target="_blank"><i class="fa fa-google-plus"></i></a></li>
+										<li class="d-inline-block"><a href="https://twitter.com/" target="_blank"><i class="fa fa-twitter"></i></a></li>
+										<li class="d-inline-block"><a href="https://www.instagram.com/" target="_blank"><i class="fa fa-instagram"></i></a></li>
+										<li class="d-inline-block"><a href="https://rss.app/" target="_blank"><i class="fa fa-rss"></i></a></li>
+									</ul>
+									<form class="d-inline-block f-right"></form>
+								</div>
+							</div>
+						</div>
+						<hr>
+						<div class="row">
+							<div class="col-md-4">
+								<h5 class="f-w-600 product-title">Rate Now</h5>
+							</div>
+							<div class="col-md-8">
+								<div class="d-flex">
+									<select id="u-rating-fontawesome" name="rating" autocomplete="off">
+										<option value="1">1</option>
+										<option value="2">2</option>
+										<option value="3">3</option>
+										<option value="4">4</option>
+										<option value="5">5</option>
+									</select>
+									<span class="ms-1">(250 review)</span>
+								</div>
+							</div>
+						</div>
+					</div>
+				</div>
+			</div>
+		</div>
+	</div>
+	<div class="card">
+		<div class="row product-page-main">
+			<div class="col-sm-12">
+				<ul class="nav nav-tabs border-tab nav-primary mb-0" id="top-tab" role="tablist">
+					<li class="nav-item">
+						<a class="nav-link active" id="top-home-tab" data-bs-toggle="tab" href="#top-home" role="tab" aria-controls="top-home" aria-selected="false">Description</a>
+						<div class="material-border"></div>
+					</li>
+				</ul>
+				<div class="tab-content" id="top-tabContent">
+					<div class="tab-pane fade active show" id="top-home" role="tabpanel" aria-labelledby="top-home-tab">
+						<p class="mb-0 m-t-20">
+							{{ property.description }}
+						</p>
+					</div>
+				</div>
+			</div>
+		</div>
+	</div>
 </div>
 
 {% endblock %}
