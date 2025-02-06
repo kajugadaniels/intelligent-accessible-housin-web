@@ -1,12 +1,19 @@
+import random
 from backend.forms import *
+from backend.models import *
 from django.urls import reverse
 from django.contrib import messages
 from django.http import JsonResponse
+from django.core.exceptions import PermissionDenied
 from django.views.decorators.csrf import csrf_exempt
 from django.utils.translation import gettext_lazy as _
 from django.contrib.auth.decorators import login_required
 from django.shortcuts import render, redirect, get_object_or_404
 from django.contrib.auth import authenticate, login as auth_login, logout, update_session_auth_hash
+
+# -------------------------------
+# Authentication and profile views
+# -------------------------------
 
 def userLogin(request):
     if request.user.is_authenticated:
@@ -21,7 +28,7 @@ def userLogin(request):
             messages.success(request, _("Welcome back! You have successfully logged in."))
             return redirect(reverse('backend:dashboard'))
         else:
-            # Extract form errors and display them as individual messages
+            # Extract and display form errors
             for field, errors in form.errors.items():
                 for error in errors:
                     messages.error(request, error)
@@ -30,18 +37,22 @@ def userLogin(request):
         form = LoginForm()
 
     context = {
-        'form': form,
+        'form': form
     }
 
     return render(request, 'backend/pages/auth/login.html', context)
 
+
 def userLogout(request):
     logout(request)
     messages.success(request, _("You have been successfully logged out."))
+
     return redirect('backend:login')
+
 
 @login_required
 def userProfile(request):
+    # Profile page: accessible for all logged-in users.
     user = request.user
     profile_form = UserProfileForm(instance=user)
     password_form = PasswordChangeForm(user=user)
@@ -50,7 +61,7 @@ def userProfile(request):
         if 'update_profile' in request.POST:
             profile_form = UserProfileForm(request.POST, request.FILES, instance=user)
             if profile_form.is_valid():
-                # Handle image deletion if a new image is uploaded
+                # Delete old image if a new one is uploaded
                 if 'image' in request.FILES and user.image:
                     user.image.delete(save=False)
                 profile_form.save()
@@ -58,7 +69,6 @@ def userProfile(request):
                 return redirect('backend:userProfile')
             else:
                 messages.error(request, _("Please correct the errors in the profile form and try again."))
-
         elif 'change_password' in request.POST:
             password_form = PasswordChangeForm(user, request.POST)
             if password_form.is_valid():
@@ -78,15 +88,29 @@ def userProfile(request):
 
     return render(request, 'backend/pages/auth/profile.html', context)
 
+
+# -------------------------------
+# Dashboard
+# -------------------------------
+
 @login_required
 def dashboard(request):
+    # Only Admin and House Provider are allowed to access the dashboard.
+    if request.user.role not in ['Admin', 'House Provider'] and not request.user.is_superuser:
+        raise PermissionDenied(_("You are not authorized to view the dashboard."))
+
     return render(request, 'backend/pages/dashboard.html')
+
+
+# -------------------------------
+# Admin-only views (Agents, Rentals, Leases, Applications)
+# -------------------------------
 
 @login_required
 def getHouseProviders(request):
-    if not (request.user.is_superuser or request.user.role == 'Admin'):
-        messages.error(request, _("You are not authorized to access this page."))
-        return redirect('backend:dashboard')
+    # Only Admin (or superuser) may view House Providers
+    if not (request.user.role == 'Admin'):
+        raise PermissionDenied(_("You are not authorized to access the House Providers page."))
 
     houseProviders = User.objects.filter(role='House Provider').order_by('-created_at')
 
@@ -96,11 +120,11 @@ def getHouseProviders(request):
 
     return render(request, 'backend/pages/houseProviders/index.html', context)
 
+
 @login_required
 def addHouseProvider(request):
-    if not (request.user.is_superuser or request.user.role == 'Admin'):
-        messages.error(request, _("You are not authorized to perform this action."))
-        return redirect('backend:dashboard')
+    if not (request.user.role == 'Admin'):
+        raise PermissionDenied(_("You are not authorized to add a House Provider."))
 
     if request.method == 'POST':
         form = HouseProviderUserCreationForm(request.POST, request.FILES)
@@ -120,11 +144,11 @@ def addHouseProvider(request):
 
     return render(request, 'backend/pages/houseProviders/create.html', context)
 
+
 @login_required
 def showHouseProvider(request, id):
-    if not (request.user.is_superuser or request.user.role == 'Admin'):
-        messages.error(request, _("You are not authorized to access this page."))
-        return redirect('backend:dashboard')
+    if not (request.user.role == 'Admin'):
+        raise PermissionDenied(_("You are not authorized to view this House Provider."))
 
     houseProvider = get_object_or_404(User, id=id, role='House Provider')
 
@@ -135,14 +159,13 @@ def showHouseProvider(request, id):
 
     return render(request, 'backend/pages/houseProviders/show.html', context)
 
+
 @login_required
 def editHouseProvider(request, id):
-    if not (request.user.is_superuser or request.user.role == 'Admin'):
-        messages.error(request, _("You are not authorized to perform this action."))
-        return redirect('backend:dashboard')
+    if not (request.user.role == 'Admin'):
+        raise PermissionDenied(_("You are not authorized to edit this House Provider."))
 
     houseProvider = get_object_or_404(User, id=id, role='House Provider')
-
     if request.method == 'POST':
         form = UserProfileForm(request.POST, request.FILES, instance=houseProvider)
         if form.is_valid():
@@ -150,7 +173,7 @@ def editHouseProvider(request, id):
             messages.success(request, _("House Provider '%(name)s' has been updated successfully.") % {'name': houseProvider.name})
             return redirect(reverse('backend:getHouseProviders'))
         else:
-            messages.error(request, _("Please correct the errors below."))
+            messages.error(request, _("Please correct the errors below and try again."))
     else:
         form = UserProfileForm(instance=houseProvider)
 
@@ -161,11 +184,11 @@ def editHouseProvider(request, id):
 
     return render(request, 'backend/pages/houseProviders/edit.html', context)
 
+
 @login_required
 def deleteHouseProvider(request, id):
-    if not (request.user.is_superuser or request.user.role == 'Admin'):
-        messages.error(request, _("You are not authorized to perform this action."))
-        return redirect('backend:dashboard')
+    if not (request.user.role == 'Admin'):
+        raise PermissionDenied(_("You are not authorized to delete this House Provider."))
 
     houseProvider = get_object_or_404(User, id=id, role='House Provider')
 
@@ -180,25 +203,59 @@ def deleteHouseProvider(request, id):
 
     return render(request, 'backend/pages/houseProviders/delete.html', context)
 
+
+@login_required
+def getRentals(request):
+    # Rentals page: Admin-only (or superuser)
+    if not (request.user.role == 'Admin'):
+        raise PermissionDenied(_("You are not authorized to view the Rentals page."))
+
+    return render(request, 'backend/pages/rentals/index.html')
+
+
+@login_required
+def getLeases(request):
+    # Leases page: Admin-only (or superuser)
+    if not (request.user.role == 'Admin'):
+        raise PermissionDenied(_("You are not authorized to view the Leases page."))
+
+    return render(request, 'backend/pages/leases/index.html')
+
+
+@login_required
+def getApplications(request):
+    # Applications page: Admin-only (or superuser)
+    if not (request.user.role == 'Admin'):
+        raise PermissionDenied(_("You are not authorized to view the Applications page."))
+
+    return render(request, 'backend/pages/applications/index.html')
+
+
+# -------------------------------
+# House Provider-only views (Amenities, Properties, Notifications)
+# -------------------------------
+
 @login_required
 def getAmenities(request):
-    """
-    Retrieve and display all amenities instances.
-    """
-    if request.user.is_superuser or request.user.role == 'Admin':
-        amenities = Amenity.objects.all().order_by('-created_at')
-    else:
-        amenities = Amenity.objects.filter(created_by=request.user).order_by('-created_at')
+    # Only House Providers may access amenities pages.
+    if request.user.role != 'House Provider':
+        raise PermissionDenied(_("You are not authorized to access the Amenities page."))
+
+    amenities = Amenity.objects.all().order_by('-created_at')
 
     context = {
-        'amenities': amenities,
+        'amenities': amenities
     }
 
     return render(request, 'backend/pages/amenities/index.html', context)
 
+
 @csrf_exempt
 @login_required
 def addAmenity(request):
+    if request.user.role != 'House Provider':
+        raise PermissionDenied(_("You are not authorized to add an Amenity."))
+
     if request.method == 'POST':
         form = AmenityForm(request.POST)
         if form.is_valid():
@@ -223,18 +280,15 @@ def addAmenity(request):
         'form': form,
         'title': _('Add New Amenity')
     }
-
     return render(request, 'backend/pages/amenities/create.html', context)
+
 
 @login_required
 def showAmenity(request, id):
-    """
-    Show an existing Amenity instance identified by its ID.
-    """
-    if request.user.is_superuser or request.user.role == 'Admin':
-        amenity = get_object_or_404(Amenity, id=id)
-    else:
-        amenity = get_object_or_404(Amenity, id=id, created_by=request.user)
+    if request.user.role != 'House Provider':
+        raise PermissionDenied(_("You are not authorized to view this Amenity."))
+
+    amenity = get_object_or_404(Amenity, id=id)
 
     context = {
         'amenity': amenity,
@@ -243,12 +297,14 @@ def showAmenity(request, id):
 
     return render(request, 'backend/pages/amenities/show.html', context)
 
+
 @login_required
 def editAmenity(request, id):
-    if request.user.is_superuser or request.user.role == 'Admin':
-        amenity = get_object_or_404(Amenity, id=id)
-    else:
-        amenity = get_object_or_404(Amenity, id=id, created_by=request.user)
+    if request.user.role != 'House Provider':
+        raise PermissionDenied(_("You are not authorized to edit this Amenity."))
+
+    amenity = get_object_or_404(Amenity, id=id)
+
     if request.method == 'POST':
         form = AmenityForm(request.POST, instance=amenity)
         if form.is_valid():
@@ -267,36 +323,32 @@ def editAmenity(request, id):
 
     return render(request, 'backend/pages/amenities/edit.html', context)
 
+
 @login_required
 def deleteAmenity(request, id):
-    """
-    Delete an existing Amenity instance identified by its ID.
-    """
-    if request.user.is_superuser or request.user.role == 'Admin':
-        amenity = get_object_or_404(Amenity, id=id)
-    else:
-        amenity = get_object_or_404(Amenity, id=id, created_by=request.user)
+    if request.user.role != 'House Provider':
+        raise PermissionDenied(_("You are not authorized to delete this Amenity."))
+
+    amenity = get_object_or_404(Amenity, id=id)
 
     if request.method == 'POST':
         amenity.delete()
-        messages.success(
-            request, 
-            _("The amenity '%(amenity)s' has been deleted successfully.") % {'amenity': amenity.name}
-        )
+        messages.success(request, _("The amenity '%(amenity)s' has been deleted successfully.") % {'amenity': amenity.name})
         return redirect(reverse('backend:getAmenities'))
-    
+
     context = {
-        'amenity': amenity,
+        'amenity': amenity
     }
 
     return render(request, 'backend/pages/amenities/delete.html', context)
 
+
 @login_required
 def getProperties(request):
-    if request.user.is_superuser or request.user.role == 'Admin':
-        properties = Property.objects.all().order_by('-created_at')
-    else:
-        properties = Property.objects.filter(created_by=request.user).order_by('-created_at')
+    if request.user.role != 'House Provider':
+        raise PermissionDenied(_("You are not authorized to access the Properties page."))
+
+    properties = Property.objects.filter(created_by=request.user).order_by('-created_at')
 
     context = {
         'properties': properties
@@ -304,8 +356,12 @@ def getProperties(request):
 
     return render(request, 'backend/pages/properties/index.html', context)
 
+
 @login_required
 def addProperty(request):
+    if request.user.role != 'House Provider':
+        raise PermissionDenied(_("You are not authorized to add a Property."))
+
     if request.method == 'POST':
         form = PropertyForm(request.POST, request.FILES)
         if form.is_valid():
@@ -327,12 +383,13 @@ def addProperty(request):
 
     return render(request, 'backend/pages/properties/create.html', context)
 
+
 @login_required
 def showProperty(request, id):
-    if request.user.is_superuser or request.user.role == 'Admin':
-        property_instance = get_object_or_404(Property, id=id)
-    else:
-        property_instance = get_object_or_404(Property, id=id, created_by=request.user)
+    if request.user.role != 'House Provider':
+        raise PermissionDenied(_("You are not authorized to view this Property."))
+
+    property_instance = get_object_or_404(Property, id=id, created_by=request.user)
 
     context = {
         'property': property_instance,
@@ -341,12 +398,13 @@ def showProperty(request, id):
 
     return render(request, 'backend/pages/properties/show.html', context)
 
+
 @login_required
 def editProperty(request, id):
-    if request.user.is_superuser or request.user.role == 'Admin':
-        property_instance = get_object_or_404(Property, id=id)
-    else:
-        property_instance = get_object_or_404(Property, id=id, created_by=request.user)
+    if request.user.role != 'House Provider':
+        raise PermissionDenied(_("You are not authorized to edit this Property."))
+
+    property_instance = get_object_or_404(Property, id=id, created_by=request.user)
 
     if request.method == 'POST':
         form = PropertyForm(request.POST, request.FILES, instance=property_instance)
@@ -366,12 +424,13 @@ def editProperty(request, id):
 
     return render(request, 'backend/pages/properties/edit.html', context)
 
+
 @login_required
 def deleteProperty(request, id):
-    if request.user.is_superuser or request.user.role == 'Admin':
-        property_instance = get_object_or_404(Property, id=id)
-    else:
-        property_instance = get_object_or_404(Property, id=id, created_by=request.user)
+    if request.user.role != 'House Provider':
+        raise PermissionDenied(_("You are not authorized to delete this Property."))
+
+    property_instance = get_object_or_404(Property, id=id, created_by=request.user)
 
     if request.method == 'POST':
         property_instance.delete()
@@ -383,3 +442,12 @@ def deleteProperty(request, id):
     }
 
     return render(request, 'backend/pages/properties/delete.html', context)
+
+
+@login_required
+def getNotifications(request):
+    # Notifications page: allowed only for House Providers.
+    if request.user.role != 'House Provider':
+        raise PermissionDenied(_("You are not authorized to view the Notifications page."))
+
+    return render(request, 'backend/pages/notifications/index.html')
