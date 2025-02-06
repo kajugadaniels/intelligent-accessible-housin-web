@@ -47,11 +47,15 @@
 									<div class="d-flex mb-3">
                                         <div class="col-md-4">
                                             <i class="icon-home"></i>
-                                            {{ property.size }}
+                                            {{ property.size }} sqf
                                         </div>
                                         <div class="col-md-4">
                                             <i class="fa fa-bed"></i>
                                             {{ property.capacity }} Rooms
+                                        </div>
+                                        <div class="col-md-4">
+                                            <i class="fa fa-bathtub"></i>
+                                            {{ property.bathroom }} Bath
                                         </div>
                                     </div>
 									<a href="{% url 'backend:showProperty' property.id %}" class="mb-3">
