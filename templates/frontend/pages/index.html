@@ -1,4 +1,5 @@
 {% extends 'frontend/layouts/app.html' %}
+{% load humanize %}
 {% block content %}
 
     {% include 'frontend/inc/hero.html' %}
@@ -100,53 +101,71 @@
                     <div class="property-feature-slider">
                         <div class="col-lg-12 m-auto">
                             <div class="row">
-                                <div class="col-lg-4 col-md-6">
-                                    <div class="property-boxarea">
-                                        <div class="img1 image-anime">
-                                            <div class="swiper swiper-fade">
-                                                <div class="swiper-wrapper">
-                                                    <div class="swiper-slide">
-                                                        <img src="https://housebox-html-demo.vercel.app/assets/img/all-images/properties/property-img5.png" alt="housebox">
+                                {% if properties %}
+                                    {% for property in properties %}
+                                        <div class="col-lg-4 col-md-6">
+                                            <div class="property-boxarea">
+                                                <div class="img1 image-anime">
+                                                    <div class="swiper swiper-fade">
+                                                        <div class="swiper-wrapper">
+                                                            {% if property.image %}
+                                                                <div class="swiper-slide">
+                                                                    <img src="{{ property.image.url }}" alt="{{ property.name }}">
+                                                                </div>
+                                                            {% else %}
+                                                                <div class="swiper-slide">
+                                                                    <img src="https://via.placeholder.com/720x480.png?text=No+Image" alt="{{ property.name }}">
+                                                                </div>
+                                                            {% endif %}
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                                <div class="category-list">
+                                                    <ul>
+                                                        <li>
+                                                            <a href="#">{{ property.type }}</a>
+                                                        </li>
+                                                        <li>
+                                                            <a href="#">{{ property.category }}</a>
+                                                        </li>
+                                                    </ul>
+                                                </div>
+                                                <div class="content-area">
+                                                    <a href="{% url 'frontend:showProperty' property.slug %}" style="font-size: 18px;">
+                                                        {{ property.name }}
+                                                    </a>
+                                                    <div class="space18"></div>
+                                                    <p>
+                                                        {{ property.address }}
+                                                    </p>
+                                                    <div class="space24"></div>
+                                                    <ul>
+                                                        {% if property.capacity %}
+                                                            <li><a href="#"><img src="https://housebox-html-demo.vercel.app/assets/img/icons/bed1.svg" alt="bed">x{{ property.capacity }}</a></li>
+                                                        {% endif %}
+                                                        {% if property.bathroom %}
+                                                            <li><a href="#"><img src="https://housebox-html-demo.vercel.app/assets/img/icons/bath1.svg" alt="bath">x{{ property.bathroom }}</a></li>
+                                                        {% endif %}
+                                                        {% if property.size %}
+                                                            <li><a href="#"><img src="https://housebox-html-demo.vercel.app/assets/img/icons/sqare1.svg" alt="size">{{ property.size }}</a></li>
+                                                        {% endif %}
+                                                    </ul>
+                                                    <div class="btn-area">
+                                                        <a href="#" class="nm-btn">
+                                                            {% if property.price_rwf|intcomma %}
+                                                                {{ property.price_rwf|intcomma }} RWF
+                                                            {% else %}
+                                                                Contact for Price
+                                                            {% endif %}
+                                                        </a>
                                                     </div>
                                                 </div>
                                             </div>
                                         </div>
-                                        <div class="category-list">
-                                            <ul>
-                                                <li>
-                                                    <a href="#">
-                                                        Featured
-                                                    </a>
-                                                </li>
-                                                <li>
-                                                    <a href="#">
-                                                        For Sale
-                                                    </a>
-                                                </li>
-                                            </ul>
-                                        </div>
-                                        <div class="content-area">
-                                            <a href="#">
-                                                Gorgeous Home for Sale
-                                            </a>
-                                            <div class="space18"></div>
-                                            <p>
-                                                Los Angeles City, CA, USA
-                                            </p>
-                                            <div class="space24"></div>
-                                            <ul>
-                                                <li><a href="#"><img src="https://housebox-html-demo.vercel.app/assets/img/icons/bed1.svg" alt="housebox">x23</a></li>
-                                                <li><a href="#"><img src="https://housebox-html-demo.vercel.app/assets/img/icons/bath1.svg" alt="housebox">x34</a></li>
-                                                <li><a href="#"><img src="https://housebox-html-demo.vercel.app/assets/img/icons/sqare1.svg" alt="housebox">1200 sq</a></li>
-                                            </ul>
-                                            <div class="btn-area">
-                                                <a href="#" class="nm-btn">
-                                                    $820,000
-                                                </a>
-                                            </div>
-                                        </div>
-                                    </div>
-                                </div>
+                                    {% endfor %}
+                                {% else %}
+                                    <p class="text-center">No featured properties available.</p>
+                                {% endif %}
                             </div>
                         </div>
                     </div>
