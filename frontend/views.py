@@ -1,5 +1,6 @@
 from backend.models import *
 from django.shortcuts import render, get_object_or_404
+from django.core.paginator import Paginator, EmptyPage, PageNotAnInteger
 
 def home(request):
     """
@@ -14,13 +15,6 @@ def home(request):
     return render(request, 'frontend/pages/index.html', context)
 
 def getProperties(request):
-    """
-    Properties list view: 
-    - Retrieves properties with dynamic filtering and sorting.
-    - Filtering parameters include city, type, category, capacity, bathroom, size, address, and price.
-    - Default sorting is by newest first.
-    - The sidebar always displays the 4 latest properties.
-    """
     properties = Property.objects.all()
 
     # --- Filtering ---
@@ -60,6 +54,11 @@ def getProperties(request):
     if price_max:
         properties = properties.filter(price_usd__lte=price_max)
 
+    # Filter by amenity if provided
+    amenity_id = request.GET.get('amenity')
+    if amenity_id:
+        properties = properties.filter(amenities__id=amenity_id)
+
     # --- Sorting ---
     sort = request.GET.get('sort')
     if sort:
@@ -72,14 +71,37 @@ def getProperties(request):
     else:
         properties = properties.order_by('-created_at')
 
-    # --- Sidebar: Latest Properties ---
+    # --- Sidebar & Dynamic Filters ---
     latest_properties = Property.objects.order_by('-created_at')[:4]
+    city_choices = Property.CITY_CHOICES
+    property_types = Property.TYPE_CHOICES
+    amenities_list = Amenity.objects.all()
+
+    # --- Pagination ---
+    limit = request.GET.get('limit', 12)
+    try:
+        limit = int(limit)
+    except ValueError:
+        limit = 12
+    paginator = Paginator(properties, limit)
+    page = request.GET.get('page')
+    try:
+        properties_page = paginator.page(page)
+    except PageNotAnInteger:
+        properties_page = paginator.page(1)
+    except EmptyPage:
+        properties_page = paginator.page(paginator.num_pages)
 
     context = {
-        'properties': properties,
+        'properties': properties_page,
         'latest_properties': latest_properties,
         'filter_params': request.GET,
-        'properties_count': properties.count(),
+        'properties_count': paginator.count,
+        'city_choices': city_choices,
+        'property_types': property_types,
+        'amenities_list': amenities_list,
+        'paginator': paginator,
+        'page_obj': properties_page,
     }
 
     return render(request, 'frontend/pages/properties/index.html', context)
