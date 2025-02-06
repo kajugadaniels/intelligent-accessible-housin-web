@@ -38,7 +38,7 @@ def userLogin(request):
 def userLogout(request):
     logout(request)
     messages.success(request, _("You have been successfully logged out."))
-    return redirect('auth:login')
+    return redirect('backend:login')
 
 @login_required
 def userProfile(request):
@@ -55,7 +55,7 @@ def userProfile(request):
                     user.image.delete(save=False)
                 profile_form.save()
                 messages.success(request, _("Your profile has been updated successfully."))
-                return redirect('auth:userProfile')
+                return redirect('backend:userProfile')
             else:
                 messages.error(request, _("Please correct the errors in the profile form and try again."))
 
@@ -67,7 +67,7 @@ def userProfile(request):
                 user.save()
                 update_session_auth_hash(request, user)
                 messages.success(request, _("Your password has been changed successfully."))
-                return redirect('auth:userProfile')
+                return redirect('backend:userProfile')
             else:
                 messages.error(request, _("Please correct the errors in the password form and try again."))
 
