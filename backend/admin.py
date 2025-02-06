@@ -8,6 +8,9 @@ class CustomUserAdmin(BaseUserAdmin):
     list_display = ('email', 'name', 'role', 'is_active', 'is_staff', 'created_at')
     search_fields = ('email', 'name', 'phone_number')
     list_filter = ('role', 'is_active', 'is_staff')
+    
+    # Mark non-editable fields as read-only
+    readonly_fields = ('last_login', 'created_at', 'updated_at')
 
     fieldsets = (
         (None, {'fields': ('email', 'password')}),
