@@ -369,6 +369,10 @@ def addProperty(request):
             property_instance.created_by = request.user
             property_instance.save()
             form.save_m2m()
+            # Process multiple additional images
+            images = request.FILES.getlist('images')
+            for img in images:
+                PropertyImage.objects.create(property=property_instance, image=img)
             messages.success(request, _("The property '%(property)s' has been created successfully.") % {'property': property_instance.name})
             return redirect(reverse('backend:getProperties'))
         else:
@@ -423,7 +427,6 @@ def editProperty(request, id):
     }
 
     return render(request, 'backend/pages/properties/edit.html', context)
-
 
 @login_required
 def deleteProperty(request, id):
