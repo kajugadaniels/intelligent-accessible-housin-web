@@ -74,6 +74,7 @@ def getProperties(request):
     # --- Dynamic Filter Options ---
     city_choices = Property.CITY_CHOICES
     property_types = Property.TYPE_CHOICES
+    property_categories = Property.CATEGORY_CHOICES
     amenities_list = Amenity.objects.all()
     latest_properties = Property.objects.order_by('-created_at')[:4]
 
@@ -99,6 +100,7 @@ def getProperties(request):
         'properties_count': paginator.count,
         'city_choices': city_choices,
         'property_types': property_types,
+        'property_categories': property_categories,
         'amenities_list': amenities_list,
         'selected_amenities': selected_amenities,
         'paginator': paginator,
