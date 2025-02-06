@@ -81,7 +81,20 @@ def getProperties(request):
         'filter_params': request.GET,
         'properties_count': properties.count(),
     }
+
     return render(request, 'frontend/pages/properties/index.html', context)
 
-def showProperty(request):
-    return render(request, 'frontend/pages/properties/show.html')
+def showProperty(request, slug):
+    """
+    Property detail view:
+    - Retrieves a single property based on its slug.
+    - Also includes additional data such as review statistics.
+    """
+    property_obj = get_object_or_404(Property, slug=slug)
+
+    context = {
+        'property': property_obj,
+        'review_data': property_obj.get_review_data() if hasattr(property_obj, 'get_review_data') else {},
+    }
+
+    return render(request, 'frontend/pages/properties/show.html', context)
