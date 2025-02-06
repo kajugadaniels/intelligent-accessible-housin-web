@@ -1,4 +1,5 @@
 {% extends 'frontend/layouts/app.html' %}
+{% load humanize %}
 {% block content %}
     <div class="hero-inner-section-area-sidebar">
         <img src="https://housebox-html-demo.vercel.app/assets/img/all-images/hero/hero-img1.png" alt="housebox" class="hero-img1" />
@@ -6,7 +7,7 @@
             <div class="row">
                 <div class="col-lg-12">
                     <div class="hero-header-area text-center">
-                        <a href="#">
+                        <a href="{% url 'frontend:home' %}">
                             Home
                             <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor">
                                 <path d="M13.1717 12.0007L8.22192 7.05093L9.63614 5.63672L16.0001 12.0007L9.63614 18.3646L8.22192 16.9504L13.1717 12.0007Z"></path>
@@ -30,79 +31,88 @@
                 <div class="col-lg-12">
                     <div class="property-mapgrid-area">
                         <div class="heading1">
-                            <h3>Properties (58)</h3>
+                            <h3>Properties ({{ properties_count }})</h3>
                             <div class="tabs-btn">
-                                <div class="d-flex">
+                                <form method="get" class="d-flex">
                                     <div class="filter-group me-3">
-                                        <select>
-                                            <option>Show:(12)</option>
-                                            <option>Show:(30)</option>
-                                            <option>Show:(50)</option>
+                                        <select name="limit" class="form-select">
+                                            <option value="12" {% if filter_params.limit == "12" %}selected{% endif %}>Show: 12</option>
+                                            <option value="30" {% if filter_params.limit == "30" %}selected{% endif %}>Show: 30</option>
+                                            <option value="50" {% if filter_params.limit == "50" %}selected{% endif %}>Show: 50</option>
                                         </select>
                                     </div>
                                     <div class="filter-group">
-                                        <select>
-                                            <option>Sort by (Default)</option>
-                                            <option>Oldest</option>
-                                            <option>Newest</option>
+                                        <select name="sort" class="form-select">
+                                            <option value="newest" {% if filter_params.sort == "newest" or not filter_params.sort %}selected{% endif %}>Sort by (Newest)</option>
+                                            <option value="oldest" {% if filter_params.sort == "oldest" %}selected{% endif %}>Oldest</option>
                                         </select>
                                     </div>
-                                </div>
+                                    <button type="submit" class="btn btn-primary ms-2">Apply</button>
+                                </form>
                             </div>
                         </div>
                         <div class="space32 d-none d-lg-block"></div>
                         <div class="row">
                             {% include 'frontend/inc/sidebar.html' %}
-                            <div class="col-lg-8">
+                            <div class="col-lg-9">
                                 <div class="tab-content">
                                     <div class="tab-pane fade show active">
                                         <div class="row">
-                                            <div class="col-lg-4 col-md-4">
-                                                <div class="property-boxarea">
-                                                    <div class="img1 image-anime">
-                                                        <div class="swiper swiper-fade">
-                                                            <div class="swiper-wrapper">
-                                                                <div class="swiper-slide">
-                                                                    <img src="https://housebox-html-demo.vercel.app/assets/img/all-images/properties/property-img2.png" alt="housebox">
+                                            {% for property in properties %}
+                                                <div class="col-lg-4 col-md-4">
+                                                    <div class="property-boxarea">
+                                                        <div class="img1 image-anime">
+                                                            <div class="swiper swiper-fade">
+                                                                <div class="swiper-wrapper">
+                                                                    {% if property.image %}
+                                                                        <div class="swiper-slide">
+                                                                            <img src="{{ property.image.url }}" alt="{{ property.name }}">
+                                                                        </div>
+                                                                    {% else %}
+                                                                        <div class="swiper-slide">
+                                                                            <img src="https://via.placeholder.com/720x480.png?text=No+Image" alt="{{ property.name }}">
+                                                                        </div>
+                                                                    {% endif %}
                                                                 </div>
                                                             </div>
                                                         </div>
-                                                    </div>
-                                                    <div class="category-list">
-                                                        <ul>
-                                                            <li>
-                                                                <a href="#">
-                                                                    Featured
+                                                        <div class="category-list">
+                                                            <ul>
+                                                                <li><a href="#">{{ property.type }}</a></li>
+                                                                <li><a href="#">{{ property.category }}</a></li>
+                                                            </ul>
+                                                        </div>
+                                                        <div class="content-area">
+                                                            <a href="{% url 'frontend:showProperty' property.slug %}" style="font-size: 18px;">{{ property.name }}</a>
+                                                            <div class="space18"></div>
+                                                            <p>{{ property.address }}</p>
+                                                            <div class="space24"></div>
+                                                            <ul>
+                                                                {% if property.capacity %}
+                                                                    <li><a href="#"><img src="https://housebox-html-demo.vercel.app/assets/img/icons/bed1.svg" alt="bed">x{{ property.capacity }}</a></li>
+                                                                {% endif %}
+                                                                {% if property.bathroom %}
+                                                                    <li><a href="#"><img src="https://housebox-html-demo.vercel.app/assets/img/icons/bath1.svg" alt="bath">x{{ property.bathroom }}</a></li>
+                                                                {% endif %}
+                                                                {% if property.size %}
+                                                                    <li><a href="#"><img src="https://housebox-html-demo.vercel.app/assets/img/icons/sqare1.svg" alt="size">{{ property.size }}</a></li>
+                                                                {% endif %}
+                                                            </ul>
+                                                            <div class="btn-area">
+                                                                <a href="#" class="nm-btn">
+                                                                    {% if property.price_rwf|intcomma %}
+                                                                        {{ property.price_rwf|intcomma }} RWF
+                                                                    {% else %}
+                                                                        Contact for Price
+                                                                    {% endif %}
                                                                 </a>
-                                                            </li>
-                                                            <li>
-                                                                <a href="#">
-                                                                    For Rent
-                                                                </a>
-                                                            </li>
-                                                        </ul>
-                                                    </div>
-                                                    <div class="content-area">
-                                                        <a href="{% url 'frontend:showProperty' %}" style="font-size: 18px;">
-                                                            Apartment Complex
-                                                        </a>
-                                                        <div class="space18"></div>
-                                                        <p>
-                                                            Los Angeles City, CA, USA
-                                                        </p>
-                                                        <div class="space24"></div>
-                                                        <ul>
-                                                            <li><a href="#"><img src="https://housebox-html-demo.vercel.app/assets/img/icons/bed1.svg" alt="housebox">x20</a></li>
-                                                            <li><a href="#"><img src="https://housebox-html-demo.vercel.app/assets/img/icons/bath1.svg" alt="housebox">x30</a></li>
-                                                        </ul>
-                                                        <div class="btn-area">
-                                                            <a href="#" class="nm-btn">
-                                                                $820,000
-                                                            </a>
+                                                            </div>
                                                         </div>
                                                     </div>
                                                 </div>
-                                            </div>
+                                            {% empty %}
+                                                <p>No properties found.</p>
+                                            {% endfor %}
                                             <div class="col-lg-12">
                                                 <div class="pagination-area">
                                                     <nav aria-label="Page navigation example">
@@ -116,8 +126,7 @@
                                                             </li>
                                                             <li class="page-item"><a class="page-link" href="#">1</a></li>
                                                             <li class="page-item"><a class="page-link" href="#">2</a></li>
-                                                            <li class="page-item"><a class="page-link" href="#">....</a></li>
-                                                            <li class="page-item"><a class="page-link" href="#">12</a></li>
+                                                            <li class="page-item"><a class="page-link" href="#">3</a></li>
                                                             <li class="page-item">
                                                                 <a class="page-link" href="#" aria-label="Next">
                                                                     <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor">
@@ -138,5 +147,5 @@
                 </div>
             </div>
         </div>
-    </div>
+     </div>
 {% endblock %}
