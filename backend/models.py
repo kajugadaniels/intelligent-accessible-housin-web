@@ -231,7 +231,13 @@ class PropertyImage(models.Model):
         verbose_name_plural = "Property Images"
 
 class PropertyReview(models.Model):
-    property = models.ForeignKey(Property, on_delete=models.CASCADE, null=True, blank=True)
+    property = models.ForeignKey(
+        Property,
+        related_name='propertyreview',
+        on_delete=models.CASCADE,
+        null=True,
+        blank=True
+    )
     name = models.CharField(max_length=100, null=True, blank=True)
     email = models.EmailField(null=True, blank=True)
     comment = models.TextField(null=True, blank=True)
