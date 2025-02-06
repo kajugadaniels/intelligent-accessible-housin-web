@@ -344,7 +344,6 @@ class PropertyForm(forms.ModelForm):
             }),
             'image': forms.ClearableFileInput(attrs={
                 'class': 'form-control',
-                'required': 'required',
             }),
             'amenities': forms.SelectMultiple(attrs={
                 'class': 'form-control',

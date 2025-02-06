@@ -20,36 +20,59 @@
                             {% csrf_token %}
                             {{ form.non_field_errors }}
                             <div class="row">
-                                <div class="col-md-6 mb-3">
+                                <div class="col-md-4 mb-3">
                                     <label class="form-label">{{ form.name.label }}</label>
                                     {{ form.name }}
                                     {% for error in form.name.errors %}
                                         <div class="text-danger">{{ error }}</div>
                                     {% endfor %}
                                 </div>
-                                <div class="col-md-6 mb-3">
+                                <div class="col-md-4 mb-3">
                                     <label class="form-label">{{ form.image.label }}</label>
                                     {{ form.image }}
                                     {% for error in form.image.errors %}
                                         <div class="text-danger">{{ error }}</div>
                                     {% endfor %}
                                 </div>
+                                <div class="col-md-4 mb-3">
+                                    <label class="form-label">{{ form.city.label }}</label>
+                                    {{ form.city }}
+                                    {% for error in form.city.errors %}
+                                        <div class="text-danger">{{ error }}</div>
+                                    {% endfor %}
+                                </div>
                             </div>
                             <div class="row">
                                 <div class="col-md-3 mb-3">
-                                    <label class="form-label">{{ form.price_usd.label }}</label>
-                                    {{ form.price_usd }}
-                                    {% for error in form.price_usd.errors %}
+                                    <label class="form-label">{{ form.type.label }}</label>
+                                    {{ form.type }}
+                                    {% for error in form.type.errors %}
                                         <div class="text-danger">{{ error }}</div>
                                     {% endfor %}
                                 </div>
                                 <div class="col-md-3 mb-3">
-                                    <label class="form-label">{{ form.price_rwf.label }}</label>
-                                    {{ form.price_rwf }}
-                                    {% for error in form.price_rwf.errors %}
+                                    <label class="form-label">{{ form.category.label }}</label>
+                                    {{ form.category }}
+                                    {% for error in form.category.errors %}
                                         <div class="text-danger">{{ error }}</div>
                                     {% endfor %}
                                 </div>
+                                <div class="col-md-3 mb-3">
+                                    <label class="form-label">{{ form.address.label }}</label>
+                                    {{ form.address }}
+                                    {% for error in form.address.errors %}
+                                        <div class="text-danger">{{ error }}</div>
+                                    {% endfor %}
+                                </div>
+                                <div class="col-md-3 mb-3">
+                                    <label class="form-label">{{ form.bathroom.label }}</label>
+                                    {{ form.bathroom }}
+                                    {% for error in form.bathroom.errors %}
+                                        <div class="text-danger">{{ error }}</div>
+                                    {% endfor %}
+                                </div>
+                            </div>
+                            <div class="row">
                                 <div class="col-md-3 mb-3">
                                     <label class="form-label">{{ form.capacity.label }}</label>
                                     {{ form.capacity }}
@@ -61,6 +84,20 @@
                                     <label class="form-label">{{ form.size.label }}</label>
                                     {{ form.size }}
                                     {% for error in form.size.errors %}
+                                        <div class="text-danger">{{ error }}</div>
+                                    {% endfor %}
+                                </div>
+                                <div class="col-md-3 mb-3">
+                                    <label class="form-label">{{ form.price_usd.label }}</label>
+                                    {{ form.price_usd }}
+                                    {% for error in form.price_usd.errors %}
+                                        <div class="text-danger">{{ error }}</div>
+                                    {% endfor %}
+                                </div>
+                                <div class="col-md-3 mb-3">
+                                    <label class="form-label">{{ form.price_rwf.label }}</label>
+                                    {{ form.price_rwf }}
+                                    {% for error in form.price_rwf.errors %}
                                         <div class="text-danger">{{ error }}</div>
                                     {% endfor %}
                                 </div>
@@ -82,7 +119,7 @@
                             <div class="row mt-2">
                                 <div class="col">
                                     <div class="text-end">
-                                        <button type="submit" class="btn btn-primary">Update Property</button>
+                                        <button type="submit" class="btn btn-primary">Add Property</button>
                                     </div>
                                 </div>
                             </div>
