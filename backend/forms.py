@@ -290,11 +290,23 @@ class AmenityForm(forms.ModelForm):
 class PropertyForm(forms.ModelForm):
     class Meta:
         model = Property
-        fields = ['name', 'description', 'price_usd', 'price_rwf', 'capacity', 'size', 'image', 'amenities']
+        fields = ['name', 'city', 'type', 'category', 'description', 'price_usd', 'price_rwf', 'bathroom', 'capacity', 'size', 'image', 'amenities']
         widgets = {
             'name': forms.TextInput(attrs={
                 'class': 'form-control',
                 'placeholder': 'Enter property name',
+                'required': 'required',
+            }),
+            'city': forms.Select(attrs={
+                'class': 'form-control',
+                'required': 'required',
+            }),
+            'type': forms.Select(attrs={
+                'class': 'form-control',
+                'required': 'required',
+            }),
+            'category': forms.Select(attrs={
+                'class': 'form-control',
                 'required': 'required',
             }),
             'description': forms.Textarea(attrs={
@@ -310,9 +322,14 @@ class PropertyForm(forms.ModelForm):
                 'class': 'form-control',
                 'placeholder': 'Enter price in RWF',
             }),
+            'bathroom': forms.NumberInput(attrs={
+                'class': 'form-control',
+                'placeholder': 'Enter number of bathroom',
+                'required': 'required',
+            }),
             'capacity': forms.NumberInput(attrs={
                 'class': 'form-control',
-                'placeholder': 'Enter capacity',
+                'placeholder': 'Enter number of rooms',
                 'required': 'required',
             }),
             'size': forms.TextInput(attrs={
@@ -328,11 +345,15 @@ class PropertyForm(forms.ModelForm):
         }
         labels = {
             'name': _('Property Name'),
+            'city': _('Property City'),
+            'type': _('Property Type'),
+            'category': _('Property Category'),
             'description': _('Description'),
             'price_usd': _('Price (USD)'),
             'price_rwf': _('Price (RWF)'),
-            'capacity': _('Capacity'),
-            'size': _('Size'),
+            'bathroom': _('Number of Bathrooms'),
+            'capacity': _('Number of Rooms'),
+            'size': _('Size in sqf'),
             'image': _('Property Image'),
             'amenities': _('Amenities'),
         }
