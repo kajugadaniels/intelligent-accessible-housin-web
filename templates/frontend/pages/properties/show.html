@@ -275,7 +275,7 @@
                     <div class="heading1 space-margin60">
                         <h2>Our Latest Properties</h2>
                         <div class="btn-area1">
-                            <a href="property-halfmap-grid.html" class="theme-btn1">
+                            <a href="{% url 'frontend:getProperties' %}" class="theme-btn1">
                                 See All Properties 
                                 <span class="arrow1">
                                     <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" width="24" height="24" fill="currentColor">
@@ -301,12 +301,12 @@
                             </div>
                             <div class="category-list">
                                 <ul>
-                                    <li><a href="property-details-v1.html">Featured</a></li>
-                                    <li><a href="property-details-v1.html">For Sale</a></li>
+                                    <li><a href="{% url 'frontend:showProperty' %}">Featured</a></li>
+                                    <li><a href="{% url 'frontend:showProperty' %}">For Sale</a></li>
                                 </ul>
                             </div>
                             <div class="content-area">
-                                <a href="property-details-v1.html">Luxury Suite Villa</a>
+                                <a href="{% url 'frontend:showProperty' %}">Luxury Suite Villa</a>
                                 <div class="space18"></div>
                                 <p>Los Angeles City, CA, USA</p>
                                 <div class="space24"></div>
