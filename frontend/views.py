@@ -4,4 +4,4 @@ def home(request):
     return render(request, 'frontend/pages/index.html')
 
 def getProperties(request):
-    return render(request, 'frontend/pages/property.html')
+    return render(request, 'frontend/pages/properties/index.html')
