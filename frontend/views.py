@@ -5,3 +5,6 @@ def home(request):
 
 def getProperties(request):
     return render(request, 'frontend/pages/properties/index.html')
+
+def showProperty(request):
+    return render(request, 'frontend/pages/properties/show.html')
