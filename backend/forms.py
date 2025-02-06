@@ -290,7 +290,7 @@ class AmenityForm(forms.ModelForm):
 class PropertyForm(forms.ModelForm):
     class Meta:
         model = Property
-        fields = ['name', 'city', 'type', 'category', 'description', 'price_usd', 'price_rwf', 'bathroom', 'capacity', 'size', 'image', 'amenities']
+        fields = ['name', 'city', 'type', 'category', 'description', 'price_usd', 'price_rwf', 'bathroom', 'capacity', 'address', 'size', 'image', 'amenities']
         widgets = {
             'name': forms.TextInput(attrs={
                 'class': 'form-control',
@@ -335,12 +335,20 @@ class PropertyForm(forms.ModelForm):
             'size': forms.TextInput(attrs={
                 'class': 'form-control',
                 'placeholder': 'Enter property size',
+                'required': 'required',
+            }),
+            'address': forms.TextInput(attrs={
+                'class': 'form-control',
+                'placeholder': 'Enter property size',
+                'required': 'required',
             }),
             'image': forms.ClearableFileInput(attrs={
                 'class': 'form-control',
+                'required': 'required',
             }),
             'amenities': forms.SelectMultiple(attrs={
                 'class': 'form-control',
+                'required': 'required',
             }),
         }
         labels = {
@@ -354,6 +362,7 @@ class PropertyForm(forms.ModelForm):
             'bathroom': _('Number of Bathrooms'),
             'capacity': _('Number of Rooms'),
             'size': _('Size in sqf'),
+            'address': _('Property Address'),
             'image': _('Property Image'),
             'amenities': _('Amenities'),
         }
