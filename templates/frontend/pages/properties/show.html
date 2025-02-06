@@ -6,7 +6,7 @@
             <div class="row">
                 <div class="col-lg-12">
                     <div class="hero-header-area text-center">
-                        <a href="#">
+                        <a href="{% url 'frontend:home' %}">
                             Home
                             <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor">
                                 <path d="M13.1717 12.0007L8.22192 7.05093L9.63614 5.63672L16.0001 12.0007L9.63614 18.3646L8.22192 16.9504L13.1717 12.0007Z"></path>
@@ -18,7 +18,7 @@
                             Property
                         </a>
                         <div class="space24"></div>
-                        <h1>Property</h1>
+                        <h1>{{ property.name }}</h1>
                     </div>
                 </div>
             </div>
@@ -30,11 +30,15 @@
             <div class="row">
                 <div class="col-lg-12">
                     <div class="images-area-details">
-                        <div class="img2-carousel owl-carousel">
-                            <img src="https://housebox-html-demo.vercel.app/assets/img/all-images/properties/property-img29.png" alt="housebox">
-                            <img src="https://housebox-html-demo.vercel.app/assets/img/all-images/properties/property-img29.png" alt="housebox">
-                            <img src="https://housebox-html-demo.vercel.app/assets/img/all-images/properties/property-img29.png" alt="housebox">
-                        </div>
+                        {% if property.images.all %}
+                            <div class="img2-carousel owl-carousel">
+                                {% for image in property.images.all %}
+                                    <img src="{{ image.image.url }}" alt="{{ property.name }}">
+                                {% endfor %}
+                            </div>
+                        {% else %}
+                            <img src="https://via.placeholder.com/720x480.png?text=No+Image" alt="{{ property.name }}">
+                        {% endif %}
                     </div>
                     <div class="space80"></div>
                     <div class="row">
@@ -42,19 +46,35 @@
                             <div class="details-siderbar">
                                 <div class="content-area">
                                     <div class="content heading2">
-                                        <h2>Apartment Complex</h2>
+                                        <h2>{{ property.name }}</h2>
                                         <ul>
-                                            <li><a href="#">$8,500</a></li>
-                                            <li><a href="#">/For Sale</a></li>
+                                            <li>
+                                                <a href="#">
+                                                    {% if property.price_usd %}
+                                                        ${{ property.price_usd }}
+                                                    {% else %}
+                                                        Contact for Price
+                                                    {% endif %}
+                                                </a>
+                                            </li>
+                                            <li>
+                                                <a href="#">{{ property.type }}</a>
+                                            </li>
                                         </ul>
                                     </div>
                                     <div class="list-area">
                                         <div class="list">
                                             <ul>
                                                 <li>Features:</li>
-                                                <li><a href="#"><img src="https://housebox-html-demo.vercel.app/assets/img/icons/bed1.svg" alt="housebox">x20 <span> | </span></a></li>
-                                                <li><a href="#"><img src="https://housebox-html-demo.vercel.app/assets/img/icons/bath1.svg" alt="housebox">x30 <span> | </span></a></li>
-                                                <li><a href="#"><img src="https://housebox-html-demo.vercel.app/assets/img/icons/sqare1.svg" alt="housebox">1200 sq</a></li>
+                                                {% if property.capacity %}
+                                                    <li><a href="#"><img src="{{ STATIC_URL }}assets/img/icons/bed1.svg" alt="bed">x{{ property.capacity }} <span> | </span></a></li>
+                                                {% endif %}
+                                                {% if property.bathroom %}
+                                                    <li><a href="#"><img src="{{ STATIC_URL }}assets/img/icons/bath1.svg" alt="bath">x{{ property.bathroom }} <span> | </span></a></li>
+                                                {% endif %}
+                                                {% if property.size %}
+                                                    <li><a href="#"><img src="{{ STATIC_URL }}assets/img/icons/sqare1.svg" alt="size">{{ property.size }}</a></li>
+                                                {% endif %}
                                             </ul>
                                             <div class="space24"></div>
                                             <ul>
@@ -62,9 +82,9 @@
                                                 <li>
                                                     <a href="#">
                                                         <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor">
-                                                            <path d="M12 23.7279L5.63604 17.364C2.12132 13.8492 2.12132 8.15076 5.63604 4.63604C9.15076 1.12132 14.8492 1.12132 18.364 4.63604C21.8787 8.15076 21.8787 13.8492 18.364 17.364L12 23.7279ZM16.9497 15.9497C19.6834 13.2161 19.6834 8.78392 16.9497 6.05025C14.2161 3.31658 9.78392 3.31658 7.05025 6.05025C4.31658 8.78392 4.31658 13.2161 7.05025 15.9497L12 20.8995L16.9497 15.9497ZM12 13C10.8954 13 10 12.1046 10 11C10 9.89543 10.8954 9 12 9C13.1046 9 14 9.89543 14 11C14 12.1046 13.1046 13 12 13Z"></path>
+                                                            <path d="M12 23.7279L5.63604 17.364C2.12132 13.8492 2.12132 8.15076 5.63604 4.63604C9.15076 1.12132 14.8492 1.12132 18.364 4.63604C21.8787 8.15076 21.8787 13.8492 18.364 17.364L12 23.7279ZM16.9497 15.9497C19.6834 13.2161 19.6834 8.78392 16.9497 6.05025C14.2161 3.31658 9.78392 3.31658 7.05025 6.05025C4.31658 8.78392 4.31658 13.2161 7.05025 15.9497L12 20.8995L16.9497 15.9497Z"></path>
                                                         </svg>
-                                                        Los Angeles City, CA, USA
+                                                        {{ property.address }}
                                                     </a>
                                                 </li>
                                             </ul>
@@ -80,9 +100,7 @@
                                             <li>
                                                 <a href="#">
                                                     <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor">
-                                                        <path
-                                                            d="M13.1202 17.0228L8.92129 14.7324C8.19135 15.5125 7.15261 16 6 16C3.79086 16 2 14.2091 2 12C2 9.79086 3.79086 8 6 8C7.15255 8 8.19125 8.48746 8.92118 9.26746L13.1202 6.97713C13.0417 6.66441 13 6.33707 13 6C13 3.79086 14.7909 2 17 2C19.2091 2 21 3.79086 21 6C21 8.20914 19.2091 10 17 10C15.8474 10 14.8087 9.51251 14.0787 8.73246L9.87977 11.0228C9.9583 11.3355 10 11.6629 10 12C10 12.3371 9.95831 12.6644 9.87981 12.9771L14.0788 15.2675C14.8087 14.4875 15.8474 14 17 14C19.2091 14 21 15.7909 21 18C21 20.2091 19.2091 22 17 22C14.7909 22 13 20.2091 13 18C13 17.6629 13.0417 17.3355 13.1202 17.0228ZM6 14C7.10457 14 8 13.1046 8 12C8 10.8954 7.10457 10 6 10C4.89543 10 4 10.8954 4 12C4 13.1046 4.89543 14 6 14ZM17 8C18.1046 8 19 7.10457 19 6C19 4.89543 18.1046 4 17 4C15.8954 4 15 4.89543 15 6C15 7.10457 15.8954 8 17 8ZM17 20C18.1046 20 19 19.1046 19 18C19 16.8954 18.1046 16 17 16C15.8954 16 15 16.8954 15 18C15 19.1046 15.8954 20 17 20Z">
-                                                        </path>
+                                                        <path d="M13.1202 17.0228L8.92129 14.7324C8.19135 15.5125 7.15261 16 6 16C3.79086 16 2 14.2091 2 12C2 9.79086 3.79086 8 6 8C7.15255 8 8.19125 8.48746 8.92118 9.26746L13.1202 6.97713C13.0417 6.66441 13 6.33707 13 6C13 3.79086 14.7909 2 17 2C19.2091 2 21 3.79086 21 6C21 8.20914 19.2091 10 17 10C15.8474 10 14.8087 9.51251 14.0787 8.73246L9.87977 11.0228C9.9583 11.3355 10 11.6629 10 12C10 12.3371 9.95831 12.6644 9.87981 12.9771L14.0788 15.2675C14.8087 14.4875 15.8474 14 17 14C19.2091 14 21 15.7909 21 18C21 20.2091 19.2091 22 17 22C14.7909 22 13 20.2091 13 18C13 17.6629 13.0417 17.3355 13.1202 17.0228ZM6 14C7.10457 14 8 13.1046 8 12C8 10.8954 7.10457 10 6 10C4.89543 10 4 10.8954 4 12C4 13.1046 4.89543 14 6 14ZM17 8C18.1046 8 19 7.10457 19 6C19 4.89543 18.1046 4 17 4C15.8954 4 15 4.89543 15 6C15 7.10457 15.8954 8 17 8ZM17 20C18.1046 20 19 19.1046 19 18C19 16.8954 18.1046 16 17 16C15.8954 16 15 16.8954 15 18C15 19.1046 15.8954 20 17 20Z"></path>
                                                     </svg>
                                                 </a>
                                             </li>
@@ -91,67 +109,32 @@
                                 </div>
                                 <div class="space32"></div>
                                 <div class="property-details-slider owl-carousel">
-                                    <div class="img1">
-                                        <img src="https://housebox-html-demo.vercel.app/assets/img/all-images/properties/property-img30.png" alt="housebox">
-                                    </div>
-                                    <div class="img1">
-                                        <img src="https://housebox-html-demo.vercel.app/assets/img/all-images/properties/property-img31.png" alt="housebox">
-                                    </div>
-                                    <div class="img1">
-                                        <img src="https://housebox-html-demo.vercel.app/assets/img/all-images/properties/property-img32.png" alt="housebox">
-                                    </div>
-                                    <div class="img1">
-                                        <img src="https://housebox-html-demo.vercel.app/assets/img/all-images/properties/property-img30.png" alt="housebox">
-                                    </div>
-                                    <div class="img1">
-                                        <img src="https://housebox-html-demo.vercel.app/assets/img/all-images/properties/property-img31.png" alt="housebox">
-                                    </div>
-                                    <div class="img1">
-                                        <img src="https://housebox-html-demo.vercel.app/assets/img/all-images/properties/property-img32.png" alt="housebox">
-                                    </div>
-                                    <div class="img1">
-                                        <img src="https://housebox-html-demo.vercel.app/assets/img/all-images/properties/property-img30.png" alt="housebox">
-                                    </div>
-                                    <div class="img1">
-                                        <img src="https://housebox-html-demo.vercel.app/assets/img/all-images/properties/property-img31.png" alt="housebox">
-                                    </div>
-                                    <div class="img1">
-                                        <img src="https://housebox-html-demo.vercel.app/assets/img/all-images/properties/property-img32.png" alt="housebox">
-                                    </div>
+                                    {% for image in property.images.all %}
+                                        <div class="img1">
+                                            <img src="{{ image.image.url }}" alt="{{ property.name }}">
+                                        </div>
+                                    {% endfor %}
                                 </div>
                                 <div class="space60"></div>
                                 <div class="bg1">
-                                    <h3>Diamond Apartment Property Amenities</h3>
+                                    <h3>{{ property.name }} Amenities</h3>
                                     <div class="space12"></div>
                                     <div class="row">
-                                        <div class="col-lg-6 col-md-6">
-                                            <div class="list-box">
-                                                <div class="icon">
-                                                    <svg xmlns="http://www.w3.org/2000/svg" width="32" height="32" viewBox="0 0 32 32" fill="none">
-                                                        <g clip-path="url(#clip0_2294_3369)">
-                                                            <path d="M16 2.3373C14.4796 1.45952 12.755 0.997453 10.9994 0.997559C9.24383 0.997664 7.51922 1.45994 5.99896 2.33791C4.47869 3.21588 3.21635 4.4786 2.33884 5.99913C1.46133 7.51965 0.999577 9.2444 1 11" stroke="#073B3A" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" />
-                                                            <path d="M21 11C21.0017 9.62353 20.7184 8.26161 20.168 7" stroke="#073B3A" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" />
-                                                            <path d="M11 30.9998C11.6717 30.9999 12.3417 30.9329 13 30.7998" stroke="#073B3A" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" />
-                                                            <path d="M1 17V21C0.999446 22.9463 1.56684 24.8504 2.63262 26.4789C3.6984 28.1074 5.21623 29.3895 7 30.168" stroke="#073B3A" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" />
-                                                            <path d="M17 17.0002V11.0002C17.0002 9.94688 16.7231 8.91207 16.1966 7.99979C15.6701 7.08751 14.9127 6.32992 14.0005 5.80317C13.0884 5.27642 12.0536 4.99908 11.0003 4.99902C9.94697 4.99897 8.9122 5.27621 8 5.80287" stroke="#073B3A" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" />
-                                                            <path d="M5 11V21C4.99971 21.96 5.2298 22.9061 5.67093 23.7588C6.11207 24.6115 6.75138 25.3459 7.53516 25.9003C8.31894 26.4547 9.22432 26.8129 10.1752 26.9449C11.1262 27.0768 12.0949 26.9787 13 26.6587" stroke="#073B3A" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" />
-                                                            <path d="M9 21C9 21.5304 9.21071 22.0391 9.58579 22.4142C9.96086 22.7893 10.4696 23 11 23C11.5304 23 12.0391 22.7893 12.4142 22.4142C12.7893 22.0391 13 21.5304 13 21V11C13 10.4696 12.7893 9.96086 12.4142 9.58579C12.0391 9.21071 11.5304 9 11 9C10.4696 9 9.96086 9.21071 9.58579 9.58579C9.21071 9.96086 9 10.4696 9 11V15" stroke="#073B3A" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" />
-                                                            <path d="M29 21H21C19.8954 21 19 21.8954 19 23V29C19 30.1046 19.8954 31 21 31H29C30.1046 31 31 30.1046 31 29V23C31 21.8954 30.1046 21 29 21Z" stroke="#073B3A" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" />
-                                                            <path d="M25 15C23.9391 15 22.9217 15.4214 22.1716 16.1716C21.4214 16.9217 21 17.9391 21 19V21H29V19C29 17.9391 28.5786 16.9217 27.8284 16.1716C27.0783 15.4214 26.0609 15 25 15Z" stroke="#073B3A" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" />
-                                                            <path d="M25 25.5386C25.0989 25.5386 25.1956 25.5679 25.2778 25.6228C25.36 25.6778 25.4241 25.7559 25.4619 25.8472C25.4998 25.9386 25.5097 26.0391 25.4904 26.1361C25.4711 26.2331 25.4235 26.3222 25.3536 26.3921C25.2836 26.4621 25.1945 26.5097 25.0975 26.529C25.0006 26.5483 24.9 26.5384 24.8087 26.5005C24.7173 26.4627 24.6392 26.3986 24.5843 26.3164C24.5293 26.2341 24.5 26.1375 24.5 26.0386C24.5 25.906 24.5527 25.7788 24.6464 25.685C24.7402 25.5913 24.8674 25.5386 25 25.5386Z" stroke="#073B3A" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" />
-                                                        </g>
-                                                        <defs>
-                                                            <clipPath id="clip0_2294_3369">
-                                                                <rect width="32" height="32" fill="white" />
-                                                            </clipPath>
-                                                        </defs>
-                                                    </svg>
-                                                </div>
-                                                <div class="text">
-                                                    <p>Private Entrance</p>
+                                        {% for amenity in property.amenities.all %}
+                                            <div class="col-lg-6 col-md-6">
+                                                <div class="list-box d-flex align-items-center">
+                                                    <div class="icon">
+                                                        <!-- Placeholder icon -->
+                                                        <svg xmlns="http://www.w3.org/2000/svg" width="32" height="32" fill="none">
+                                                            <rect width="32" height="32" fill="#073B3A"/>
+                                                        </svg>
+                                                    </div>
+                                                    <div class="text ms-2">
+                                                        <p>{{ amenity.name }}</p>
+                                                    </div>
                                                 </div>
                                             </div>
-                                        </div>
+                                        {% endfor %}
                                     </div>
                                 </div>
                                 <div class="space60"></div>
@@ -159,14 +142,18 @@
                                     <h3>Play Video</h3>
                                     <div class="space32"></div>
                                     <div class="vide-images">
-                                        <div class="img1">
-                                            <img src="https://housebox-html-demo.vercel.app/assets/img/all-images/properties/property-img33.png" alt="housebox">
-                                        </div>
-                                        <a href="https://www.youtube.com/watch?v=ec_fXMrD7Ow&ab_channel=ProjectRemark" class="popup-youtube">
-                                            <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor">
-                                                <path d="M6 20.1957V3.80421C6 3.01878 6.86395 2.53993 7.53 2.95621L20.6432 11.152C21.2699 11.5436 21.2699 12.4563 20.6432 12.848L7.53 21.0437C6.86395 21.46 6 20.9812 6 20.1957Z"></path>
-                                            </svg>
-                                        </a>
+                                        {% if property.video_url %}
+                                            <div class="img1">
+                                                <img src="{{ property.video_thumbnail.url }}" alt="{{ property.name }}">
+                                            </div>
+                                            <a href="{{ property.video_url }}" class="popup-youtube">
+                                                <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor">
+                                                    <path d="M6 20.1957V3.80421C6 3.01878 6.86395 2.53993 7.53 2.95621L20.6432 11.152C21.2699 11.5436 21.2699 12.4563 20.6432 12.848L7.53 21.0437C6.86395 21.46 6 20.9812 6 20.1957Z"></path>
+                                                </svg>
+                                            </a>
+                                        {% else %}
+                                            <p>No video available.</p>
+                                        {% endif %}
                                     </div>
                                 </div>
                                 <div class="space60"></div>
@@ -174,33 +161,32 @@
                                     <h3>Map Locations</h3>
                                     <div class="space32"></div>
                                     <div class="map-section">
-                                        <iframe src="https://www.google.com/maps/embed?pb=!1m14!1m12!1m3!1d4506257.120552435!2d88.67021924228865!3d21.954385721237916!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!5e0!3m2!1sen!2sbd!4v1704088968016!5m2!1sen!2sbd" width="600" height="450" style="border:0;" allowfullscreen="" loading="lazy" referrerpolicy="no-referrer-when-downgrade"></iframe>
+                                        <iframe src="https://www.google.com/maps/embed?pb=!1m14!1m12!1m3!1d4506257.120552435!2d88.67021924228865!3d21.954385721237916!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!5e0!3m2!1sen!2sbd!4v1704088968016!5m2!1sen!2sbd" width="600" height="450" style="border:0;" allowfullscreen="" loading="lazy"></iframe>
                                         <div class="space12"></div>
                                         <div class="list">
                                             <ul>
                                                 <li>
                                                     <span>Address:</span>
-                                                    <div>CA, USA</div>
+                                                    <div>{{ property.address }}</div>
                                                 </li>
                                                 <li>
                                                     <span>City:</span>
-                                                    <div>Los Angeles</div>
+                                                    <div>{{ property.city }}</div>
                                                 </li>
                                             </ul>
-                                            <ul class="m-0 ">
+                                            <ul class="m-0">
                                                 <li>
                                                     <span>Postal Code:</span>
-                                                    <div>CA, USA</div>
+                                                    <div>{{ property.postal_code|default:"N/A" }}</div>
                                                 </li>
                                                 <li>
                                                     <span>Area Name:</span>
-                                                    <div>Los Angeles</div>
+                                                    <div>{{ property.area_name|default:"N/A" }}</div>
                                                 </li>
                                             </ul>
                                         </div>
                                     </div>
                                 </div>
-                                <div class="space60"></div>
                                 <div class="space60"></div>
                             </div>
                         </div>
@@ -209,25 +195,27 @@
                                 <div class="details-siderbar2">
                                     <h4>Contact Seller</h4>
                                     <div class="space24"></div>
-                                    <div class="personal-info">
+                                    <div class="personal-info d-flex">
                                         <div class="img1">
-                                            <img src="https://housebox-html-demo.vercel.app/assets/img/all-images/blog/blog-img17.png" alt="housebox">
+                                            {% if property.created_by.image %}
+                                                <img src="{{ property.created_by.image.url }}" alt="{{ property.created_by.name }}">
+                                            {% else %}
+                                                <img src="https://via.placeholder.com/100.png?text=No+Image" alt="{{ property.created_by.name }}">
+                                            {% endif %}
                                         </div>
-                                        <div class="content">
-                                            <a href="#">Ruhul Amin Jr</a>
-                                            <a href="mailto:ruhulaminjr@.com">
+                                        <div class="content ms-2">
+                                            <a href="#">{{ property.created_by.name }}</a>
+                                            <a href="mailto:{{ property.created_by.email }}">
                                                 <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor">
                                                     <path d="M3 3H21C21.5523 3 22 3.44772 22 4V20C22 20.5523 21.5523 21 21 21H3C2.44772 21 2 20.5523 2 20V4C2 3.44772 2.44772 3 3 3ZM20 7.23792L12.0718 14.338L4 7.21594V19H20V7.23792ZM4.51146 5L12.0619 11.662L19.501 5H4.51146Z"></path>
                                                 </svg>
-                                                ruhulaminjr@.com
+                                                {{ property.created_by.email }}
                                             </a>
-                                            <a href="tel:(234)345-4574">
+                                            <a href="tel:{{ property.created_by.phone_number }}">
                                                 <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor">
-                                                    <path
-                                                        d="M9.36556 10.6821C10.302 12.3288 11.6712 13.698 13.3179 14.6344L14.2024 13.3961C14.4965 12.9845 15.0516 12.8573 15.4956 13.0998C16.9024 13.8683 18.4571 14.3353 20.0789 14.4637C20.599 14.5049 21 14.9389 21 15.4606V19.9234C21 20.4361 20.6122 20.8657 20.1022 20.9181C19.5723 20.9726 19.0377 21 18.5 21C9.93959 21 3 14.0604 3 5.5C3 4.96227 3.02742 4.42771 3.08189 3.89776C3.1343 3.38775 3.56394 3 4.07665 3H8.53942C9.0611 3 9.49513 3.40104 9.5363 3.92109C9.66467 5.54288 10.1317 7.09764 10.9002 8.50444C11.1427 8.9484 11.0155 9.50354 10.6039 9.79757L9.36556 10.6821ZM6.84425 10.0252L8.7442 8.66809C8.20547 7.50514 7.83628 6.27183 7.64727 5H5.00907C5.00303 5.16632 5 5.333 5 5.5C5 12.9558 11.0442 19 18.5 19C18.667 19 18.8337 18.997 19 18.9909V16.3527C17.7282 16.1637 16.4949 15.7945 15.3319 15.2558L13.9748 17.1558C13.4258 16.9425 12.8956 16.6915 12.3874 16.4061L12.3293 16.373C10.3697 15.2587 8.74134 13.6303 7.627 11.6707L7.59394 11.6126C7.30849 11.1044 7.05754 10.5742 6.84425 10.0252Z">
-                                                    </path>
+                                                    <path d="M9.36556 10.6821C10.302 12.3288 11.6712 13.698 13.3179 14.6344L14.2024 13.3961C14.4965 12.9845 15.0516 12.8573 15.4956 13.0998C16.9024 13.8683 18.4571 14.3353 20.0789 14.4637C20.599 14.5049 21 14.9389 21 15.4606V19.9234C21 20.4361 20.6122 20.8657 20.1022 20.9181C19.5723 20.9726 19.0377 21 18.5 21C9.93959 21 3 14.0604 3 5.5C3 4.96227 3.02742 4.42771 3.08189 3.89776C3.1343 3.38775 3.56394 3 4.07665 3H8.53942C9.0611 3 9.49513 3.40104 9.5363 3.92109C9.66467 5.54288 10.1317 7.09764 10.9002 8.50444C11.1427 8.9484 11.0155 9.50354 10.6039 9.79757L9.36556 10.6821ZM6.84425 10.0252L8.7442 8.66809C8.20547 7.50514 7.83628 6.27183 7.64727 5H5.00907C5.00303 5.16632 5 5.333 5 5.5C5 12.9558 11.0442 19 18.5 19C18.667 19 18.8337 18.997 19 18.9909V16.3527C17.7282 16.1637 16.4949 15.7945 15.3319 15.2558L13.9748 17.1558C13.4258 16.9425 12.8956 16.6915 12.3874 16.4061L12.3293 16.373C10.3697 15.2587 8.74134 13.6303 7.627 11.6707L7.59394 11.6126C7.30849 11.1044 7.05754 10.5742 6.84425 10.0252Z"></path>
                                                 </svg>
-                                                (234) 345-4574
+                                                {{ property.created_by.phone_number }}
                                             </a>
                                         </div>
                                     </div>
@@ -266,7 +254,7 @@
                 </div>
             </div>
         </div>
-    </div>
+     </div>
 
     <div class="propoerties-boxes-section">
         <div class="container">
@@ -288,37 +276,6 @@
                                     </svg>
                                 </span>
                             </a>
-                        </div>
-                    </div>
-                </div>
-            </div>
-            <div class="row">
-                <div class="col-lg-12">
-                    <div class="single-slider-area owl-carousel">
-                        <div class="property-boxarea">
-                            <div class="img1 image-anime">
-                                <img src="https://housebox-html-demo.vercel.app/assets/img/all-images/properties/property-img2.png" alt="housebox">
-                            </div>
-                            <div class="category-list">
-                                <ul>
-                                    <li><a href="{% url 'frontend:showProperty' %}">Featured</a></li>
-                                    <li><a href="{% url 'frontend:showProperty' %}">For Sale</a></li>
-                                </ul>
-                            </div>
-                            <div class="content-area">
-                                <a href="{% url 'frontend:showProperty' %}">Luxury Suite Villa</a>
-                                <div class="space18"></div>
-                                <p>Los Angeles City, CA, USA</p>
-                                <div class="space24"></div>
-                                <ul>
-                                    <li><a href="#"><img src="https://housebox-html-demo.vercel.app/assets/img/icons/bed1.svg" alt="housebox">x12</a></li>
-                                    <li><a href="#"><img src="https://housebox-html-demo.vercel.app/assets/img/icons/bath1.svg" alt="housebox">x16</a></li>
-                                    <li><a href="#"><img src="https://housebox-html-demo.vercel.app/assets/img/icons/sqare1.svg" alt="housebox">1200 sq</a></li>
-                                </ul>
-                                <div class="btn-area">
-                                    <a href="#" class="nm-btn">$820,000</a>
-                                </div>
-                            </div>
                         </div>
                     </div>
                 </div>
