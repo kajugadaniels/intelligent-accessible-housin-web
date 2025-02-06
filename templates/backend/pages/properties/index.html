@@ -3,72 +3,74 @@
 {% load humanize %}
 {% block content %}
 
-<div class="container-fluid">
-    <div class="row"> 
-        <div class="col-sm-12"> 
-            <div class="card"> 
-                <div class="card-body">
-                    <div class="list-product-header">
-                        <div class="d-flex justify-content-between">
-                            <h4>Properties</h4>
-                            <a class="btn btn-primary" href="{% url 'backend:addProperty' %}"><i class="fa fa-plus"></i> Add New Property</a>
-                        </div>
-                    </div>
-                    <hr>
-                    <div class="list-product">
-                        <table class="table" id="project-status">
-                            <thead> 
-                                <tr> 
-                                    <th>
-                                        <div class="form-check"> 
-                                            <input class="form-check-input checkbox-primary" type="checkbox">
-                                        </div>
-                                    </th>
-                                    <th><span class="f-light f-w-600">Name</span></th>
-                                    <th><span class="f-light f-w-600">Capacity</span></th>
-                                    <th><span class="f-light f-w-600">Created At</span></th>
-                                    <th><span class="f-light f-w-600">Action</span></th>
-                                </tr>
-                            </thead>
-                            <tbody>
-                                {% for property in properties %}
-                                    <tr class="product-removes">
-                                        <td>
-                                            <div class="form-check"> 
-                                                <input class="form-check-input checkbox-primary" type="checkbox">
-                                            </div>
-                                        </td>
-                                        <td>
-                                            <p class="f-light">{{ property.name }}</p>
-                                        </td>
-                                        <td>
-                                            <p class="f-light">{{ property.capacity }}</p>
-                                        </td>
-                                        <td>
-                                            <p class="f-light">{{ property.created_at|naturaltime }}</p>
-                                        </td>
-                                        <td>
-                                            <div class="product-action">
-                                                <a href="{% url 'backend:showProperty' property.id %}" class="btn btn-primary">
-                                                    View
-                                                </a>
-                                                <a href="{% url 'backend:editProperty' property.id %}" class="btn btn-warning">
-                                                    Edit
-                                                </a>
-                                                <a href="{% url 'backend:deleteProperty' property.id %}" class="btn btn-danger" onclick="return confirm('Are you sure you want to delete the property \'{{ property.name }}\'?');">
-                                                    Delete
-                                                </a>
-                                            </div>
-                                        </td>
-                                    </tr>
-                                {% endfor %}
-                            </tbody>
-                        </table>
+<div class="container-fluid product-wrapper">
+	<div class="product-grid">
+		<div class="feature-products">
+			<div class="row">
+				<div class="list-product-header">
+                    <div class="d-flex justify-content-between">
+                        <h4>Properties</h4>
+                        <a class="btn btn-primary" href="{% url 'backend:addProperty' %}"><i class="fa fa-plus"></i> Add New Property</a>
                     </div>
                 </div>
-            </div>
-        </div>
-    </div>
+			</div>
+		</div>
+		<div class="product-wrapper-grid">
+			<div class="row">
+				{% for property in properties %}
+					<div class="col-xl-3 col-sm-6 xl-4">
+						<div class="card">
+							<div class="product-box">
+								<div class="product-img">
+									<img class="img-fluid" src="{{ property.image.url }}" alt="">
+									<div class="product-hover">
+										<ul>
+											<li>
+												<a href="{% url 'backend:showProperty' property.id %}">
+													<i class="icon-eye"></i>
+												</a>
+											</li>
+											<li>
+												<a href="{% url 'backend:editProperty' property.id %}">
+													<i class="icon-ruler-pencil"></i>
+												</a>
+											</li>
+											<li>
+												<a href="{% url 'backend:deleteProperty' property.id %}">
+													<i class="icon-trash"></i>
+												</a>
+											</li>
+										</ul>
+									</div>
+								</div>
+								<div class="product-details">
+									<div class="d-flex mb-3">
+                                        <div class="col-md-4">
+                                            <i class="icon-home"></i>
+                                            {{ property.size }}
+                                        </div>
+                                        <div class="col-md-4">
+                                            <i class="fa fa-bed"></i>
+                                            {{ property.capacity }} Rooms
+                                        </div>
+                                    </div>
+									<a href="{% url 'backend:showProperty' property.id %}" class="mb-3">
+										<h4 style="font-size: 18px;">{{ property.name }}</h4>
+									</a>
+                                    <p class="mb-3">
+                                        {{ property.description|truncatechars:100 }}
+                                    </p>
+									<div class="product-price" style="font-size: 14px;">
+										{{ property.price_rwf|intcomma }} RWF
+									</div>
+								</div>
+							</div>
+						</div>
+					</div>
+				{% endfor %}
+			</div>
+		</div>
+	</div>
 </div>
 
 {% endblock %}
