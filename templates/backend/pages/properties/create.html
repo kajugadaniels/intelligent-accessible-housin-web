@@ -2,7 +2,6 @@
 {% load static %}
 {% load humanize %}
 {% block content %}
-
 <div class="container-fluid">
     <div class="row">
         <div class="col-sm-12">
@@ -116,6 +115,12 @@
                                     <div class="text-danger">{{ error }}</div>
                                 {% endfor %}
                             </div>
+                            <!-- New field for multiple additional images -->
+                            <div class="mb-3">
+                                <label class="form-label">Additional Images</label>
+                                <input type="file" name="images" class="form-control" multiple>
+                                <small class="form-text text-muted">You can upload multiple images.</small>
+                            </div>
                             <div class="row mt-2">
                                 <div class="col">
                                     <div class="text-end">
@@ -130,5 +135,4 @@
         </div>
     </div>
 </div>
-
 {% endblock %}
