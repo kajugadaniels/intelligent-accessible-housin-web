@@ -414,6 +414,10 @@ def editProperty(request, id):
         form = PropertyForm(request.POST, request.FILES, instance=property_instance)
         if form.is_valid():
             property_instance = form.save()
+            # Process additional new images (if any)
+            images = request.FILES.getlist('images')
+            for img in images:
+                PropertyImage.objects.create(property=property_instance, image=img)
             messages.success(request, _("The property '%(property)s' has been updated successfully.") % {'property': property_instance.name})
             return redirect(reverse('backend:getProperties'))
         else:
@@ -423,6 +427,7 @@ def editProperty(request, id):
 
     context = {
         'form': form,
+        'property': property_instance,
         'title': _('Edit Property: %(property)s') % {'property': property_instance.name}
     }
 
