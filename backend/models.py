@@ -114,6 +114,9 @@ class Property(models.Model):
         ('Nyamirambo', 'Nyamirambo'),
         ('Nyamata', 'Nyamata'),
         ('Gisenyi', 'Gisenyi'),
+        ('Kacyiru', 'Kacyiru'),
+        ('Kabeza', 'Kabeza'),
+        ('Kicukiro', 'Kicukiro'),
     )
     TYPE_CHOICES = (
         ('Featured', 'Featured'),

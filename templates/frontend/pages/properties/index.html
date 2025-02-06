@@ -59,7 +59,7 @@
                                     <div class="tab-pane fade show active">
                                         <div class="row">
                                             {% for property in properties %}
-                                                <div class="col-lg-4 col-md-4">
+                                                <div class="col-lg-6 col-md-6">
                                                     <div class="property-boxarea">
                                                         <div class="img1 image-anime">
                                                             <div class="swiper swiper-fade">
@@ -83,7 +83,7 @@
                                                             </ul>
                                                         </div>
                                                         <div class="content-area">
-                                                            <a href="{% url 'frontend:showProperty' property.slug %}" style="font-size: 18px;">{{ property.name }}</a>
+                                                            <a href="{% url 'frontend:showProperty' property.slug %}" style="font-size: 18px;">{{ property.name|truncatechars:40 }}</a>
                                                             <div class="space18"></div>
                                                             <p>{{ property.address }}</p>
                                                             <div class="space24"></div>
@@ -99,7 +99,7 @@
                                                                 {% endif %}
                                                             </ul>
                                                             <div class="btn-area">
-                                                                <a href="#" class="nm-btn">
+                                                                <a href="{% url 'frontend:showProperty' property.slug %}" class="nm-btn">
                                                                     {% if property.price_rwf|intcomma %}
                                                                         {{ property.price_rwf|intcomma }} RWF
                                                                     {% else %}
