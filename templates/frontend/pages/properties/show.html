@@ -49,11 +49,19 @@
                                     <div class="content heading2">
                                         <h2 style="font-size: 20px;">{{ property.name }}</h2>
                                         <ul>
-                                            <li>
-                                                <a href="#" style="font-size: 18px;">
-                                                    Apply For Renting
-                                                </a>
-                                            </li>
+                                            {% if user.is_authenticated %}
+                                                <li>
+                                                    <a href="#" style="font-size: 18px;">
+                                                        Apply For Renting
+                                                    </a>
+                                                </li>
+                                            {% else %}
+                                                <li>
+                                                    <a href="{% url 'frontend:login' %}" style="font-size: 18px;">
+                                                        Login to Apply for Rent
+                                                    </a>
+                                                </li>
+                                            {% endif %}
                                         </ul>
                                     </div>
                                     <div class="list-area">
