@@ -30,4 +30,6 @@ urlpatterns = [
     path('property/edit/<int:id>/', editProperty, name="editProperty"),
     path('property/delete/<int:id>/', deleteProperty, name="deleteProperty"),
     path('property/image/delete/<int:image_id>/', deletePropertyImage, name="deletePropertyImage"),
+
+    path('rent-applications/', getRentApplications, name="getRentApplications"),
 ]  + static(settings.STATIC_URL, document_root=settings.STATIC_ROOT)+ static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)

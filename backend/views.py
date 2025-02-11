@@ -1,6 +1,7 @@
 import random
 from backend.forms import *
 from backend.models import *
+from frontend.models import *
 from django.urls import reverse
 from django.contrib import messages
 from django.http import JsonResponse
@@ -342,7 +343,6 @@ def deleteAmenity(request, id):
 
     return render(request, 'backend/pages/amenities/delete.html', context)
 
-
 @login_required
 def getProperties(request):
     if request.user.role != 'House Provider':
@@ -485,3 +485,18 @@ def getNotifications(request):
         raise PermissionDenied(_("You are not authorized to view the Notifications page."))
 
     return render(request, 'backend/pages/notifications/index.html')
+
+
+
+@login_required
+def getRentApplications(request):
+    if request.user.role != 'Admin':
+        raise PermissionDenied(_("You are not authorized to access the Properties page."))
+
+    applications = RentApplication.objects.all().order_by('-created_at')
+
+    context = {
+        'applications': applications
+    }
+
+    return render(request, 'backend/pages/applications/index.html', context)
