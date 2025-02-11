@@ -20,7 +20,6 @@ def userLogin(request):
             messages.success(request, _("Welcome back! You have successfully logged in."))
             return redirect(reverse('frontend:userDashboard'))
         else:
-            # Extract and display form errors
             for field, errors in form.errors.items():
                 for error in errors:
                     messages.error(request, error)
@@ -31,7 +30,6 @@ def userLogin(request):
     context = {
         'form': form
     }
-
     return render(request, 'frontend/pages/auth/login.html', context)
 
 def userRegister(request):
