@@ -47,24 +47,29 @@
                             <div class="details-siderbar">
                                 <div class="content-area">
                                     <div class="content heading2">
-                                        <h2 style="font-size: 24px;">{{ property.name }}</h2>
+                                        <h2 style="font-size: 20px;">{{ property.name }}</h2>
                                         <ul>
                                             <li>
                                                 <a href="#" style="font-size: 18px;">
-                                                    {% if property.price_rwf %}
-                                                        ${{ property.price_rwf|intcomma }} RWF
-                                                    {% else %}
-                                                        Contact for Price
-                                                    {% endif %}
+                                                    Apply For Renting
                                                 </a>
-                                            </li>
-                                            <li>
-                                                <a href="#">{{ property.type }}</a>
                                             </li>
                                         </ul>
                                     </div>
                                     <div class="list-area">
                                         <div class="list">
+                                            <ul>
+                                                <li>Price: </li>
+                                                {% if property.price_rwf|intcomma %}
+                                                    {{ property.price_rwf|intcomma }} RWF
+                                                {% else %}
+                                                    Contact for Price
+                                                {% endif %}
+                                            </ul>
+                                            <ul>
+                                                <li>Type:</li>
+                                                <a href="#" class="text-black">{{ property.type }}</a>
+                                            </ul>
                                             <ul>
                                                 <li>Features:</li>
                                                 {% if property.capacity %}
