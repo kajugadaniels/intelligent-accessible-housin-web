@@ -10,6 +10,9 @@ urlpatterns = [
     path('register', userRegister, name="register"),
 
     path('', home, name="home"),
+
+    path('user/dashboard', userDashboard, name="userDashboard"),
+
     path('properties', getProperties, name="getProperties"),
     path('property/<slug:slug>/', showProperty, name="showProperty"),
 ]  + static(settings.STATIC_URL, document_root=settings.STATIC_ROOT)+ static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)
