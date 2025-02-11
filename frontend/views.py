@@ -116,10 +116,12 @@ def showProperty(request, slug):
     - Also includes additional data such as review statistics.
     """
     property_obj = get_object_or_404(Property, slug=slug)
+    properties = Property.objects.order_by('-created_at')[:4]
 
     context = {
         'property': property_obj,
         'review_data': property_obj.get_review_data() if hasattr(property_obj, 'get_review_data') else {},
+        'properties': properties
     }
 
     return render(request, 'frontend/pages/properties/show.html', context)

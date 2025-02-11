@@ -275,6 +275,66 @@
                     </div>
                 </div>
             </div>
+
+            <div class="row">
+                <div class="col-lg-12">
+                    {% for property in properties %}
+                    <div class="single-slider-area owl-carousel">
+                        <div class="property-boxarea">
+                            {% if property.image %}
+                                <div class="swiper-slide">
+                                    <img src="{{ property.image.url }}" alt="{{ property.name }}">
+                                </div>
+                            {% else %}
+                                <div class="swiper-slide">
+                                    <img src="https://via.placeholder.com/720x480.png?text=No+Image" alt="{{ property.name }}">
+                                </div>
+                            {% endif %}
+                            <div class="category-list">
+                                <ul>
+                                    <li>
+                                        <a href="#">{{ property.type }}</a>
+                                    </li>
+                                    <li>
+                                        <a href="#">{{ property.category }}</a>
+                                    </li>
+                                </ul>
+                            </div>
+                            <div class="content-area">
+                                <a href="{% url 'frontend:showProperty' property.slug %}" style="font-size: 18px;">
+                                {{ property.name }}
+                                </a>
+                                <div class="space18"></div>
+                                <p>
+                                    {{ property.address }}
+                                </p>
+                                <div class="space24"></div>
+                                <ul>
+                                    {% if property.capacity %}
+                                    <li><a href="#"><img src="https://housebox-html-demo.vercel.app/assets/img/icons/bed1.svg" alt="bed">x{{ property.capacity }}</a></li>
+                                    {% endif %}
+                                    {% if property.bathroom %}
+                                    <li><a href="#"><img src="https://housebox-html-demo.vercel.app/assets/img/icons/bath1.svg" alt="bath">x{{ property.bathroom }}</a></li>
+                                    {% endif %}
+                                    {% if property.size %}
+                                    <li><a href="#"><img src="https://housebox-html-demo.vercel.app/assets/img/icons/sqare1.svg" alt="size">{{ property.size }}</a></li>
+                                    {% endif %}
+                                </ul>
+                                <div class="btn-area">
+                                    <a href="#" class="nm-btn">
+                                    {% if property.price_rwf|intcomma %}
+                                    {{ property.price_rwf|intcomma }} RWF
+                                    {% else %}
+                                    Contact for Price
+                                    {% endif %}
+                                    </a>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    {% endfor %}
+                </div>
+            </div>
         </div>
     </div>
 {% endblock %}
