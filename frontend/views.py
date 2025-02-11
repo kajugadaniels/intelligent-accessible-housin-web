@@ -34,6 +34,9 @@ def userLogin(request):
 
     return render(request, 'frontend/pages/auth/login.html', context)
 
+def userRegister(request):
+    return render(request, 'frontend/pages/auth/register.html')
+
 def home(request):
     """
     Home view: Display the homepage with the 4 latest properties.
