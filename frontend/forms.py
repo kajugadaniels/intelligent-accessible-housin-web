@@ -8,7 +8,6 @@ class LoginForm(forms.Form):
     email = forms.EmailField(
         max_length=255,
         widget=forms.EmailInput(attrs={
-            'class': 'form-control',
             'placeholder': 'Enter your email',
             'required': 'required',
             'id': 'emailaddress',
@@ -21,7 +20,6 @@ class LoginForm(forms.Form):
     )
     password = forms.CharField(
         widget=forms.PasswordInput(attrs={
-            'class': 'form-control',
             'placeholder': 'Enter your password',
             'required': 'required',
             'id': 'password',
@@ -60,22 +58,18 @@ class UserProfileForm(forms.ModelForm):
         fields = ['name', 'email', 'phone_number', 'image']
         widgets = {
             'name': forms.TextInput(attrs={
-                'class': 'form-control',
                 'placeholder': 'Enter your full name',
                 'required': 'required',
             }),
             'email': forms.EmailInput(attrs={
-                'class': 'form-control',
                 'placeholder': 'Enter your email address',
                 'required': 'required',
             }),
             'phone_number': forms.TextInput(attrs={
-                'class': 'form-control',
                 'placeholder': 'Enter your phone number',
                 'required': 'required',
             }),
             'image': forms.ClearableFileInput(attrs={
-                'class': 'form-control',
             }),
         }
         labels = {
@@ -122,7 +116,6 @@ class RegisterForm(forms.ModelForm):
     """
     password = forms.CharField(
         widget=forms.PasswordInput(attrs={
-            'class': 'form-control',
             'placeholder': 'Enter Password',
             'required': 'required',
             'id': 'password',
@@ -132,7 +125,6 @@ class RegisterForm(forms.ModelForm):
     )
     confirm_password = forms.CharField(
         widget=forms.PasswordInput(attrs={
-            'class': 'form-control',
             'placeholder': 'Confirm Password',
             'required': 'required',
             'id': 'confirm_password',
@@ -146,17 +138,14 @@ class RegisterForm(forms.ModelForm):
         fields = ['name', 'email', 'phone_number']
         widgets = {
             'name': forms.TextInput(attrs={
-                'class': 'form-control',
                 'placeholder': 'Enter your name',
                 'required': 'required',
             }),
             'email': forms.EmailInput(attrs={
-                'class': 'form-control',
                 'placeholder': 'Enter your email address',
                 'required': 'required',
             }),
             'phone_number': forms.TextInput(attrs={
-                'class': 'form-control',
                 'placeholder': 'Enter your phone number',
                 'required': 'required',
             }),
