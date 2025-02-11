@@ -18,7 +18,7 @@ def userLogin(request):
             user = form.cleaned_data.get('user')
             auth_login(request, user)
             messages.success(request, _("Welcome back! You have successfully logged in."))
-            return redirect(reverse('frontend:home'))
+            return redirect(reverse('frontend:userDashboard'))
         else:
             # Extract and display form errors
             for field, errors in form.errors.items():
