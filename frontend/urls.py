@@ -6,7 +6,7 @@ from django.conf.urls.static import static
 app_name = 'frontend'
 
 urlpatterns = [
-    path('', userLogin, name="login"),
+    path('login', userLogin, name="login"),
 
     path('', home, name="home"),
     path('properties', getProperties, name="getProperties"),
