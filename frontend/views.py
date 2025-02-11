@@ -34,6 +34,12 @@ def userLogin(request):
     }
     return render(request, 'frontend/pages/auth/login.html', context)
 
+def userLogout(request):
+    logout(request)
+    messages.success(request, _("You have been successfully logged out."))
+
+    return redirect('frontend:login')
+
 def userRegister(request):
     if request.user.is_authenticated:
         return redirect(reverse('frontend:userDashboard'))
