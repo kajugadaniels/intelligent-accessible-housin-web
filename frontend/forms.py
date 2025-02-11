@@ -1,5 +1,6 @@
 from django import forms
 from backend.models import *
+from frontend.models import *
 from django.contrib.auth import authenticate
 from django.utils.translation import gettext_lazy as _
 from django.contrib.auth.password_validation import validate_password
@@ -198,3 +199,29 @@ class RegisterForm(forms.ModelForm):
         if commit:
             user.save()
         return user
+
+class RentApplicationForm(forms.ModelForm):
+    """
+    Form for creating a rent application.
+    """
+    class Meta:
+        model = RentApplication
+        fields = ['preferred_move_in_date', 'rental_period_months', 'message']
+        widgets = {
+            'preferred_move_in_date': forms.DateInput(attrs={
+                'placeholder': 'Preferred move-in date',
+                'required': 'required',
+            }),
+            'rental_period_months': forms.NumberInput(attrs={
+                'placeholder': 'Rental period in months',
+                'required': 'required',
+            }),
+            'message': forms.Textarea(attrs={
+                'placeholder': 'Additional message (optional)',
+            }),
+        }
+        labels = {
+            'preferred_move_in_date': _('Preferred Move-in Date'),
+            'rental_period_months': _('Rental Period (in months)'),
+            'message': _('Message'),
+        }
