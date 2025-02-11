@@ -5,7 +5,7 @@
                 <div class="col-lg-12">
                     <div class="header-elements">
                         <div class="site-logo">
-                            <a href="">
+                            <a href="{% url 'frontend:home' %}">
                                 <img src="https://housebox-html-demo.vercel.app/assets/img/logo/logo1.png" alt="">
                             </a>
                         </div>
@@ -29,34 +29,62 @@
                             </ul>
                         </div>
                         <div class="btn-area">
-                            <a href="{% url 'frontend:login' %}" class="theme-btn2">
-                                Sign In
-                                <span class="arrow1">
-                                    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" width="24" height="24" fill="currentColor">
-                                        <path d="M12 13H4V11H12V4L20 12L12 20V13Z"></path>
-                                    </svg>
-                                </span>
-                                <span class="arrow2">
-                                    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" width="24" height="24" fill="currentColor">
-                                        <path d="M12 13H4V11H12V4L20 12L12 20V13Z"></path>
-                                    </svg>
-                                </span>
-                            </a>
-                            <div class="search-icon header__search header-search-btn">
-                            </div>
-                            <a href="{% url 'frontend:register' %}" class="theme-btn1">
-                                Sign Up
-                                <span class="arrow1">
-                                    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" width="24" height="24" fill="currentColor">
-                                        <path d="M12 13H4V11H12V4L20 12L12 20V13Z"></path>
-                                    </svg>
-                                </span>
-                                <span class="arrow2">
-                                    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" width="24" height="24" fill="currentColor">
-                                        <path d="M12 13H4V11H12V4L20 12L12 20V13Z"></path>
-                                    </svg>
-                                </span>
-                            </a>
+                            {% if user.is_authenticated %}
+                                <a href="{% url 'frontend:userDashboard' %}" class="theme-btn2">
+                                    Dashboard
+                                    <span class="arrow1">
+                                        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" width="24" height="24" fill="currentColor">
+                                            <path d="M12 13H4V11H12V4L20 12L12 20V13Z"></path>
+                                        </svg>
+                                    </span>
+                                    <span class="arrow2">
+                                        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" width="24" height="24" fill="currentColor">
+                                            <path d="M12 13H4V11H12V4L20 12L12 20V13Z"></path>
+                                        </svg>
+                                    </span>
+                                </a>
+                                <a href="{% url 'frontend:logout' %}" class="theme-btn1">
+                                    Logout
+                                    <span class="arrow1">
+                                        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" width="24" height="24" fill="currentColor">
+                                            <path d="M12 13H4V11H12V4L20 12L12 20V13Z"></path>
+                                        </svg>
+                                    </span>
+                                    <span class="arrow2">
+                                        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" width="24" height="24" fill="currentColor">
+                                            <path d="M12 13H4V11H12V4L20 12L12 20V13Z"></path>
+                                        </svg>
+                                    </span>
+                                </a>
+                            {% else %}
+                                <a href="{% url 'frontend:login' %}" class="theme-btn2">
+                                    Sign In
+                                    <span class="arrow1">
+                                        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" width="24" height="24" fill="currentColor">
+                                            <path d="M12 13H4V11H12V4L20 12L12 20V13Z"></path>
+                                        </svg>
+                                    </span>
+                                    <span class="arrow2">
+                                        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" width="24" height="24" fill="currentColor">
+                                            <path d="M12 13H4V11H12V4L20 12L12 20V13Z"></path>
+                                        </svg>
+                                    </span>
+                                </a>
+                                <div class="search-icon header__search header-search-btn"></div>
+                                <a href="{% url 'frontend:register' %}" class="theme-btn1">
+                                    Sign Up
+                                    <span class="arrow1">
+                                        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" width="24" height="24" fill="currentColor">
+                                            <path d="M12 13H4V11H12V4L20 12L12 20V13Z"></path>
+                                        </svg>
+                                    </span>
+                                    <span class="arrow2">
+                                        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" width="24" height="24" fill="currentColor">
+                                            <path d="M12 13H4V11H12V4L20 12L12 20V13Z"></path>
+                                        </svg>
+                                    </span>
+                                </a>
+                            {% endif %}
                         </div>
                     </div>
                 </div>
@@ -70,7 +98,7 @@
         <div class="col-12">
             <div class="mobile-header-elements">
                 <div class="mobile-logo">
-                    <a href="#">
+                    <a href="{% url 'frontend:home' %}">
                         <img src="https://housebox-html-demo.vercel.app/assets/img/logo/logo1.png" alt="">
                     </a>
                 </div>
@@ -115,5 +143,22 @@
                 <a href="#">Contact Us</a>
             </li>
         </ul>
+        <div class="mobile-btn-area mt-3">
+            {% if user.is_authenticated %}
+                <a href="{% url 'frontend:userDashboard' %}" class="theme-btn2 d-block mb-2 text-center">
+                    Dashboard
+                </a>
+                <a href="{% url 'frontend:logout' %}" class="theme-btn1 d-block text-center">
+                    Logout
+                </a>
+            {% else %}
+                <a href="{% url 'frontend:login' %}" class="theme-btn2 d-block mb-2 text-center">
+                    Sign In
+                </a>
+                <a href="{% url 'frontend:register' %}" class="theme-btn1 d-block text-center">
+                    Sign Up
+                </a>
+            {% endif %}
+        </div>
     </div>
 </div>
