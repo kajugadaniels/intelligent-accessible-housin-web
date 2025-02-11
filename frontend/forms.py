@@ -210,6 +210,7 @@ class RentApplicationForm(forms.ModelForm):
         widgets = {
             'preferred_move_in_date': forms.DateInput(attrs={
                 'placeholder': 'Preferred move-in date',
+                'type': 'date',
                 'required': 'required',
             }),
             'rental_period_months': forms.NumberInput(attrs={
