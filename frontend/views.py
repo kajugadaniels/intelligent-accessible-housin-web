@@ -189,3 +189,30 @@ def showProperty(request, slug):
     }
 
     return render(request, 'frontend/pages/properties/show.html', context)
+
+def sendRentApplication(request, slug):
+    """
+    Render the rent application form and process form submissions.
+    """
+    property_obj = get_object_or_404(Property, slug=slug)
+
+    if request.method == 'POST':
+        form = RentApplicationForm(request.POST)
+        if form.is_valid():
+            # Automatically prefill the user's data
+            form.instance.user = request.user
+            form.instance.property = property_obj
+            form.save()
+            messages.success(request, "Your rent application has been submitted successfully.")
+            return redirect(reverse('frontend:showProperty', args=[slug]))
+        else:
+            messages.error(request, "Please correct the errors below and try again.")
+    else:
+        form = RentApplicationForm()
+
+    context = {
+        'form': form,
+        'property': property_obj,
+    }
+
+    return render(request, 'frontend/pages/applications/create.html', context)
