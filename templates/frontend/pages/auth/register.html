@@ -1,0 +1,101 @@
+{% extends 'frontend/layouts/app.html' %}
+{% load humanize %}
+{% block content %}
+<div class="hero-inner-section-area-sidebar">
+	<img src="https://housebox-html-demo.vercel.app/assets/img/all-images/hero/hero-img1.png" alt="housebox" class="hero-img1" />
+	<div class="container">
+		<div class="row">
+			<div class="col-lg-12">
+				<div class="hero-header-area text-center">
+					<a href="{% url 'frontend:home' %}">
+						Home
+						<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor">
+							<path d="M13.1717 12.0007L8.22192 7.05093L9.63614 5.63672L16.0001 12.0007L9.63614 18.3646L8.22192 16.9504L13.1717 12.0007Z"></path>
+						</svg>
+						Login
+						<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor">
+							<path d="M13.1717 12.0007L8.22192 7.05093L9.63614 5.63672L16.0001 12.0007L9.63614 18.3646L8.22192 16.9504L13.1717 12.0007Z"></path>
+						</svg>
+					</a>
+					<div class="space24"></div>
+					<h1>Login</h1>
+				</div>
+			</div>
+		</div>
+	</div>
+</div>
+<div class="contact-inner-section sp1">
+	<div class="container">
+		<div class="row align-items-center">
+			<div class="col-lg-10 mx-auto">
+				<div class="row">
+					<div class="col-lg-3"></div>
+					<div class="col-lg-6">
+						<div class="contact-form-area">
+							<h4>Login</h4>
+							<div class="space16"></div>
+							<p>
+								Welcome Again!!!!
+							</p>
+							<hr>
+							<div class="space24"></div>
+							<div class="row">
+								<div class="col-lg-12">
+									<p class="fs-14 fw-semibold">Name</p>
+									<div class="input-area">
+										<input class="mt-12" type="text" placeholder="Enter Name">
+									</div>
+								</div>
+								<div class="col-lg-12">
+									<p class="fs-14 fw-semibold">Email Address</p>
+									<div class="input-area">
+										<input class="mt-12" type="email" placeholder="Enter Email Address">
+									</div>
+								</div>
+								<div class="col-lg-12">
+									<p class="fs-14 fw-semibold">Phone Number</p>
+									<div class="input-area">
+										<input class="mt-12" type="number" placeholder="Enter Phone Number">
+									</div>
+								</div>
+								<div class="col-lg-12 mt-24">
+									<p class="fs-14 fw-semibold">Password</p>
+									<div class="input-area">
+										<input class="mt-12" type="password" placeholder="Enter Password">
+									</div>
+								</div>
+								<div class="col-lg-12 mt-24">
+									<p class="fs-14 fw-semibold">Confirm Password</p>
+									<div class="input-area">
+										<input class="mt-12" type="password" placeholder="Confirm Password">
+									</div>
+								</div>
+								<div class="col-lg-12">
+									<div class="input-area">
+										<button type="submit" class="theme-btn1">
+											Login 
+											<span class="arrow1">
+												<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" width="24" height="24" fill="currentColor">
+													<path d="M12 13H4V11H12V4L20 12L12 20V13Z"></path>
+												</svg>
+											</span>
+											<span class="arrow2">
+												<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" width="24" height="24" fill="currentColor">
+													<path d="M12 13H4V11H12V4L20 12L12 20V13Z"></path>
+												</svg>
+											</span>
+										</button>
+									</div>
+								</div>
+                                <div class="col-lg-12 mt-24">
+                                    <p class="fs-14 neutral-500">Don't have an account? <a href="" class="fw-bold" style="color: #CBCD30;">Sign Up</a></p>
+                                </div>
+							</div>
+						</div>
+					</div>
+				</div>
+			</div>
+		</div>
+	</div>
+</div>
+{% endblock content %}
