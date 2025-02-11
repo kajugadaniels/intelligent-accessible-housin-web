@@ -49,7 +49,7 @@ def userRegister(request):
             user = form.save()
             auth_login(request, user)
             messages.success(request, _("Your account has been created successfully and you are now logged in."))
-            return redirect(reverse('frontend:userDashboard'))
+            return redirect(reverse('frontend:login'))
         else:
             for field, errors in form.errors.items():
                 for error in errors:
