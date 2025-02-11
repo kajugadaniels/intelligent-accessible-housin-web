@@ -51,7 +51,7 @@
                                         <ul>
                                             {% if user.is_authenticated %}
                                                 <li>
-                                                    <a href="{% url 'frontend:sendRentApplication' %}" style="font-size: 18px;">
+                                                    <a href="{% url 'frontend:sendRentApplication' property.slug %}" style="font-size: 18px;">
                                                         Apply For Renting
                                                     </a>
                                                 </li>
