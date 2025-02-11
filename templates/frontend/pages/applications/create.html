@@ -1,27 +1,104 @@
 {% extends 'frontend/layouts/app.html' %}
 {% load humanize %}
 {% block content %}
-    <div class="hero-inner-section-area-sidebar">
-        <img src="https://housebox-html-demo.vercel.app/assets/img/all-images/hero/hero-img1.png" alt="housebox" class="hero-img1" />
-        <div class="container">
-            <div class="row">
-                <div class="col-lg-12">
-                    <div class="hero-header-area text-center">
-                        <a href="{% url 'frontend:home' %}">
-                            Home
-                            <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor">
-                                <path d="M13.1717 12.0007L8.22192 7.05093L9.63614 5.63672L16.0001 12.0007L9.63614 18.3646L8.22192 16.9504L13.1717 12.0007Z"></path>
-                            </svg>
-                            Rent Apply
-                            <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor">
-                                <path d="M13.1717 12.0007L8.22192 7.05093L9.63614 5.63672L16.0001 12.0007L9.63614 18.3646L8.22192 16.9504L13.1717 12.0007Z"></path>
-                            </svg>
-                        </a>
-                        <div class="space24"></div>
-                        <h1>Rent Apply</h1>
+<div class="hero-inner-section-area-sidebar">
+    <img src="https://housebox-html-demo.vercel.app/assets/img/all-images/hero/hero-img1.png" alt="housebox" class="hero-img1" />
+    <div class="container">
+        <div class="row">
+            <div class="col-lg-12">
+                <div class="hero-header-area text-center">
+                    <a href="{% url 'frontend:home' %}">
+                        Home
+                        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor">
+                            <path d="M13.1717 12.0007L8.22192 7.05093L9.63614 5.63672L16.0001 12.0007L9.63614 18.3646L8.22192 16.9504L13.1717 12.0007Z"></path>
+                        </svg>
+                        Apply for Renting
+                    </a>
+                    <div class="space24"></div>
+                    <h1 style="font-size: 30px;">Apply for Renting: {{ property.name }}</h1>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div class="contact-inner-section sp1">
+    <div class="container">
+        <div class="row align-items-center">
+            <div class="col-lg-10 mx-auto">
+                <div class="row">
+                    <div class="col-lg-3"></div>
+                    <div class="col-lg-6">
+                        <div class="contact-form-area">
+                            <h4>Rent Application Form</h4>
+                            <div class="space16"></div>
+                            <p>Fill in the details below to apply for renting this property.</p>
+                            <hr>
+                            <div class="space24"></div>
+                            <form method="POST">
+                                {% csrf_token %}
+                                {{ form.non_field_errors }}
+                                <div class="row">
+                                    <div class="col-lg-12">
+                                        <p class="fs-14 fw-semibold">{{ form.preferred_move_in_date.label }}</p>
+                                        <div class="input-area">
+                                            {{ form.preferred_move_in_date }}
+                                        </div>
+                                        {% if form.preferred_move_in_date.errors %}
+                                            <div class="text-danger">
+                                                {{ form.preferred_move_in_date.errors }}
+                                            </div>
+                                        {% endif %}
+                                    </div>
+                                    <div class="col-lg-6 mt-12">
+                                        <p class="fs-14 fw-semibold">{{ form.rental_period_months.label }}</p>
+                                        <div class="input-area">
+                                            {{ form.rental_period_months }}
+                                        </div>
+                                        {% if form.rental_period_months.errors %}
+                                            <div class="text-danger">
+                                                {{ form.rental_period_months.errors }}
+                                            </div>
+                                        {% endif %}
+                                    </div>
+                                    <div class="col-lg-12 mt-12">
+                                        <p class="fs-14 fw-semibold">{{ form.message.label }}</p>
+                                        <div class="input-area">
+                                            {{ form.message }}
+                                        </div>
+                                        {% if form.message.errors %}
+                                            <div class="text-danger">
+                                                {{ form.message.errors }}
+                                            </div>
+                                        {% endif %}
+                                    </div>
+                                    <div class="col-lg-12">
+                                        <div class="input-area">
+                                            <button type="submit" class="theme-btn1 w-100">
+                                                Submit Application 
+                                                <span class="arrow1">
+                                                    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" width="24" height="24" fill="currentColor">
+                                                        <path d="M12 13H4V11H12V4L20 12L12 20V13Z"></path>
+                                                    </svg>
+                                                </span>
+                                                <span class="arrow2">
+                                                    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" width="24" height="24" fill="currentColor">
+                                                        <path d="M12 13H4V11H12V4L20 12L12 20V13Z"></path>
+                                                    </svg>
+                                                </span>
+                                            </button>
+                                        </div>
+                                    </div>
+                                    <div class="col-lg-12 mt-24 text-center">
+                                        <p class="fs-14 neutral-500">Need more information? <a href="#" class="fw-bold" style="color: #CBCD30;">Contact us</a></p>
+                                    </div>
+                                </div>
+                            </form>
+                        </div>
                     </div>
                 </div>
             </div>
         </div>
     </div>
+</div>
 {% endblock %}
