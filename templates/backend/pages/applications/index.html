@@ -1,0 +1,67 @@
+{% extends 'backend/layouts/app.html' %}
+{% load static %}
+{% load humanize %}
+{% block content %}
+
+<div class="container-fluid">
+    <div class="row"> 
+        <div class="col-sm-12"> 
+            <div class="card"> 
+                <div class="card-body">
+                    <div class="list-product-header">
+                        <div class="d-flex justify-content-between">
+                            <h4>Rent Applications</h4>
+                        </div>
+                    </div>
+                    <hr>
+                    <div class="list-product">
+                        <table class="table" id="project-status">
+                            <thead> 
+                                <tr> 
+                                    <th>
+                                        <div class="form-check"> 
+                                            <input class="form-check-input checkbox-primary" type="checkbox">
+                                        </div>
+                                    </th>
+                                    <th><span class="f-light f-w-600">Property</span></th>
+                                    <th><span class="f-light f-w-600">User</span></th>
+                                    <th><span class="f-light f-w-600">Sent</span></th>
+                                    <th><span class="f-light f-w-600">Action</span></th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                {% for application in applications %}
+                                    <tr class="product-removes">
+                                        <td>
+                                            <div class="form-check"> 
+                                                <input class="form-check-input checkbox-primary" type="checkbox">
+                                            </div>
+                                        </td>
+                                        <td>
+                                            <p class="f-light">{{ application.property.name }}</p>
+                                        </td>
+                                        <td>
+                                            <p class="f-light">{{ application.user.name }}</p>
+                                        </td>
+                                        <td>
+                                            <p class="f-light">{{ application.created_at|naturaltime }}</p>
+                                        </td>
+                                        <td>
+                                            <div class="product-action">
+                                                <a href="#" class="btn btn-primary">
+                                                    View
+                                                </a>
+                                            </div>
+                                        </td>
+                                    </tr>
+                                {% endfor %}
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+{% endblock %}
