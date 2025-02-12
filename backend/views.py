@@ -528,3 +528,40 @@ def showApplication(request, id):
     }
 
     return render(request, 'backend/pages/applications/show.html', context)
+
+@login_required
+def updateApplicationStatus(request, id):
+    # if request.user.role != 'House Provider':
+    #     raise PermissionDenied(_("You are not authorized to view this Property."))
+
+    """
+    Admin view to accept, reject, or mark a rent application as Moved Out.
+    """
+    # Fetch the rent application object by id
+    application = get_object_or_404(RentApplication, id=id)
+
+    # Check if the user is an admin
+    if request.user.role != 'Admin':
+        raise PermissionDenied("You do not have permission to perform this action.")
+
+    if request.method == 'POST':
+        # Get the selected status from the form
+        status = request.POST.get('status')
+
+        # Ensure the status is valid
+        if status not in ['Accepted', 'Rejected', 'Moved Out']:
+            messages.error(request, "Invalid status.")
+            return redirect('backend:showApplication', id=id)
+
+        # Update the application's status
+        application.status = status
+        application.save()
+
+        messages.success(request, f"Application status updated to {status}.")
+        return redirect('backend:showApplication', id=id)
+
+    context = {
+        'application': application,
+    }
+
+    return render(request, 'backend/pages/applications/edit.html', context)
