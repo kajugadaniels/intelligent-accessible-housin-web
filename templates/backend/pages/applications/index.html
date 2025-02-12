@@ -59,6 +59,10 @@
                                                     <a href="{% url 'backend:updateApplicationStatus' application.id %}" class="btn btn-warning">
                                                         Manage Application
                                                     </a>
+                                                {% elif application.status == "Accepted" %}
+                                                    <a href="#" class="btn btn-success">
+                                                        Send Contract
+                                                    </a>
                                                 {% endif %}
                                             </div>
                                         </td>
