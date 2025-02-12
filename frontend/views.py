@@ -217,5 +217,12 @@ def sendRentApplication(request, slug):
 def userDashboard(request):
     return render(request, 'frontend/pages/user/dashboard.html')
 
+@login_required
 def getUserApplication(request):
-    return render(request, 'frontend/pages/user/applications/index.html')
+    applications = RentApplication.objects.filter(user=request.user)
+    
+    context = {
+        'applications': applications,
+    }
+    
+    return render(request, 'frontend/pages/user/applications/index.html', context)
