@@ -387,8 +387,7 @@ class ContractForm(forms.ModelForm):
     class Meta:
         model = Contract
         fields = [
-            'tenant', 'agent', 'property', 'contract_number', 
-            'start_date', 'end_date', 'rental_period_months', 
+            'contract_number', 'start_date', 'end_date', 'rental_period_months', 
             'rent_amount', 'security_deposit', 'payment_status', 
             'status', 'additional_terms', 'rent_due_date', 'payment_method'
         ]
@@ -404,7 +403,7 @@ class ContractForm(forms.ModelForm):
         super().__init__(*args, **kwargs)
         self.rent_application = rent_application
 
-        # Automatically populate tenant, agent, and property fields
+        # Automatically populate tenant, agent, and property fields from RentApplication
         self.fields['tenant'].initial = rent_application.user
         self.fields['agent'].initial = rent_application.property.created_by
         self.fields['property'].initial = rent_application.property
@@ -415,7 +414,7 @@ class ContractForm(forms.ModelForm):
         self.fields['contract_number'].initial = next_contract_number
 
         # Set start date to today's date
-        self.fields['start_date'].initial = forms.DateInput(attrs={'class': 'form-control', 'value': timezone.now().date()})
+        self.fields['start_date'].initial = timezone.now().date()
 
         # Set end date based on rental_period_months (calculate and auto-populate)
         rental_period_months = rent_application.rental_period_months
@@ -426,7 +425,7 @@ class ContractForm(forms.ModelForm):
             self.fields['rental_period_months'].initial = rental_period_months
 
         # Set rent amount automatically from the Property model
-        self.fields['rent_amount'].initial = rent_application.property.price_rwf
+        self.fields['rent_amount'].initial = rent_application.property.rent_amount
         self.fields['payment_status'].initial = 'Pending'
         self.fields['status'].initial = 'Pending'
         
