@@ -246,7 +246,7 @@ def userDashboard(request):
 
 @login_required
 def getUserApplications(request):
-    applications = RentApplication.objects.filter(user=request.user)
+    applications = RentApplication.objects.filter(user=request.user).order_by('-created_at')
     
     context = {
         'applications': applications,
