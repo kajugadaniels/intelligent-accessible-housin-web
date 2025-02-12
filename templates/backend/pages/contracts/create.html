@@ -1,5 +1,6 @@
 {% extends 'backend/layouts/app.html' %}
 {% load static %}
+{% load humanize %}
 {% block content %}
 
 <div class="container-fluid">
@@ -10,37 +11,16 @@
                     <div class="list-client-header">
                         <div class="d-flex justify-content-between">
                             <h4>Create Contract</h4>
-                            <a class="btn btn-primary" href="{% url 'backend:getRentApplications' %}"><i class="fa fa-arrow-left"></i> Go Back</a>
+                            <a class="btn btn-primary" href="{% url 'backend:getRentApplications' %}">
+                                <i class="fa fa-arrow-left"></i> Go Back
+                            </a>
                         </div>
                     </div>
                     <hr>
                     <form method="post">
                         {% csrf_token %}
+                        
                         <div class="row">
-                            <div class="col-md-6 mb-3">
-                                <label class="form-label">{{ form.tenant.label }}</label>
-                                {{ form.tenant }}
-                                {% for error in form.tenant.errors %}
-                                    <div class="text-danger">{{ error }}</div>
-                                {% endfor %}
-                            </div>
-                            <div class="col-md-6 mb-3">
-                                <label class="form-label">{{ form.agent.label }}</label>
-                                {{ form.agent }}
-                                {% for error in form.agent.errors %}
-                                    <div class="text-danger">{{ error }}</div>
-                                {% endfor %}
-                            </div>
-                        </div>
-
-                        <div class="row">
-                            <div class="col-md-6 mb-3">
-                                <label class="form-label">{{ form.property.label }}</label>
-                                {{ form.property }}
-                                {% for error in form.property.errors %}
-                                    <div class="text-danger">{{ error }}</div>
-                                {% endfor %}
-                            </div>
                             <div class="col-md-6 mb-3">
                                 <label class="form-label">{{ form.contract_number.label }}</label>
                                 {{ form.contract_number }}
@@ -48,9 +28,7 @@
                                     <div class="text-danger">{{ error }}</div>
                                 {% endfor %}
                             </div>
-                        </div>
 
-                        <div class="row">
                             <div class="col-md-6 mb-3">
                                 <label class="form-label">{{ form.start_date.label }}</label>
                                 {{ form.start_date }}
@@ -58,6 +36,9 @@
                                     <div class="text-danger">{{ error }}</div>
                                 {% endfor %}
                             </div>
+                        </div>
+
+                        <div class="row">
                             <div class="col-md-6 mb-3">
                                 <label class="form-label">{{ form.end_date.label }}</label>
                                 {{ form.end_date }}
@@ -65,16 +46,7 @@
                                     <div class="text-danger">{{ error }}</div>
                                 {% endfor %}
                             </div>
-                        </div>
 
-                        <div class="row">
-                            <div class="col-md-6 mb-3">
-                                <label class="form-label">{{ form.rental_period_months.label }}</label>
-                                {{ form.rental_period_months }}
-                                {% for error in form.rental_period_months.errors %}
-                                    <div class="text-danger">{{ error }}</div>
-                                {% endfor %}
-                            </div>
                             <div class="col-md-6 mb-3">
                                 <label class="form-label">{{ form.rent_amount.label }}</label>
                                 {{ form.rent_amount }}
@@ -92,6 +64,7 @@
                                     <div class="text-danger">{{ error }}</div>
                                 {% endfor %}
                             </div>
+
                             <div class="col-md-6 mb-3">
                                 <label class="form-label">{{ form.payment_status.label }}</label>
                                 {{ form.payment_status }}
@@ -109,6 +82,7 @@
                                     <div class="text-danger">{{ error }}</div>
                                 {% endfor %}
                             </div>
+
                             <div class="col-md-6 mb-3">
                                 <label class="form-label">{{ form.rent_due_date.label }}</label>
                                 {{ form.rent_due_date }}
