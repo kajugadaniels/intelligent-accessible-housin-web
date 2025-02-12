@@ -7,6 +7,7 @@ class RentApplication(models.Model):
         ('Pending', 'Pending'),
         ('Accepted', 'Accepted'),
         ('Rejected', 'Rejected'),
+        ('Moved Out', 'Moved Out'),
     )
 
     user = models.ForeignKey(User, on_delete=models.CASCADE, related_name='rent_applications')
@@ -18,7 +19,7 @@ class RentApplication(models.Model):
     created_at = models.DateTimeField(default=timezone.now)
 
     def __str__(self):
-        return f"Application by {self.full_name} for {self.property.name}"
+        return f"Application by {self.user.get_full_name()} for {self.property.name}"
 
     class Meta:
         verbose_name_plural = "Rent Applications"
