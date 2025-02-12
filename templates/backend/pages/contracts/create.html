@@ -136,6 +136,9 @@
                             </div>
                         </div>
 
+                        <!-- Rental Period Months (Calculated by JavaScript) -->
+                        <input type="hidden" name="rental_period_months" id="rental_period_months">
+
                         <div class="row mt-2">
                             <div class="col text-end">
                                 <button type="submit" class="btn btn-primary">Create Contract</button>
@@ -147,5 +150,26 @@
         </div>
     </div>
 </div>
+
+<script>
+    // Calculate the rental period in months when start date or end date is changed
+    document.addEventListener("DOMContentLoaded", function() {
+        const startDateInput = document.getElementById("id_start_date");
+        const endDateInput = document.getElementById("id_end_date");
+        const rentalPeriodMonthsField = document.getElementById("rental_period_months");
+
+        function calculateRentalPeriod() {
+            const startDate = new Date(startDateInput.value);
+            const endDate = new Date(endDateInput.value);
+            if (startDate && endDate) {
+                const months = (endDate.getFullYear() - startDate.getFullYear()) * 12 + (endDate.getMonth() - startDate.getMonth());
+                rentalPeriodMonthsField.value = months;
+            }
+        }
+
+        startDateInput.addEventListener("change", calculateRentalPeriod);
+        endDateInput.addEventListener("change", calculateRentalPeriod);
+    });
+</script>
 
 {% endblock %}
