@@ -608,11 +608,18 @@ def createContract(request, application_id):
     if request.method == 'POST':
         form = ContractForm(rent_application=application, data=request.POST)
         if form.is_valid():
-            contract = form.save()
+            contract = form.save(commit=False)
+            contract.rent_application = application  # Ensure rent_application is set to this application
+            contract.save()
             messages.success(request, _("Contract has been created successfully."))
             return redirect(reverse('backend:showContract', kwargs={'id': contract.id}))
         else:
+            # Display detailed error messages for each field
+            for field in form.errors:
+                for error in form.errors[field]:
+                    messages.error(request, f"{form.fields[field].label}: {error}")
             messages.error(request, _("Please correct the errors below and try again."))
+
     else:
         form = ContractForm(rent_application=application)
 
