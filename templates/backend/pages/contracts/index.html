@@ -1,41 +1,30 @@
 {% extends 'backend/layouts/app.html' %}
 {% block content %}
 <div class="container-fluid">
-    <div class="row">
-        <div class="col-sm-12">
-            <div class="card">
-                <div class="card-body">
-                    <h4>All Contracts</h4>
-                    <hr>
-                    <table class="table">
-                        <thead>
-                            <tr>
-                                <th>Contract #</th>
-                                <th>Tenant</th>
-                                <th>Property</th>
-                                <th>Status</th>
-                                <th>Start Date</th>
-                                <th>Actions</th>
-                            </tr>
-                        </thead>
-                        <tbody>
-                            {% for contract in contracts %}
-                                <tr>
-                                    <td>{{ contract.contract_number }}</td>
-                                    <td>{{ contract.tenant.name }}</td>
-                                    <td>{{ contract.property.name }}</td>
-                                    <td>{{ contract.status }}</td>
-                                    <td>{{ contract.start_date }}</td>
-                                    <td>
-                                        <a href="{% url 'backend:showContract' contract.id %}" class="btn btn-info">View</a>
-                                    </td>
-                                </tr>
-                            {% endfor %}
-                        </tbody>
-                    </table>
-                </div>
-            </div>
-        </div>
-    </div>
+    <h4>Contracts</h4>
+    <table class="table">
+        <thead>
+            <tr>
+                <th>Contract Number</th>
+                <th>Tenant</th>
+                <th>Property</th>
+                <th>Status</th>
+                <th>Action</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for contract in contracts %}
+            <tr>
+                <td>{{ contract.contract_number }}</td>
+                <td>{{ contract.tenant.name }}</td>
+                <td>{{ contract.property.name }}</td>
+                <td>{{ contract.status }}</td>
+                <td>
+                    <a href="{% url 'backend:show_contract' contract.id %}" class="btn btn-info">View</a>
+                </td>
+            </tr>
+            {% endfor %}
+        </tbody>
+    </table>
 </div>
 {% endblock %}
