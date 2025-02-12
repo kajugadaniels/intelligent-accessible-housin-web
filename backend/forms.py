@@ -377,3 +377,48 @@ class PropertyForm(forms.ModelForm):
                 'required': _('Please enter the capacity.'),
             },
         }
+
+class ContractForm(forms.ModelForm):
+    """
+    Form for creating or updating a rental contract.
+    """
+    class Meta:
+        model = Contract
+        fields = [
+            'tenant',
+            'agent',
+            'property',
+            'start_date',
+            'end_date',
+            'rental_period_months',
+            'rent_amount',
+            'security_deposit',
+            'payment_status',
+            'status',
+            'signed_date',
+            'additional_terms',
+            'rent_due_date',
+            'payment_method',
+        ]
+        widgets = {
+            'start_date': forms.DateInput(attrs={'type': 'date'}),
+            'end_date': forms.DateInput(attrs={'type': 'date'}),
+            'signed_date': forms.DateInput(attrs={'type': 'date'}),
+            'rent_due_date': forms.DateInput(attrs={'type': 'date'}),
+        }
+        labels = {
+            'tenant': _('Tenant'),
+            'agent': _('Agent'),
+            'property': _('Property'),
+            'start_date': _('Start Date'),
+            'end_date': _('End Date'),
+            'rental_period_months': _('Rental Period (months)'),
+            'rent_amount': _('Rent Amount (in RWF)'),
+            'security_deposit': _('Security Deposit (in RWF)'),
+            'payment_status': _('Payment Status'),
+            'status': _('Contract Status'),
+            'signed_date': _('Signed Date'),
+            'additional_terms': _('Additional Terms'),
+            'rent_due_date': _('Rent Due Date'),
+            'payment_method': _('Payment Method'),
+        }
