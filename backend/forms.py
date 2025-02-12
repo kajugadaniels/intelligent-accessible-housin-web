@@ -1,7 +1,7 @@
 import random
 from django import forms
 from backend.models import *
-from django.utils import timezone
+from datetime import datetime, timedelta
 from django.contrib.auth import authenticate
 from django.utils.translation import gettext_lazy as _
 from django.contrib.auth.password_validation import validate_password
@@ -380,56 +380,66 @@ class PropertyForm(forms.ModelForm):
             },
         }
 
+# backend/forms.py
+
 class ContractForm(forms.ModelForm):
+    """
+    Form for creating a rental contract, with the automatic population of certain fields.
+    """
     class Meta:
         model = Contract
         fields = [
-            'tenant', 'agent', 'property', 'contract_number', 'start_date', 
-            'end_date', 'rental_period_months', 'rent_amount', 'security_deposit',
-            'payment_status', 'status', 'additional_terms', 'rent_due_date', 'payment_method'
+            'tenant', 'agent', 'property', 'contract_number', 
+            'start_date', 'end_date', 'rental_period_months', 
+            'rent_amount', 'security_deposit', 'payment_status', 
+            'status', 'additional_terms', 'rent_due_date', 'payment_method'
         ]
         widgets = {
-            'start_date': forms.DateInput(attrs={'type': 'date'}),
-            'end_date': forms.DateInput(attrs={'type': 'date'}),
-            'additional_terms': forms.Textarea(attrs={'class': 'form-control', 'id': 'additional_terms'})
+            'start_date': forms.DateInput(attrs={'class': 'form-control', 'type': 'date'}),
+            'end_date': forms.DateInput(attrs={'class': 'form-control', 'type': 'date'}),
+            'additional_terms': forms.Textarea(attrs={'class': 'form-control', 'rows': 5}),
+            'rent_due_date': forms.DateInput(attrs={'class': 'form-control', 'type': 'date'}),
+            'payment_method': forms.TextInput(attrs={'class': 'form-control'}),
         }
 
-    def __init__(self, *args, **kwargs):
-        rent_application = kwargs.pop('rent_application', None)
+    def __init__(self, rent_application, *args, **kwargs):
         super().__init__(*args, **kwargs)
+        self.rent_application = rent_application
 
-        if rent_application:
-            # Automatically populate fields from the rent application
-            self.fields['tenant'].initial = rent_application.user.id
-            self.fields['agent'].initial = rent_application.property.created_by.id
-            self.fields['property'].initial = rent_application.property.id
-            self.fields['contract_number'].initial = self.generate_contract_number()
-            self.fields['start_date'].initial = timezone.now().date()
-            self.fields['end_date'].initial = self.calculate_end_date(rent_application)
-            self.fields['rental_period_months'].initial = rent_application.rental_period_months
-            self.fields['rent_amount'].initial = rent_application.property.price_rwf
-            self.fields['security_deposit'].initial = rent_application.user.security_deposit  # Assuming field exists
-            self.fields['payment_status'].initial = 'Pending'
-            self.fields['status'].initial = 'Pending'
-            self.fields['rent_due_date'].initial = rent_application.user.rent_due_date  # Assuming field exists
-            self.fields['payment_method'].initial = rent_application.user.payment_method  # Assuming field exists
+        # Automatically populate tenant, agent, and property fields
+        self.fields['tenant'].initial = rent_application.user
+        self.fields['agent'].initial = rent_application.property.created_by
+        self.fields['property'].initial = rent_application.property
 
-    def generate_contract_number(self):
+        # Generate contract number (7 digit starting from 0000001)
         last_contract = Contract.objects.all().order_by('-id').first()
-        last_number = int(last_contract.contract_number[1:]) if last_contract else 0
-        new_number = last_number + 1
-        return f"{new_number:07d}"  # 7 digits, starting from 0000001
+        next_contract_number = f"{last_contract.id + 1 if last_contract else 1:07d}"
+        self.fields['contract_number'].initial = next_contract_number
 
-    def calculate_end_date(self, rent_application):
-        start_date = self.cleaned_data.get('start_date', timezone.now().date())
+        # Set start date to today's date
+        self.fields['start_date'].initial = forms.DateInput(attrs={'class': 'form-control', 'value': timezone.now().date()})
+
+        # Set end date based on rental_period_months (calculate and auto-populate)
         rental_period_months = rent_application.rental_period_months
-        end_date = start_date.replace(month=start_date.month + rental_period_months)
-        return end_date
+        if rental_period_months:
+            start_date = timezone.now().date()
+            end_date = start_date + timedelta(months=rental_period_months)
+            self.fields['end_date'].initial = end_date
+            self.fields['rental_period_months'].initial = rental_period_months
 
+        # Set rent amount automatically from the Property model
+        self.fields['rent_amount'].initial = rent_application.property.rent_amount
+        self.fields['payment_status'].initial = 'Pending'
+        self.fields['status'].initial = 'Pending'
+        
     def clean(self):
         cleaned_data = super().clean()
+
+        # Ensure the rental period is valid
         start_date = cleaned_data.get('start_date')
         end_date = cleaned_data.get('end_date')
-        if start_date and end_date and start_date > end_date:
-            raise forms.ValidationError("End date must be after start date.")
+        
+        if start_date and end_date:
+            rental_period_months = (end_date.year - start_date.year) * 12 + end_date.month - start_date.month
+            cleaned_data['rental_period_months'] = rental_period_months
         return cleaned_data
