@@ -179,13 +179,22 @@ def showProperty(request, slug):
     property_obj = get_object_or_404(Property, slug=slug)
     properties = Property.objects.order_by('-created_at')[:4]
 
+    # Check if the user is authenticated and if they have already applied for this property
+    application_status = None
+    if request.user.is_authenticated:
+        application = RentApplication.objects.filter(user=request.user, property=property_obj).first()
+        if application:
+            application_status = application.status
+
     context = {
         'property': property_obj,
         'review_data': property_obj.get_review_data() if hasattr(property_obj, 'get_review_data') else {},
-        'properties': properties
+        'properties': properties,
+        'application_status': application_status,  # Add the application status to the context
     }
 
     return render(request, 'frontend/pages/properties/show.html', context)
+
 
 @login_required
 def sendRentApplication(request, slug):
