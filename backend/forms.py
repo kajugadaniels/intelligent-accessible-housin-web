@@ -387,8 +387,8 @@ class ContractForm(forms.ModelForm):
     class Meta:
         model = Contract
         fields = [
-            'contract_number', 'start_date', 'end_date', 'rental_period_months', 
-            'rent_amount', 'security_deposit', 'payment_status', 
+            'tenant', 'agent', 'property', 'contract_number', 'start_date', 'end_date', 
+            'rental_period_months', 'rent_amount', 'security_deposit', 'payment_status', 
             'status', 'additional_terms', 'rent_due_date', 'payment_method'
         ]
         widgets = {
@@ -403,7 +403,7 @@ class ContractForm(forms.ModelForm):
         super().__init__(*args, **kwargs)
         self.rent_application = rent_application
 
-        # Check if the tenant field exists before assigning it
+        # Ensure 'tenant' is correctly populated from RentApplication's user
         if 'tenant' in self.fields:
             self.fields['tenant'].initial = rent_application.user  # Assign tenant from RentApplication's user
         if 'agent' in self.fields:
