@@ -1,3 +1,9 @@
 from django.contrib import admin
+from frontend.models import *
 
-# Register your models here.
+class RentApplicationAdmin(admin.ModelAdmin):
+    list_display = ('user', 'property', 'status', 'created_at')
+    search_fields = ('user',)
+    ordering = ('-created_at',)
+
+admin.site.register(RentApplication, RentApplicationAdmin)
