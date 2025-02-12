@@ -608,3 +608,17 @@ def addContract(request):
     }
 
     return render(request, 'backend/pages/contracts/create.html', context)
+
+@login_required
+def showContract(request, id):
+    """
+    View to display details of a single contract.
+    """
+    contract = get_object_or_404(Contract, id=id)
+
+    context = {
+        'contract': contract,
+        'title': f"Contract #{contract.contract_number}",
+    }
+
+    return render(request, 'backend/pages/contracts/show.html', context)
