@@ -1,5 +1,7 @@
+import random
 from django import forms
 from backend.models import *
+from django.utils import timezone
 from django.contrib.auth import authenticate
 from django.utils.translation import gettext_lazy as _
 from django.contrib.auth.password_validation import validate_password
@@ -379,46 +381,55 @@ class PropertyForm(forms.ModelForm):
         }
 
 class ContractForm(forms.ModelForm):
-    """
-    Form for creating or updating a rental contract.
-    """
     class Meta:
         model = Contract
         fields = [
-            'tenant',
-            'agent',
-            'property',
-            'start_date',
-            'end_date',
-            'rental_period_months',
-            'rent_amount',
-            'security_deposit',
-            'payment_status',
-            'status',
-            'signed_date',
-            'additional_terms',
-            'rent_due_date',
-            'payment_method',
+            'tenant', 'agent', 'property', 'contract_number', 'start_date', 
+            'end_date', 'rental_period_months', 'rent_amount', 'security_deposit',
+            'payment_status', 'status', 'additional_terms', 'rent_due_date', 'payment_method'
         ]
         widgets = {
             'start_date': forms.DateInput(attrs={'type': 'date'}),
             'end_date': forms.DateInput(attrs={'type': 'date'}),
-            'signed_date': forms.DateInput(attrs={'type': 'date'}),
-            'rent_due_date': forms.DateInput(attrs={'type': 'date'}),
+            'additional_terms': forms.Textarea(attrs={'class': 'form-control', 'id': 'additional_terms'})
         }
-        labels = {
-            'tenant': _('Tenant'),
-            'agent': _('Agent'),
-            'property': _('Property'),
-            'start_date': _('Start Date'),
-            'end_date': _('End Date'),
-            'rental_period_months': _('Rental Period (months)'),
-            'rent_amount': _('Rent Amount (in RWF)'),
-            'security_deposit': _('Security Deposit (in RWF)'),
-            'payment_status': _('Payment Status'),
-            'status': _('Contract Status'),
-            'signed_date': _('Signed Date'),
-            'additional_terms': _('Additional Terms'),
-            'rent_due_date': _('Rent Due Date'),
-            'payment_method': _('Payment Method'),
-        }
+
+    def __init__(self, *args, **kwargs):
+        rent_application = kwargs.pop('rent_application', None)
+        super().__init__(*args, **kwargs)
+
+        if rent_application:
+            # Automatically populate fields from the rent application
+            self.fields['tenant'].initial = rent_application.user.id
+            self.fields['agent'].initial = rent_application.property.created_by.id
+            self.fields['property'].initial = rent_application.property.id
+            self.fields['contract_number'].initial = self.generate_contract_number()
+            self.fields['start_date'].initial = timezone.now().date()
+            self.fields['end_date'].initial = self.calculate_end_date(rent_application)
+            self.fields['rental_period_months'].initial = rent_application.rental_period_months
+            self.fields['rent_amount'].initial = rent_application.property.price_rwf
+            self.fields['security_deposit'].initial = rent_application.user.security_deposit  # Assuming field exists
+            self.fields['payment_status'].initial = 'Pending'
+            self.fields['status'].initial = 'Pending'
+            self.fields['rent_due_date'].initial = rent_application.user.rent_due_date  # Assuming field exists
+            self.fields['payment_method'].initial = rent_application.user.payment_method  # Assuming field exists
+
+    def generate_contract_number(self):
+        last_contract = Contract.objects.all().order_by('-id').first()
+        last_number = int(last_contract.contract_number[1:]) if last_contract else 0
+        new_number = last_number + 1
+        return f"{new_number:07d}"  # 7 digits, starting from 0000001
+
+    def calculate_end_date(self, rent_application):
+        start_date = self.cleaned_data.get('start_date', timezone.now().date())
+        rental_period_months = rent_application.rental_period_months
+        end_date = start_date.replace(month=start_date.month + rental_period_months)
+        return end_date
+
+    def clean(self):
+        cleaned_data = super().clean()
+        start_date = cleaned_data.get('start_date')
+        end_date = cleaned_data.get('end_date')
+        if start_date and end_date and start_date > end_date:
+            raise forms.ValidationError("End date must be after start date.")
+        return cleaned_data
