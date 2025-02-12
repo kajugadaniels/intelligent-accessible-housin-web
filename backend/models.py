@@ -261,3 +261,46 @@ class PropertyReview(models.Model):
 
     class Meta:
         verbose_name_plural = "Property Reviews"
+
+class Contract(models.Model):
+    STATUS_CHOICES = (
+        ('Active', 'Active'),
+        ('Terminated', 'Terminated'),
+        ('Expired', 'Expired'),
+        ('Pending', 'Pending'),
+    )
+
+    PAYMENT_STATUS_CHOICES = (
+        ('Paid', 'Paid'),
+        ('Pending', 'Pending'),
+        ('Overdue', 'Overdue'),
+    )
+
+    tenant = models.ForeignKey(User, on_delete=models.CASCADE, related_name='tenant_contracts')
+    agent = models.ForeignKey(User, on_delete=models.CASCADE, related_name='house_provider_contracts')
+    property = models.ForeignKey(Property, on_delete=models.CASCADE, related_name='contracts')
+
+    contract_number = models.CharField(max_length=100, unique=True, blank=True, null=True)
+    start_date = models.DateField(default=timezone.now, help_text="The start date of the rental contract.")
+    end_date = models.DateField(help_text="The end date of the rental contract.")
+    rental_period_months = models.PositiveIntegerField(help_text="The length of the rental period in months.")
+    rent_amount = models.DecimalField(max_digits=10, decimal_places=2, help_text="Monthly rent amount.")
+    security_deposit = models.DecimalField(max_digits=10, decimal_places=2, help_text="Security deposit amount.")
+    payment_status = models.CharField(max_length=10, choices=PAYMENT_STATUS_CHOICES, default='Pending', help_text="The current payment status of the contract.")
+    status = models.CharField(max_length=10, choices=STATUS_CHOICES, default='Pending', help_text="The current status of the contract (e.g., Active, Terminated).")
+    signed_date = models.DateField(null=True, blank=True, help_text="The date when both parties signed the contract.")
+    
+    additional_terms = models.TextField(null=True, blank=True, help_text="Any additional terms or agreements in the contract.")
+    rent_due_date = models.DateField(help_text="The date when the rent is due each month.")
+    payment_method = models.CharField(max_length=100, blank=True, null=True, help_text="The agreed method of payment (e.g., Bank Transfer, Cash).")
+    
+    created_at = models.DateTimeField(default=timezone.now)
+    updated_at = models.DateTimeField(auto_now=True)
+
+    def __str__(self):
+        return f"Contract #{self.contract_number} between {self.tenant.name} and {self.agent.name} for {self.property.name}"
+
+    class Meta:
+        verbose_name_plural = "Contracts"
+        ordering = ['start_date']
+
