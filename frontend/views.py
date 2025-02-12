@@ -63,9 +63,6 @@ def userRegister(request):
     }
     return render(request, 'frontend/pages/auth/register.html', context)
 
-def userDashboard(request):
-    return render(request, 'frontend/pages/user/dashboard.html')
-
 def home(request):
     """
     Home view: Display the homepage with the 4 latest properties.
@@ -216,3 +213,9 @@ def sendRentApplication(request, slug):
     }
 
     return render(request, 'frontend/pages/applications/create.html', context)
+
+def userDashboard(request):
+    return render(request, 'frontend/pages/user/dashboard.html')
+
+def getUserApplication(request):
+    return render(request, 'frontend/pages/user/applications/index.html')

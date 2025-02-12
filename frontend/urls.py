@@ -12,9 +12,10 @@ urlpatterns = [
 
     path('', home, name="home"),
 
-    path('user/dashboard', userDashboard, name="userDashboard"),
-
     path('properties', getProperties, name="getProperties"),
     path('property/<slug:slug>/', showProperty, name="showProperty"),
     path('property/<slug:slug>/apply/', sendRentApplication, name='sendRentApplication'),
+
+    path('user/dashboard', userDashboard, name="userDashboard"),
+    path('user/applications', getUserApplication, name="getUserApplication"),
 ]  + static(settings.STATIC_URL, document_root=settings.STATIC_ROOT)+ static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)
