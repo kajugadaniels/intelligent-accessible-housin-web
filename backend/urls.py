@@ -33,4 +33,5 @@ urlpatterns = [
 
     path('rent-applications/', getRentApplications, name="getRentApplications"),
     path('application/<int:id>/', showApplication, name="showApplication"),
+    path('application/status/update/<int:id>/', updateApplicationStatus, name="updateApplicationStatus"),
 ]  + static(settings.STATIC_URL, document_root=settings.STATIC_ROOT)+ static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)
