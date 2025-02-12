@@ -1,16 +1,23 @@
 from django.contrib import admin
-from frontend.models import RentApplication
+from .models import RentApplication
+from backend.models import User, Property
 
 class RentApplicationAdmin(admin.ModelAdmin):
-    # Display the user's name instead of email
-    def user_name(self, obj):
-        return obj.user.name
-
-    user_name.admin_order_field = 'user__name'
-    user_name.short_description = 'Name'
-
-    list_display = ('user_name', 'property', 'status', 'created_at')
-    search_fields = ('user__name',) 
+    list_display = ('user', 'property', 'status', 'created_at', 'preferred_move_in_date')
+    list_filter = ('status', 'user', 'property', 'created_at')
+    search_fields = ('user__name', 'property__name', 'status')
     ordering = ('-created_at',)
+
+    fieldsets = (
+        (None, {
+            'fields': ('user', 'property', 'preferred_move_in_date', 'rental_period_months', 'message', 'status')
+        }),
+        ('Audit Information', {
+            'fields': ('created_at',),
+            'classes': ('collapse',),
+        }),
+    )
+
+    readonly_fields = ('created_at',)
 
 admin.site.register(RentApplication, RentApplicationAdmin)
