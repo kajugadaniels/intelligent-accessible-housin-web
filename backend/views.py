@@ -590,11 +590,11 @@ def getContracts(request):
     return render(request, 'backend/pages/contracts/index.html', context)
 
 @login_required
-def createContract(request, application_id):
+def createContract(request, rent_application_id):
     """
     Create a contract for a rent application once it is accepted.
     """
-    application = get_object_or_404(RentApplication, id=application_id)
+    application = get_object_or_404(RentApplication, id=rent_application_id)
 
     if application.status != 'Accepted':
         messages.error(request, _("Only accepted applications can have a contract created."))

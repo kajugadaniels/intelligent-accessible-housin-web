@@ -1,19 +1,30 @@
 {% extends 'backend/layouts/app.html' %}
+{% load static %}
 {% block content %}
+
 <div class="container-fluid">
     <div class="row">
         <div class="col-sm-12">
             <div class="card">
                 <div class="card-body">
-                    <h4>Create Contract for {{ rent_application.property.name }}</h4>
-                    <form method="POST" enctype="multipart/form-data">
+                    <div class="list-client-header">
+                        <div class="d-flex justify-content-between">
+                            <h4>Create Contract</h4>
+                            <a class="btn btn-primary" href="{% url 'backend:getRentApplications' %}"><i class="fa fa-arrow-left"></i> Go Back</a>
+                        </div>
+                    </div>
+                    <hr>
+                    <form method="post">
                         {% csrf_token %}
                         {{ form.as_p }}
-                        <button type="submit" class="btn btn-primary">Create Contract</button>
+                        <div class="mt-2 text-end">
+                            <button type="submit" class="btn btn-primary">Create Contract</button>
+                        </div>
                     </form>
                 </div>
             </div>
         </div>
     </div>
 </div>
+
 {% endblock %}
