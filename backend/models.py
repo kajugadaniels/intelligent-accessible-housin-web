@@ -1,6 +1,7 @@
 import os
 import random
 from django.db import models
+from frontend.models import *
 from backend.managers import *
 from django.db.models import Avg
 from django.utils import timezone
@@ -279,6 +280,7 @@ class Contract(models.Model):
     tenant = models.ForeignKey(User, on_delete=models.CASCADE, related_name='tenant_contracts')
     agent = models.ForeignKey(User, on_delete=models.CASCADE, related_name='agent_contracts')
     property = models.ForeignKey(Property, on_delete=models.CASCADE, related_name='contracts')
+    rent_application = models.ForeignKey(RentApplication, on_delete=models.CASCADE, related_name='contracts')
 
     contract_number = models.CharField(max_length=100, unique=True, blank=True, null=True)
     start_date = models.DateField(default=timezone.now, help_text="The start date of the rental contract.")
@@ -303,4 +305,3 @@ class Contract(models.Model):
     class Meta:
         verbose_name_plural = "Contracts"
         ordering = ['start_date']
-
