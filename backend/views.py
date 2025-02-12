@@ -500,17 +500,31 @@ def getRentApplications(request):
 
     return render(request, 'backend/pages/applications/index.html', context)
 
+# backend/views.py
 
 @login_required
 def showApplication(request, id):
     # if request.user.role != 'House Provider':
     #     raise PermissionDenied(_("You are not authorized to view this Property."))
 
+    # Fetch the application details
     application = get_object_or_404(RentApplication, id=id)
+    
+    if request.method == 'POST':
+        # Handle status change based on the form submission
+        new_status = request.POST.get('status')
+        if new_status in ['Accepted', 'Rejected', 'Moved Out']:
+            application.status = new_status
+            application.save()
+            messages.success(request, _("The application status has been updated to '%s' successfully.") % new_status)
+        else:
+            messages.error(request, _("Invalid status update."))
+
+        return redirect('backend:showApplication', id=application.id)
 
     context = {
         'application': application,
-        'title': _('Application: %(application)s') % {'application': application.property.name}
+        'title': _('Application for %(property)s') % {'property': application.property.name}
     }
 
     return render(request, 'backend/pages/applications/show.html', context)
