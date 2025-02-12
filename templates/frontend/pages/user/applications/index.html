@@ -1,0 +1,95 @@
+{% extends 'frontend/layouts/app.html' %}
+{% load humanize %}
+{% block content %}
+<div class="hero-inner-section-area-sidebar">
+	<img src="https://housebox-html-demo.vercel.app/assets/img/all-images/hero/hero-img1.png" alt="housebox" class="hero-img1" />
+	<div class="container">
+		<div class="row">
+			<div class="col-lg-12">
+				<div class="hero-header-area text-center">
+					<a href="{% url 'frontend:home' %}">
+						Home
+						<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor">
+							<path d="M13.1717 12.0007L8.22192 7.05093L9.63614 5.63672L16.0001 12.0007L9.63614 18.3646L8.22192 16.9504L13.1717 12.0007Z"></path>
+						</svg>
+						Dashboard
+					</a>
+					<div class="space24"></div>
+					<h1>Dashboard</h1>
+				</div>
+			</div>
+		</div>
+	</div>
+</div>
+
+<div class="blog-inner-section sp1">
+	<div class="container">
+		<div class="row">
+			{% include 'frontend/inc/user-sidebar.html' %}
+			<div class="col-lg-9">
+				<div class="dashboard-section-area sp1" style="padding: 30px 0 0 0 !important;">
+					<div class="row">
+						<div class="col-lg-9">
+							<div class="space30"></div>
+							<div class="dashboad-all-details-section">
+								<h3>New Listing</h3>
+								<div class="row">
+									<div class="space20"></div>
+									<div class="table-container">
+										<!-- Header -->
+										<div class="table-header">
+											<div>Listing</div>
+											<div>Status</div>
+											<div>Agent</div>
+										</div>
+										<div class="table-row">
+											<div class="listing">
+												<img src="https://housebox-html-demo.vercel.app/assets/img/all-images/others/dash-img1.png" alt="Apartment Complex">
+												<div class="details">
+													<a href="property-details-v1.html">Apartment Complex</a>
+													<div class="space18"></div>
+													<p>
+														<span><img src="https://housebox-html-demo.vercel.app/assets/img/icons/bed1.svg" alt="housebox"> x2</span>
+														<span><img src="https://housebox-html-demo.vercel.app/assets/img/icons/bath1.svg" alt="housebox"> x2</span>
+														<span><img src="https://housebox-html-demo.vercel.app/assets/img/icons/sqare1.svg" alt="housebox"> 1200 sq</span>
+													</p>
+													<div class="space16"></div>
+													<a class="price">$820,000</a>
+												</div>
+											</div>
+											<div class="status">
+												<a href="#" class="status-badge approved">Approved</a>
+											</div>
+											<div class="status">
+												<a href="#" class="status-badge approved">Name</a>
+											</div>
+										</div>
+									</div>
+								</div>
+							</div>
+							<div class="space30"></div>
+						</div>
+						<div class="col-lg-3">
+							<div class="space30"></div>
+							<div class="dashboard-info-sider-deatils">
+								<div class="dashboard-info-sider">
+									<h3>Notifications</h3>
+									<div class="space32"></div>
+									<div class="conatent-area">
+										<div class="content">
+											<a href="#">Henry Nicolas</a>
+											<p>3 Days Ago</p>
+										</div>
+										<div class="space14"></div>
+										<p>We're excited to help you find the perfect neighborhood and home for your family Let us know how.</p>
+									</div>
+								</div>
+							</div>
+						</div>
+					</div>
+				</div>
+			</div>
+		</div>
+	</div>
+</div>
+{% endblock content %}
