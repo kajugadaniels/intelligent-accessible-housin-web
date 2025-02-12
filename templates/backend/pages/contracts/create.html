@@ -5,12 +5,11 @@
         <div class="col-sm-12">
             <div class="card">
                 <div class="card-body">
-                    <h4>Create New Contract</h4>
-                    <hr>
-                    <form method="POST">
+                    <h4>Create Contract for {{ rent_application.property.name }}</h4>
+                    <form method="POST" enctype="multipart/form-data">
                         {% csrf_token %}
                         {{ form.as_p }}
-                        <button type="submit" class="btn btn-success">Create Contract</button>
+                        <button type="submit" class="btn btn-primary">Create Contract</button>
                     </form>
                 </div>
             </div>
