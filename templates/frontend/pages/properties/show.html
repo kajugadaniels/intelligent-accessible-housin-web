@@ -50,11 +50,29 @@
                                         <h2 style="font-size: 20px;">{{ property.name }}</h2>
                                         <ul>
                                             {% if user.is_authenticated %}
-                                                <li>
-                                                    <a href="{% url 'frontend:sendRentApplication' property.slug %}" style="font-size: 18px;">
-                                                        Apply For Renting
-                                                    </a>
-                                                </li>
+                                                {% if user.rent_applications.filter(property=property).exists %}
+                                                    {% with user.rent_applications.filter(property=property).first as app %}
+                                                        {% if app.status == "Accepted" or app.status == "Pending" %}
+                                                            <li>
+                                                                <a href="#" style="font-size: 18px;" class="disabled">
+                                                                    You have already applied
+                                                                </a>
+                                                            </li>
+                                                        {% else %}
+                                                            <li>
+                                                                <a href="{% url 'frontend:sendRentApplication' property.slug %}" style="font-size: 18px;">
+                                                                    Reapply for Renting
+                                                                </a>
+                                                            </li>
+                                                        {% endif %}
+                                                    {% endwith %}
+                                                {% else %}
+                                                    <li>
+                                                        <a href="{% url 'frontend:sendRentApplication' property.slug %}" style="font-size: 18px;">
+                                                            Apply For Renting
+                                                        </a>
+                                                    </li>
+                                                {% endif %}
                                             {% else %}
                                                 <li>
                                                     <a href="{% url 'frontend:login' %}" style="font-size: 18px;">
