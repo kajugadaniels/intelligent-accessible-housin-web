@@ -1,8 +1,8 @@
 import random
 from django import forms
 from backend.models import *
-from datetime import datetime, timedelta
 from django.contrib.auth import authenticate
+from dateutil.relativedelta import relativedelta
 from django.utils.translation import gettext_lazy as _
 from django.contrib.auth.password_validation import validate_password
 
@@ -380,8 +380,6 @@ class PropertyForm(forms.ModelForm):
             },
         }
 
-# backend/forms.py
-
 class ContractForm(forms.ModelForm):
     """
     Form for creating a rental contract, with the automatic population of certain fields.
@@ -423,7 +421,7 @@ class ContractForm(forms.ModelForm):
         rental_period_months = rent_application.rental_period_months
         if rental_period_months:
             start_date = timezone.now().date()
-            end_date = start_date + timedelta(months=rental_period_months)
+            end_date = start_date + relativedelta(months=rental_period_months)
             self.fields['end_date'].initial = end_date
             self.fields['rental_period_months'].initial = rental_period_months
 
