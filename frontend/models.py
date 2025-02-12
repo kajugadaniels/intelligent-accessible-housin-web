@@ -1,4 +1,3 @@
-from backend.models import *
 from django.db import models
 from django.utils import timezone
 
@@ -10,8 +9,8 @@ class RentApplication(models.Model):
         ('Moved Out', 'Moved Out'),
     )
 
-    user = models.ForeignKey(User, on_delete=models.CASCADE, related_name='rent_applications')
-    property = models.ForeignKey(Property, on_delete=models.CASCADE, related_name='rent_applications')
+    user = models.ForeignKey('backend.User', on_delete=models.CASCADE, related_name='rent_applications')
+    property = models.ForeignKey('backend.Property', on_delete=models.CASCADE, related_name='rent_applications')
     preferred_move_in_date = models.DateField(null=True, blank=True)
     rental_period_months = models.PositiveIntegerField(null=True, blank=True)
     message = models.TextField(null=True, blank=True)

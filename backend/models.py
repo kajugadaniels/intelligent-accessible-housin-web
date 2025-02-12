@@ -277,7 +277,7 @@ class Contract(models.Model):
         ('Overdue', 'Overdue'),
     )
 
-    rent_application = models.OneToOneField(RentApplication, on_delete=models.CASCADE, related_name='contract')
+    rent_application = models.OneToOneField(RentApplication, on_delete=models.CASCADE, related_name='contract', null=True, blank=True)
 
     tenant = models.ForeignKey(User, on_delete=models.CASCADE, related_name='tenant_contracts')
     agent = models.ForeignKey(User, on_delete=models.CASCADE, related_name='agent_contracts')
