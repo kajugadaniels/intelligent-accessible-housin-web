@@ -609,3 +609,14 @@ def createContract(request, rent_application_id):
     }
 
     return render(request, 'backend/pages/contracts/create.html', context)
+
+@login_required
+def showContract(request, id):
+    contract = get_object_or_404(Contract, id=id)
+    
+    context = {
+        'contract': contract,
+        'title': f"Contract #{contract.contract_number}"
+    }
+
+    return render(request, 'backend/pages/contracts/show.html', context)
