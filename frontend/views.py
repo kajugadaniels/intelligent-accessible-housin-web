@@ -230,7 +230,7 @@ def sendRentApplication(request, slug):
         'property': property_obj,
     }
 
-    return render(request, 'frontend/pages/properties/rent_application_form.html', context)
+    return render(request, 'frontend/pages/user/applications/create.html', context)
 
 def userDashboard(request):
     return render(request, 'frontend/pages/user/dashboard.html')
