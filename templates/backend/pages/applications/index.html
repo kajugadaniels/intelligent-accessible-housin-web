@@ -4,9 +4,9 @@
 {% block content %}
 
 <div class="container-fluid">
-    <div class="row"> 
-        <div class="col-sm-12"> 
-            <div class="card"> 
+    <div class="row">
+        <div class="col-sm-12">
+            <div class="card">
                 <div class="card-body">
                     <div class="list-product-header">
                         <div class="d-flex justify-content-between">
@@ -16,10 +16,10 @@
                     <hr>
                     <div class="list-product">
                         <table class="table" id="project-status">
-                            <thead> 
-                                <tr> 
+                            <thead>
+                                <tr>
                                     <th>
-                                        <div class="form-check"> 
+                                        <div class="form-check">
                                             <input class="form-check-input checkbox-primary" type="checkbox">
                                         </div>
                                     </th>
@@ -34,7 +34,7 @@
                                 {% for application in applications %}
                                     <tr class="product-removes">
                                         <td>
-                                            <div class="form-check"> 
+                                            <div class="form-check">
                                                 <input class="form-check-input checkbox-primary" type="checkbox">
                                             </div>
                                         </td>
@@ -45,7 +45,19 @@
                                             <p class="f-light">{{ application.user.name }}</p>
                                         </td>
                                         <td>
-                                            <p class="f-light">{{ application.status }}</p>
+                                            {% if application.contract %}
+                                                {% if application.contract.status == 'Pending' %}
+                                                    <span class="badge badge-light-warning">Contract Sent</span>
+                                                {% elif application.contract.status == 'Active' %}
+                                                    <span class="badge badge-light-success">Rented</span>
+                                                {% elif application.contract.status == 'Terminated' %}
+                                                    <span class="badge badge-light-danger">Contract Terminated</span>
+                                                {% elif application.contract.status == 'Expired' %}
+                                                    <span class="badge badge-light-secondary">Contract Expired</span>
+                                                {% endif %}
+                                            {% else %}
+                                                <p class="f-light">{{ application.status }}</p>
+                                            {% endif %}
                                         </td>
                                         <td>
                                             <p class="f-light">{{ application.created_at|naturaltime }}</p>
@@ -60,13 +72,9 @@
                                                         Manage Application
                                                     </a>
                                                 {% elif application.status == "Accepted" %}
-                                                    {% if not application.property.contract_set.exists %}
-                                                        <a href="{% url 'backend:createContract' application.id %}" class="btn btn-success">
-                                                            Send Contract
-                                                        </a>
-                                                    {% else %}
-                                                        <span class="btn btn-secondary">Contract Sent</span>
-                                                    {% endif %}
+                                                    <a href="{% url 'backend:createContract' application.id %}" class="btn btn-success">
+                                                        Send Contract
+                                                    </a>
                                                 {% endif %}
                                             </div>
                                         </td>
