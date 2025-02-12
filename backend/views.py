@@ -476,7 +476,6 @@ def deleteProperty(request, id):
 
     return render(request, 'backend/pages/properties/delete.html', context)
 
-
 @login_required
 def getNotifications(request):
     # Notifications page: allowed only for House Providers.
@@ -485,14 +484,21 @@ def getNotifications(request):
 
     return render(request, 'backend/pages/notifications/index.html')
 
-
-
 @login_required
 def getRentApplications(request):
-    # if request.user.role != 'Admin':
-    #     raise PermissionDenied(_("You are not authorized to access the Properties page."))
-
-    applications = RentApplication.objects.all().order_by('-created_at')
+    """
+    View to get rent applications.
+    - Admin can see all applications.
+    - House Providers can only see applications for properties they created.
+    """
+    if request.user.role == 'Admin':
+        # Admin can see all rent applications
+        applications = RentApplication.objects.all().order_by('-created_at')
+    elif request.user.role == 'House Provider':
+        # House Provider can only see applications for properties they created
+        applications = RentApplication.objects.filter(property__created_by=request.user).order_by('-created_at')
+    else:
+        raise PermissionDenied(_("You are not authorized to access the applications page."))
 
     context = {
         'applications': applications
@@ -500,12 +506,10 @@ def getRentApplications(request):
 
     return render(request, 'backend/pages/applications/index.html', context)
 
-# backend/views.py
-
 @login_required
 def showApplication(request, id):
-    # if request.user.role != 'House Provider':
-    #     raise PermissionDenied(_("You are not authorized to view this Property."))
+    if request.user.role != 'Admin':
+        raise PermissionDenied(_("You are not authorized to view this Property."))
 
     # Fetch the application details
     application = get_object_or_404(RentApplication, id=id)
@@ -531,8 +535,8 @@ def showApplication(request, id):
 
 @login_required
 def updateApplicationStatus(request, id):
-    # if request.user.role != 'House Provider':
-    #     raise PermissionDenied(_("You are not authorized to view this Property."))
+    if request.user.role != 'Admin':
+        raise PermissionDenied(_("You are not authorized to view this Property."))
 
     """
     Admin view to accept, reject, or mark a rent application as Moved Out.
