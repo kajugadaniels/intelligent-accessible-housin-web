@@ -588,3 +588,24 @@ def getContracts(request):
     }
 
     return render(request, 'backend/pages/contracts/index.html', context)
+
+@login_required
+def createContract(request, rent_application_id):
+    rent_application = get_object_or_404(RentApplication, id=rent_application_id, status='Accepted')
+    if request.method == 'POST':
+        form = ContractForm(request.POST, rent_application=rent_application)
+        if form.is_valid():
+            contract = form.save()
+            messages.success(request, f"Contract #{contract.contract_number} created successfully!")
+            return redirect('backend:show_contract', contract.id)
+        else:
+            messages.error(request, "Please correct the errors in the form.")
+    else:
+        form = ContractForm(rent_application=rent_application)
+
+    context = {
+        'form': form,
+        'title': 'Create Contract'
+    }
+
+    return render(request, 'backend/pages/contracts/create.html', context)
