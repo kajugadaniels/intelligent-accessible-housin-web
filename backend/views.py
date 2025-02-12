@@ -572,3 +572,19 @@ def updateApplicationStatus(request, id):
     }
 
     return render(request, 'backend/pages/applications/edit.html', context)
+
+@login_required
+def getContracts(request):
+    if request.user.role == 'Admin':
+        contracts = Contract.objects.all()
+    elif request.user.role == 'House Provider':
+        contracts = Contract.objects.filter(property__created_by=request.user)
+    else:
+        contracts = []
+        messages.error(request, "You are not authorized to view contracts.")
+    
+    context = {
+        'contracts': contracts
+    }
+
+    return render(request, 'backend/pages/contracts/index.html', context)
