@@ -582,3 +582,29 @@ def getContracts(request):
     }
 
     return render(request, 'backend/pages/contracts/index.html', context)
+
+@login_required
+def addContract(request):
+    """
+    View to add a new rental contract.
+    """
+    if request.user.role != 'Admin':
+        raise PermissionDenied("You do not have permission to add a contract.")
+
+    if request.method == 'POST':
+        form = ContractForm(request.POST)
+        if form.is_valid():
+            form.save()
+            messages.success(request, "Contract has been successfully created.")
+            return redirect('backend:getContracts')
+        else:
+            messages.error(request, "Please correct the errors below.")
+    else:
+        form = ContractForm()
+
+    context = {
+        'form': form,
+        'title': 'Create New Contract',
+    }
+
+    return render(request, 'backend/pages/contracts/create.html', context)
