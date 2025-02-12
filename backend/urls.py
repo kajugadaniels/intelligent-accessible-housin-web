@@ -32,4 +32,5 @@ urlpatterns = [
     path('property/image/delete/<int:image_id>/', deletePropertyImage, name="deletePropertyImage"),
 
     path('rent-applications/', getRentApplications, name="getRentApplications"),
+    path('application/<int:id>/', showApplication, name="showApplication"),
 ]  + static(settings.STATIC_URL, document_root=settings.STATIC_ROOT)+ static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)

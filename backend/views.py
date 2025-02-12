@@ -396,7 +396,6 @@ def addProperty(request):
 
     return render(request, 'backend/pages/properties/create.html', context)
 
-
 @login_required
 def showProperty(request, id):
     if request.user.role != 'House Provider':
@@ -500,3 +499,18 @@ def getRentApplications(request):
     }
 
     return render(request, 'backend/pages/applications/index.html', context)
+
+
+@login_required
+def showApplication(request, id):
+    # if request.user.role != 'House Provider':
+    #     raise PermissionDenied(_("You are not authorized to view this Property."))
+
+    application = get_object_or_404(RentApplication, id=id, created_by=request.user)
+
+    context = {
+        'application': application,
+        'title': _('Application: %(application)s') % {'application': application.name}
+    }
+
+    return render(request, 'backend/pages/applications/show.html', context)
