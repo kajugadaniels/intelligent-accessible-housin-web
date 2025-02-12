@@ -439,7 +439,10 @@ class ContractForm(forms.ModelForm):
         start_date = cleaned_data.get('start_date')
         end_date = cleaned_data.get('end_date')
         
+        # Calculate rental_period_months if start_date and end_date are provided
         if start_date and end_date:
             rental_period_months = (end_date.year - start_date.year) * 12 + end_date.month - start_date.month
             cleaned_data['rental_period_months'] = rental_period_months
+        elif 'rental_period_months' not in cleaned_data:
+            raise forms.ValidationError({'rental_period_months': _("This field is required.")})
         return cleaned_data
