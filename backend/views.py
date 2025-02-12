@@ -489,8 +489,8 @@ def getNotifications(request):
 
 @login_required
 def getRentApplications(request):
-    if request.user.role != 'Admin':
-        raise PermissionDenied(_("You are not authorized to access the Properties page."))
+    # if request.user.role != 'Admin':
+    #     raise PermissionDenied(_("You are not authorized to access the Properties page."))
 
     applications = RentApplication.objects.all().order_by('-created_at')
 
