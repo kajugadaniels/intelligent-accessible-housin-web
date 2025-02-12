@@ -17,6 +17,6 @@ urlpatterns = [
     path('property/<slug:slug>/apply/', sendRentApplication, name='sendRentApplication'),
 
     path('user/dashboard', userDashboard, name="userDashboard"),
-    path('user/applications/', getUserApplication, name='getUserApplications'),
-    path('user/application/<int:application_id>/', applicationDetail, name='applicationDetail'),
+    path('user/applications/', getUserApplications, name='getUserApplications'),
+    path('user/application/<int:application_id>/', showApplicationDetail, name='showApplicationDetail'),
 ]  + static(settings.STATIC_URL, document_root=settings.STATIC_ROOT)+ static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)

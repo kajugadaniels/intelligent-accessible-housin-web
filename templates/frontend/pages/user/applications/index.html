@@ -32,39 +32,52 @@
 						<div class="col-lg-12">
 							<div class="space30"></div>
 							<div class="dashboad-all-details-section">
-								<h3>New Listing</h3>
+								<h3>Your Rent Applications</h3>
 								<div class="row">
 									<div class="space20"></div>
 									<div class="table-container">
-										<!-- Header -->
-										<div class="table-header">
-											<div>Listing</div>
-											<div>Status</div>
-											<div>Agent</div>
-										</div>
-										<div class="table-row">
-											<div class="listing">
-												<img src="https://housebox-html-demo.vercel.app/assets/img/all-images/others/dash-img1.png" alt="Apartment Complex">
-												<div class="details">
-													<a href="property-details-v1.html">Apartment Complex</a>
-													<div class="space18"></div>
-													<p>
-														<span><img src="https://housebox-html-demo.vercel.app/assets/img/icons/bed1.svg" alt="housebox"> x2</span>
-														<span><img src="https://housebox-html-demo.vercel.app/assets/img/icons/bath1.svg" alt="housebox"> x2</span>
-														<span><img src="https://housebox-html-demo.vercel.app/assets/img/icons/sqare1.svg" alt="housebox"> 1200 sq</span>
-													</p>
-													<div class="space16"></div>
-													<a class="price">$820,000</a>
-												</div>
-											</div>
-											<div class="status">
-												<a href="#" class="status-badge approved">Approved</a>
-											</div>
-											<div class="status">
-												<a href="#" class="status-badge approved">Name</a>
-											</div>
-										</div>
-									</div>
+                                        <div class="table-header">
+                                            <div>Listing</div>
+                                            <div>Status</div>
+                                            <div>Action</div>
+                                        </div>
+                                        {% for application in applications %}
+                                            <div class="table-row">
+                                                <div class="listing">
+                                                    <img src="{{ application.property.image.url }}" alt="{{ application.property.name }}">
+                                                    <div class="details">
+                                                        <a href="property-details-v1.html">Apartment Complex</a>
+                                                        <div class="space18"></div>
+                                                        <p>
+                                                            <span><img src="https://housebox-html-demo.vercel.app/assets/img/icons/bed1.svg" alt="housebox"> x{{ application.property.capacity }}</span>
+                                                            <span><img src="https://housebox-html-demo.vercel.app/assets/img/icons/bath1.svg" alt="housebox"> x{{ application.property.bathroom }}</span>
+                                                            <span><img src="https://housebox-html-demo.vercel.app/assets/img/icons/sqare1.svg" alt="housebox"> {{ application.property.size }} sq ft</span>
+                                                        </p>
+                                                        <div class="space16"></div>
+                                                        <a class="price">{{ application.property.price_rwf|intcomma }} RWF</a>
+                                                    </div>
+                                                </div>
+                                                <div class="status">
+                                                    <a href="#" class="status-badge {% if application.status == 'Accepted' %}approved{% else %}pending{% endif %}">{{ application.status }}</a>
+                                                </div>
+                                                <div class="actions">
+                                                    <button class="edit">
+                                                        <a href="{% url 'frontend:showApplicationDetail' application.id %}">
+                                                            <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24">
+                                                                <g fill="none" fill-rule="evenodd">
+                                                                    <path d="m12.593 23.258l-.011.002l-.071.035l-.02.004l-.014-.004l-.071-.035q-.016-.005-.024.005l-.004.01l-.017.428l.005.02l.01.013l.104.074l.015.004l.012-.004l.104-.074l.012-.016l.004-.017l-.017-.427q-.004-.016-.017-.018m.265-.113l-.013.002l-.185.093l-.01.01l-.003.011l.018.43l.005.012l.008.007l.201.093q.019.005.029-.008l.004-.014l-.034-.614q-.005-.018-.02-.022m-.715.002a.02.02 0 0 0-.027.006l-.006.014l-.034.614q.001.018.017.024l.015-.002l.201-.093l.01-.008l.004-.011l.017-.43l-.003-.012l-.01-.01z" />
+                                                                    <path fill="currentColor" d="M12 4C9.213 4 6.737 5.257 4.974 6.813C4.09 7.594 3.36 8.47 2.846 9.344C2.34 10.201 2 11.13 2 12s.34 1.799.846 2.656c.514.873 1.243 1.75 2.128 2.531C6.737 18.743 9.214 20 12 20c2.787 0 5.263-1.257 7.026-2.813c.885-.781 1.614-1.658 2.128-2.531C21.66 13.799 22 12.87 22 12s-.34-1.799-.846-2.656c-.514-.873-1.243-1.75-2.128-2.531C17.263 5.257 14.786 4 12 4m2 8c.36 0 .697-.095.989-.261A3 3 0 1 1 12.26 9.01A2 2 0 0 0 14 12" />
+                                                                </g>
+                                                            </svg>
+                                                            View
+                                                        </a>
+                                                    </button>
+                                                </div>
+                                            </div>
+                                        {% empty %}
+                                            <p>No applications found.</p>
+                                        {% endfor %}
+                                    </div>
 								</div>
 							</div>
 							<div class="space30"></div>

@@ -218,7 +218,7 @@ def userDashboard(request):
     return render(request, 'frontend/pages/user/dashboard.html')
 
 @login_required
-def getUserApplication(request):
+def getUserApplications(request):
     applications = RentApplication.objects.filter(user=request.user)
     
     context = {
@@ -228,7 +228,7 @@ def getUserApplication(request):
     return render(request, 'frontend/pages/user/applications/index.html', context)
 
 @login_required
-def applicationDetail(request, application_id):
+def showApplicationDetail(request, application_id):
     application = get_object_or_404(RentApplication, id=application_id)
 
     context = {
