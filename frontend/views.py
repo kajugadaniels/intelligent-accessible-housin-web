@@ -187,23 +187,41 @@ def showProperty(request, slug):
 
     return render(request, 'frontend/pages/properties/show.html', context)
 
+@login_required
 def sendRentApplication(request, slug):
-    """
-    Render the rent application form and process form submissions.
-    """
     property_obj = get_object_or_404(Property, slug=slug)
 
+    # Check if the user has already applied to this property
+    existing_application = RentApplication.objects.filter(
+        user=request.user,
+        property=property_obj
+    ).first()
+
+    # If there's an existing application, check the status
+    if existing_application:
+        if existing_application.status in ['Pending', 'Accepted']:
+            messages.warning(request, "You have already applied for this property.")
+            return redirect('frontend:showProperty', slug=slug)
+        elif existing_application.status in ['Rejected', 'Moved Out']:
+            # Allow the user to reapply if the status is Rejected or Moved Out
+            pass
+        else:
+            messages.warning(request, "Invalid application status.")
+            return redirect('frontend:showProperty', slug=slug)
+
+    # If the user has not applied yet or has a rejected/moved-out application, allow them to apply
     if request.method == 'POST':
         form = RentApplicationForm(request.POST)
         if form.is_valid():
-            # Automatically prefill the user's data
-            form.instance.user = request.user
-            form.instance.property = property_obj
-            form.save()
+            application = form.save(commit=False)
+            application.user = request.user
+            application.property = property_obj
+            application.save()
+
             messages.success(request, "Your rent application has been submitted successfully.")
-            return redirect(reverse('frontend:showProperty', args=[slug]))
+            return redirect('frontend:showProperty', slug=slug)
         else:
-            messages.error(request, "Please correct the errors below and try again.")
+            messages.error(request, "Please correct the errors below.")
     else:
         form = RentApplicationForm()
 
@@ -212,7 +230,7 @@ def sendRentApplication(request, slug):
         'property': property_obj,
     }
 
-    return render(request, 'frontend/pages/user/applications/create.html', context)
+    return render(request, 'frontend/pages/properties/rent_application_form.html', context)
 
 def userDashboard(request):
     return render(request, 'frontend/pages/user/dashboard.html')
