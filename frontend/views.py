@@ -224,5 +224,15 @@ def getUserApplication(request):
     context = {
         'applications': applications,
     }
-    
+
     return render(request, 'frontend/pages/user/applications/index.html', context)
+
+@login_required
+def applicationDetail(request, application_id):
+    application = get_object_or_404(RentApplication, id=application_id)
+
+    context = {
+        'application': application,
+    }
+
+    return render(request, 'frontend/pages/user/applications/show.html', context)
