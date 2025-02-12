@@ -403,7 +403,7 @@ class ContractForm(forms.ModelForm):
         super().__init__(*args, **kwargs)
         self.rent_application = rent_application
 
-        # Ensure 'tenant' is correctly populated from RentApplication's user
+        # Check if the tenant field exists before assigning it
         if 'tenant' in self.fields:
             self.fields['tenant'].initial = rent_application.user  # Assign tenant from RentApplication's user
         if 'agent' in self.fields:
