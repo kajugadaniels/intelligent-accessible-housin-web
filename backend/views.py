@@ -600,6 +600,11 @@ def createContract(request, application_id):
         messages.error(request, _("Only accepted applications can have a contract created."))
         return redirect('backend:getRentApplications')
 
+    # Check if the contract already exists for this RentApplication
+    if Contract.objects.filter(rent_application=application).exists():
+        messages.info(request, _("A contract has already been created for this application."))
+        return redirect('backend:getRentApplications')
+
     if request.method == 'POST':
         form = ContractForm(rent_application=application, data=request.POST)
         if form.is_valid():
