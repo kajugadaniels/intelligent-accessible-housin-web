@@ -18,7 +18,7 @@ class RentApplication(models.Model):
     created_at = models.DateTimeField(default=timezone.now)
 
     def __str__(self):
-        return f"Application by {self.user.get_full_name()} for {self.property.name}"
+        return f"Application by {self.user.name} for {self.property.name}" 
 
     class Meta:
         verbose_name_plural = "Rent Applications"
