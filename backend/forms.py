@@ -382,13 +382,13 @@ class PropertyForm(forms.ModelForm):
 
 class ContractForm(forms.ModelForm):
     """
-    Form for creating a rental contract, with the automatic population of certain fields.
+    Form for creating a rental contract, with automatic population of certain fields.
     """
     class Meta:
         model = Contract
         fields = [
-            'contract_number', 'start_date', 'end_date', 'rental_period_months', 
-            'rent_amount', 'security_deposit', 'payment_status', 
+            'contract_number', 'start_date', 'end_date', 'rental_period_months',
+            'rent_amount', 'security_deposit', 'payment_status',
             'status', 'additional_terms', 'rent_due_date', 'payment_method'
         ]
         widgets = {
@@ -404,11 +404,11 @@ class ContractForm(forms.ModelForm):
         self.rent_application = rent_application
 
         # Automatically populate tenant, agent, and property fields from RentApplication
-        self.fields['tenant'].initial = rent_application.user
-        self.fields['agent'].initial = rent_application.property.created_by
-        self.fields['property'].initial = rent_application.property
+        self.fields['tenant'].initial = rent_application.user  # Use rent_application.user for tenant
+        self.fields['agent'].initial = rent_application.property.created_by  # Agent is the creator of the property
+        self.fields['property'].initial = rent_application.property  # Property is directly from RentApplication
 
-        # Generate contract number (7 digit starting from 0000001)
+        # Generate contract number (7 digits starting from 0000001)
         last_contract = Contract.objects.all().order_by('-id').first()
         next_contract_number = f"{last_contract.id + 1 if last_contract else 1:07d}"
         self.fields['contract_number'].initial = next_contract_number
