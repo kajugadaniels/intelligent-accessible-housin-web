@@ -67,17 +67,31 @@
                                                 <a href="{% url 'backend:showApplication' application.id %}" class="btn btn-primary">
                                                     View
                                                 </a>
-                                                {% if application.status == "Pending" %}
-                                                    <a href="{% url 'backend:updateApplicationStatus' application.id %}" class="btn btn-warning">
-                                                        Manage Application
-                                                    </a>
-                                                {% elif application.status == "Accepted" %}
-                                                    <a href="{% url 'backend:createContract' application.id %}" class="btn btn-success">
-                                                        Send Contract
-                                                    </a>
+                                        
+                                                {% if application.contract %}
+                                                    {% if application.contract.status == 'Pending' %}
+                                                        <span class="badge badge-light-warning">Contract Sent</span>
+                                                    {% elif application.contract.status == 'Active' %}
+                                                        <span class="badge badge-light-success">Rented</span>
+                                                    {% elif application.contract.status == 'Terminated' %}
+                                                        <span class="badge badge-light-danger">Contract Terminated</span>
+                                                    {% elif application.contract.status == 'Expired' %}
+                                                        <span class="badge badge-light-secondary">Contract Expired</span>
+                                                    {% endif %}
+                                                {% else %}
+                                                    {% if application.status == "Pending" %}
+                                                        <a href="{% url 'backend:updateApplicationStatus' application.id %}" class="btn btn-warning">
+                                                            Manage Application
+                                                        </a>
+                                                    {% elif application.status == "Accepted" %}
+                                                        <a href="{% url 'backend:createContract' application.id %}" class="btn btn-success">
+                                                            Send Contract
+                                                        </a>
+                                                    {% endif %}
                                                 {% endif %}
                                             </div>
                                         </td>
+                                        
                                     </tr>
                                 {% endfor %}
                             </tbody>
