@@ -508,23 +508,28 @@ def getRentApplications(request):
 
 @login_required
 def showApplication(request, id):
-    if request.user.role != 'Admin':
-        raise PermissionDenied(_("You are not authorized to view this Property."))
-
-    # Fetch the application details
+    """
+    View to show rent application details.
+    - Admin and House Provider can view details of applications.
+    - Only Admin or House Providers who created the property can update the application status.
+    """
     application = get_object_or_404(RentApplication, id=id)
-    
-    if request.method == 'POST':
-        # Handle status change based on the form submission
-        new_status = request.POST.get('status')
-        if new_status in ['Accepted', 'Rejected', 'Moved Out']:
-            application.status = new_status
-            application.save()
-            messages.success(request, _("The application status has been updated to '%s' successfully.") % new_status)
-        else:
-            messages.error(request, _("Invalid status update."))
 
-        return redirect('backend:showApplication', id=application.id)
+    # Check if the user is authorized to view the application
+    if request.user.role == 'Admin' or application.property.created_by == request.user:
+        if request.method == 'POST':
+            # Handle status change based on the form submission
+            new_status = request.POST.get('status')
+            if new_status in ['Accepted', 'Rejected', 'Moved Out']:
+                application.status = new_status
+                application.save()
+                messages.success(request, _("The application status has been updated to '%s' successfully.") % new_status)
+            else:
+                messages.error(request, _("Invalid status update."))
+
+            return redirect('backend:showApplication', id=application.id)
+    else:
+        raise PermissionDenied(_("You do not have permission to view or update this application."))
 
     context = {
         'application': application,
