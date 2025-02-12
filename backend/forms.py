@@ -403,7 +403,7 @@ class ContractForm(forms.ModelForm):
         super().__init__(*args, **kwargs)
         self.rent_application = rent_application
 
-        # Check if the tenant field exists before assigning it
+        # Ensure 'tenant' is correctly populated from RentApplication's user
         if 'tenant' in self.fields:
             self.fields['tenant'].initial = rent_application.user  # Assign tenant from RentApplication's user
         if 'agent' in self.fields:
@@ -419,30 +419,10 @@ class ContractForm(forms.ModelForm):
         # Set start date to today's date
         self.fields['start_date'].initial = timezone.now().date()
 
-        # Set end date based on rental_period_months (calculate and auto-populate)
-        rental_period_months = rent_application.rental_period_months
-        if rental_period_months:
-            start_date = timezone.now().date()
-            end_date = start_date + relativedelta(months=rental_period_months)
-            self.fields['end_date'].initial = end_date
-            self.fields['rental_period_months'].initial = rental_period_months
-
         # Set rent amount automatically from the Property model
         self.fields['rent_amount'].initial = rent_application.property.price_rwf
         self.fields['payment_status'].initial = 'Pending'
         self.fields['status'].initial = 'Pending'
-        
-    def clean(self):
-        cleaned_data = super().clean()
 
-        # Ensure the rental period is valid
-        start_date = cleaned_data.get('start_date')
-        end_date = cleaned_data.get('end_date')
-        
-        # Calculate rental_period_months if start_date and end_date are provided
-        if start_date and end_date:
-            rental_period_months = (end_date.year - start_date.year) * 12 + end_date.month - start_date.month
-            cleaned_data['rental_period_months'] = rental_period_months
-        elif 'rental_period_months' not in cleaned_data:
-            raise forms.ValidationError({'rental_period_months': _("This field is required.")})
-        return cleaned_data
+        # Remove the rental period months calculation here (we'll use JS to set this)
+        self.fields['rental_period_months'].required = False
