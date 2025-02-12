@@ -426,7 +426,7 @@ class ContractForm(forms.ModelForm):
             self.fields['rental_period_months'].initial = rental_period_months
 
         # Set rent amount automatically from the Property model
-        self.fields['rent_amount'].initial = rent_application.property.rent_amount
+        self.fields['rent_amount'].initial = rent_application.property.price_rwf
         self.fields['payment_status'].initial = 'Pending'
         self.fields['status'].initial = 'Pending'
         
