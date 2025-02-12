@@ -55,6 +55,11 @@
                                                 <a href="{% url 'backend:showApplication' application.id %}" class="btn btn-primary">
                                                     View
                                                 </a>
+                                                {% if application.status == "Pending" %}
+                                                    <a href="{% url 'backend:showApplication' application.id %}" class="btn btn-warning">
+                                                        Manage Application
+                                                    </a>
+                                                {% endif %}
                                             </div>
                                         </td>
                                     </tr>
