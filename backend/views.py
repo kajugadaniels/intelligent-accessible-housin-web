@@ -590,22 +590,30 @@ def getContracts(request):
     return render(request, 'backend/pages/contracts/index.html', context)
 
 @login_required
-def createContract(request, rent_application_id):
-    rent_application = get_object_or_404(RentApplication, id=rent_application_id, status='Accepted')
+def createContract(request, application_id):
+    """
+    Create a contract for a rent application once it is accepted.
+    """
+    application = get_object_or_404(RentApplication, id=application_id)
+
+    if application.status != 'Accepted':
+        messages.error(request, _("Only accepted applications can have a contract created."))
+        return redirect('backend:getRentApplications')
+
     if request.method == 'POST':
-        form = ContractForm(request.POST, rent_application=rent_application)
+        form = ContractForm(rent_application=application, data=request.POST)
         if form.is_valid():
             contract = form.save()
-            messages.success(request, f"Contract #{contract.contract_number} created successfully!")
-            return redirect('backend:show_contract', contract.id)
+            messages.success(request, _("Contract has been created successfully."))
+            return redirect(reverse('backend:showContract', kwargs={'id': contract.id}))
         else:
-            messages.error(request, "Please correct the errors in the form.")
+            messages.error(request, _("Please correct the errors below and try again."))
     else:
-        form = ContractForm(rent_application=rent_application)
+        form = ContractForm(rent_application=application)
 
     context = {
         'form': form,
-        'title': 'Create Contract'
+        'title': _("Create Contract for Application: %(property)s") % {'property': application.property.name}
     }
 
     return render(request, 'backend/pages/contracts/create.html', context)
