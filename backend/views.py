@@ -565,3 +565,20 @@ def updateApplicationStatus(request, id):
     }
 
     return render(request, 'backend/pages/applications/edit.html', context)
+
+@login_required
+def getContracts(request):
+    """
+    View to display a list of all contracts.
+    """
+    if request.user.role != 'Admin':
+        raise PermissionDenied("You do not have permission to view contracts.")
+
+    contracts = Contract.objects.all().order_by('-start_date')
+
+    context = {
+        'contracts': contracts,
+        'title': 'All Contracts'
+    }
+
+    return render(request, 'backend/pages/contracts/index.html', context)
