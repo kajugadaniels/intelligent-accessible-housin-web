@@ -76,7 +76,7 @@
                                                         </ul>
                                                         <ul>
                                                             <li>Status:</li>
-                                                            <a href="#" class="text-black">{{ application.status }}</a>
+                                                            <a href="#" class="status-badge {% if application.status == 'Accepted' %}approved{% else %}pending{% endif %}">{{ application.status }}</a>
                                                         </ul>
                                                         <ul>
                                                             <li>Features:</li>

@@ -46,7 +46,9 @@
                                                 <div class="listing">
                                                     <img src="{{ application.property.image.url }}" alt="{{ application.property.name }}">
                                                     <div class="details">
-                                                        <a href="property-details-v1.html">Apartment Complex</a>
+                                                        <a href="{% url 'frontend:showProperty' application.property.slug %}">
+                                                            {{ application.property.name }}
+                                                        </a>
                                                         <div class="space18"></div>
                                                         <p>
                                                             <span><img src="https://housebox-html-demo.vercel.app/assets/img/icons/bed1.svg" alt="housebox"> x{{ application.property.capacity }}</span>
