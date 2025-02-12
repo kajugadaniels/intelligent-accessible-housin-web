@@ -25,6 +25,7 @@
                                     </th>
                                     <th><span class="f-light f-w-600">Property</span></th>
                                     <th><span class="f-light f-w-600">User</span></th>
+                                    <th><span class="f-light f-w-600">Status</span></th>
                                     <th><span class="f-light f-w-600">Sent</span></th>
                                     <th><span class="f-light f-w-600">Action</span></th>
                                 </tr>
@@ -42,6 +43,9 @@
                                         </td>
                                         <td>
                                             <p class="f-light">{{ application.user.name }}</p>
+                                        </td>
+                                        <td>
+                                            <p class="f-light">{{ application.status }}</p>
                                         </td>
                                         <td>
                                             <p class="f-light">{{ application.created_at|naturaltime }}</p>
