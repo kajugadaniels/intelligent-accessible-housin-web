@@ -20,7 +20,37 @@
                     <form method="post">
                         {% csrf_token %}
                         
+                        <!-- Tenant Field -->
                         <div class="row">
+                            <div class="col-md-6 mb-3">
+                                <label class="form-label">{{ form.tenant.label }}</label>
+                                {{ form.tenant }}
+                                {% for error in form.tenant.errors %}
+                                    <div class="text-danger">{{ error }}</div>
+                                {% endfor %}
+                            </div>
+
+                            <!-- Agent Field -->
+                            <div class="col-md-6 mb-3">
+                                <label class="form-label">{{ form.agent.label }}</label>
+                                {{ form.agent }}
+                                {% for error in form.agent.errors %}
+                                    <div class="text-danger">{{ error }}</div>
+                                {% endfor %}
+                            </div>
+                        </div>
+
+                        <!-- Property Field -->
+                        <div class="row">
+                            <div class="col-md-6 mb-3">
+                                <label class="form-label">{{ form.property.label }}</label>
+                                {{ form.property }}
+                                {% for error in form.property.errors %}
+                                    <div class="text-danger">{{ error }}</div>
+                                {% endfor %}
+                            </div>
+
+                            <!-- Contract Number -->
                             <div class="col-md-6 mb-3">
                                 <label class="form-label">{{ form.contract_number.label }}</label>
                                 {{ form.contract_number }}
@@ -28,7 +58,10 @@
                                     <div class="text-danger">{{ error }}</div>
                                 {% endfor %}
                             </div>
+                        </div>
 
+                        <!-- Start Date & End Date -->
+                        <div class="row">
                             <div class="col-md-6 mb-3">
                                 <label class="form-label">{{ form.start_date.label }}</label>
                                 {{ form.start_date }}
@@ -36,9 +69,7 @@
                                     <div class="text-danger">{{ error }}</div>
                                 {% endfor %}
                             </div>
-                        </div>
 
-                        <div class="row">
                             <div class="col-md-6 mb-3">
                                 <label class="form-label">{{ form.end_date.label }}</label>
                                 {{ form.end_date }}
@@ -46,7 +77,10 @@
                                     <div class="text-danger">{{ error }}</div>
                                 {% endfor %}
                             </div>
+                        </div>
 
+                        <!-- Rent Amount & Security Deposit -->
+                        <div class="row">
                             <div class="col-md-6 mb-3">
                                 <label class="form-label">{{ form.rent_amount.label }}</label>
                                 {{ form.rent_amount }}
@@ -54,9 +88,7 @@
                                     <div class="text-danger">{{ error }}</div>
                                 {% endfor %}
                             </div>
-                        </div>
 
-                        <div class="row">
                             <div class="col-md-6 mb-3">
                                 <label class="form-label">{{ form.security_deposit.label }}</label>
                                 {{ form.security_deposit }}
@@ -64,21 +96,14 @@
                                     <div class="text-danger">{{ error }}</div>
                                 {% endfor %}
                             </div>
+                        </div>
 
+                        <!-- Payment Status & Rent Due Date -->
+                        <div class="row">
                             <div class="col-md-6 mb-3">
                                 <label class="form-label">{{ form.payment_status.label }}</label>
                                 {{ form.payment_status }}
                                 {% for error in form.payment_status.errors %}
-                                    <div class="text-danger">{{ error }}</div>
-                                {% endfor %}
-                            </div>
-                        </div>
-
-                        <div class="row">
-                            <div class="col-md-6 mb-3">
-                                <label class="form-label">{{ form.status.label }}</label>
-                                {{ form.status }}
-                                {% for error in form.status.errors %}
                                     <div class="text-danger">{{ error }}</div>
                                 {% endfor %}
                             </div>
@@ -92,7 +117,16 @@
                             </div>
                         </div>
 
+                        <!-- Status & Additional Terms -->
                         <div class="row">
+                            <div class="col-md-6 mb-3">
+                                <label class="form-label">{{ form.status.label }}</label>
+                                {{ form.status }}
+                                {% for error in form.status.errors %}
+                                    <div class="text-danger">{{ error }}</div>
+                                {% endfor %}
+                            </div>
+
                             <div class="col-md-12 mb-3">
                                 <label class="form-label">{{ form.additional_terms.label }}</label>
                                 {{ form.additional_terms }}
