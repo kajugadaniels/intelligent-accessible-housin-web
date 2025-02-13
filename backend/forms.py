@@ -387,9 +387,8 @@ class ContractForm(forms.ModelForm):
     class Meta:
         model = Contract
         fields = [
-            'tenant', 'agent', 'property', 'contract_number', 'start_date', 'end_date', 
-            'rental_period_months', 'rent_amount', 'security_deposit', 'payment_status', 
-            'status', 'additional_terms', 'rent_due_date', 'payment_method'
+            'start_date', 'end_date', 'additional_terms', 'rent_due_date', 
+            'payment_method', 'rent_amount', 'security_deposit'
         ]
         widgets = {
             'start_date': forms.DateInput(attrs={'class': 'form-control', 'type': 'date'}),
@@ -405,13 +404,10 @@ class ContractForm(forms.ModelForm):
         super().__init__(*args, **kwargs)
         self.rent_application = rent_application
 
-        # Ensure 'tenant' is correctly populated from RentApplication's user
-        if 'tenant' in self.fields:
-            self.fields['tenant'].initial = rent_application.user  # Assign tenant from RentApplication's user
-        if 'agent' in self.fields:
-            self.fields['agent'].initial = rent_application.property.created_by  # Agent from property creator
-        if 'property' in self.fields:
-            self.fields['property'].initial = rent_application.property  # Property from RentApplication
+        # Automatically populate non-visible fields
+        self.fields['tenant'].initial = rent_application.user  # tenant from RentApplication's user
+        self.fields['agent'].initial = rent_application.property.created_by  # agent from property creator
+        self.fields['property'].initial = rent_application.property  # property from RentApplication
 
         # Generate contract number (7 digit starting from 0000001)
         last_contract = Contract.objects.all().order_by('-id').first()
@@ -428,3 +424,16 @@ class ContractForm(forms.ModelForm):
 
         # Remove the rental period months calculation here (we'll use JS to set this)
         self.fields['rental_period_months'].required = False
+
+
+    def clean(self):
+        cleaned_data = super().clean()
+
+        # Ensure the rental period is valid
+        start_date = cleaned_data.get('start_date')
+        end_date = cleaned_data.get('end_date')
+        
+        if start_date and end_date:
+            rental_period_months = (end_date.year - start_date.year) * 12 + end_date.month - start_date.month
+            cleaned_data['rental_period_months'] = rental_period_months
+        return cleaned_data
