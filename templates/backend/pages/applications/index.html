@@ -67,7 +67,7 @@
                                                 <a href="{% url 'backend:showApplication' application.id %}" class="btn btn-primary">
                                                     View
                                                 </a>
-                                        
+                                                
                                                 {% if application.contract %}
                                                     {% if application.contract.status == 'Pending' %}
                                                         <span class="badge badge-light-warning">Contract Sent</span>
@@ -84,14 +84,16 @@
                                                             Manage Application
                                                         </a>
                                                     {% elif application.status == "Accepted" %}
-                                                        <a href="{% url 'backend:createContract' application.id %}" class="btn btn-success">
-                                                            Send Contract
-                                                        </a>
+                                                        <!-- Show the "Send Contract" button only if the contract doesn't exist or is pending -->
+                                                        {% if not application.contract or application.contract.status == 'Pending' %}
+                                                            <a href="{% url 'backend:createContract' application.id %}" class="btn btn-success">
+                                                                Send Contract
+                                                            </a>
+                                                        {% endif %}
                                                     {% endif %}
                                                 {% endif %}
                                             </div>
                                         </td>
-                                        
                                     </tr>
                                 {% endfor %}
                             </tbody>
