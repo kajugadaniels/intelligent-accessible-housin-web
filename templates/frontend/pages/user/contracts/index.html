@@ -1,0 +1,109 @@
+{% extends 'frontend/layouts/app.html' %}
+{% load humanize %}
+
+{% block content %}
+<div class="hero-inner-section-area-sidebar">
+    <img src="https://housebox-html-demo.vercel.app/assets/img/all-images/hero/hero-img1.png" alt="housebox" class="hero-img1" />
+    <div class="container">
+        <div class="row">
+            <div class="col-lg-12">
+                <div class="hero-header-area text-center">
+                    <a href="{% url 'frontend:home' %}">
+                        Home
+                        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor">
+                            <path d="M13.1717 12.0007L8.22192 7.05093L9.63614 5.63672L16.0001 12.0007L9.63614 18.3646L8.22192 16.9504L13.1717 12.0007Z"></path>
+                        </svg>
+                        Dashboard
+                    </a>
+                    <div class="space24"></div>
+                    <h1>Contracts Dashboard</h1>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div class="blog-inner-section sp1">
+    <div class="container">
+        <div class="row">
+            {% include 'frontend/inc/user-sidebar.html' %}
+            <div class="col-lg-9">
+                <div class="dashboard-section-area sp1" style="padding: 30px 0 0 0 !important;">
+                    <div class="row">
+                        <div class="col-lg-12">
+                            <div class="space30"></div>
+                            <div class="dashboad-all-details-section">
+                                <h3>All Contracts</h3>
+                                <div class="space20"></div>
+                                
+                                <!-- Active Contracts -->
+                                <h4>Active Contracts</h4>
+                                {% for contract in active_contracts %}
+                                    <div class="table-row">
+                                        <div class="listing">
+                                            <p>Contract #{{ contract.contract_number }}</p>
+                                            <p>Status: {{ contract.status }}</p>
+                                            <a href="{% url 'frontend:showContract' contract.id %}">View Contract</a>
+                                        </div>
+                                    </div>
+                                {% empty %}
+                                    <p>No active contracts.</p>
+                                {% endfor %}
+
+                                <div class="space30"></div>
+
+                                <!-- Pending Contracts -->
+                                <h4>Pending Contracts</h4>
+                                {% for contract in pending_contracts %}
+                                    <div class="table-row">
+                                        <div class="listing">
+                                            <p>Contract #{{ contract.contract_number }}</p>
+                                            <p>Status: {{ contract.status }}</p>
+                                            <a href="{% url 'frontend:showContract' contract.id %}">View Contract</a>
+                                        </div>
+                                    </div>
+                                {% empty %}
+                                    <p>No pending contracts.</p>
+                                {% endfor %}
+
+                                <div class="space30"></div>
+
+                                <!-- Terminated Contracts -->
+                                <h4>Terminated Contracts</h4>
+                                {% for contract in terminated_contracts %}
+                                    <div class="table-row">
+                                        <div class="listing">
+                                            <p>Contract #{{ contract.contract_number }}</p>
+                                            <p>Status: {{ contract.status }}</p>
+                                            <a href="{% url 'frontend:showContract' contract.id %}">View Contract</a>
+                                        </div>
+                                    </div>
+                                {% empty %}
+                                    <p>No terminated contracts.</p>
+                                {% endfor %}
+
+                                <div class="space30"></div>
+
+                                <!-- Expired Contracts -->
+                                <h4>Expired Contracts</h4>
+                                {% for contract in expired_contracts %}
+                                    <div class="table-row">
+                                        <div class="listing">
+                                            <p>Contract #{{ contract.contract_number }}</p>
+                                            <p>Status: {{ contract.status }}</p>
+                                            <a href="{% url 'frontend:showContract' contract.id %}">View Contract</a>
+                                        </div>
+                                    </div>
+                                {% empty %}
+                                    <p>No expired contracts.</p>
+                                {% endfor %}
+                            </div>
+                            <div class="space30"></div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}
