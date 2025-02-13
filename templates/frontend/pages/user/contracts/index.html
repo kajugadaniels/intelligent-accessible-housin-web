@@ -36,9 +36,8 @@
                                 <h3>All Contracts</h3>
                                 <div class="space20"></div>
                                 
-                                <!-- Active Contracts -->
-                                <h4>Active Contracts</h4>
-                                {% for contract in active_contracts %}
+                                <!-- Loop through all contracts -->
+                                {% for contract in contracts %}
                                     <div class="table-row">
                                         <div class="listing">
                                             <p>Contract #{{ contract.contract_number }}</p>
@@ -47,55 +46,7 @@
                                         </div>
                                     </div>
                                 {% empty %}
-                                    <p>No active contracts.</p>
-                                {% endfor %}
-
-                                <div class="space30"></div>
-
-                                <!-- Pending Contracts -->
-                                <h4>Pending Contracts</h4>
-                                {% for contract in pending_contracts %}
-                                    <div class="table-row">
-                                        <div class="listing">
-                                            <p>Contract #{{ contract.contract_number }}</p>
-                                            <p>Status: {{ contract.status }}</p>
-                                            <a href="{% url 'frontend:showContract' contract.id %}">View Contract</a>
-                                        </div>
-                                    </div>
-                                {% empty %}
-                                    <p>No pending contracts.</p>
-                                {% endfor %}
-
-                                <div class="space30"></div>
-
-                                <!-- Terminated Contracts -->
-                                <h4>Terminated Contracts</h4>
-                                {% for contract in terminated_contracts %}
-                                    <div class="table-row">
-                                        <div class="listing">
-                                            <p>Contract #{{ contract.contract_number }}</p>
-                                            <p>Status: {{ contract.status }}</p>
-                                            <a href="{% url 'frontend:showContract' contract.id %}">View Contract</a>
-                                        </div>
-                                    </div>
-                                {% empty %}
-                                    <p>No terminated contracts.</p>
-                                {% endfor %}
-
-                                <div class="space30"></div>
-
-                                <!-- Expired Contracts -->
-                                <h4>Expired Contracts</h4>
-                                {% for contract in expired_contracts %}
-                                    <div class="table-row">
-                                        <div class="listing">
-                                            <p>Contract #{{ contract.contract_number }}</p>
-                                            <p>Status: {{ contract.status }}</p>
-                                            <a href="{% url 'frontend:showContract' contract.id %}">View Contract</a>
-                                        </div>
-                                    </div>
-                                {% empty %}
-                                    <p>No expired contracts.</p>
+                                    <p>No contracts found.</p>
                                 {% endfor %}
                             </div>
                             <div class="space30"></div>
