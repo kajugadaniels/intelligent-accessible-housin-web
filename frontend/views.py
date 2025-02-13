@@ -263,3 +263,20 @@ def showApplicationDetail(request, application_id):
     }
 
     return render(request, 'frontend/pages/user/applications/show.html', context)
+
+@login_required
+def showContract(request, contract_id):
+    """
+    Show the details of the contract for the rent application.
+    """
+    contract = get_object_or_404(Contract, id=contract_id)
+
+    if contract.rent_application.user != request.user:
+        messages.error(request, "You don't have permission to view this contract.")
+        return redirect('frontend:getUserApplications')
+
+    context = {
+        'contract': contract,
+    }
+
+    return render(request, 'frontend/pages/user/contracts/show.html', context)
