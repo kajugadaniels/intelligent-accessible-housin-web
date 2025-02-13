@@ -61,7 +61,15 @@
                                                     </div>
                                                 </div>
                                                 <div class="status">
-                                                    <a href="#" class="status-badge {% if application.status == 'Accepted' %}approved{% else %}pending{% endif %}">{{ application.status }}</a>
+                                                    {% if application.contract %}
+                                                        {% if application.contract.status == 'Active' %}
+                                                            <a href="#" class="status-badge approved">Rented</a>
+                                                        {% else %}
+                                                            <a href="#" class="status-badge {% if application.status == 'Accepted' %}approved{% else %}pending{% endif %}">{{ application.status }}</a>
+                                                        {% endif %}
+                                                    {% else %}
+                                                        <a href="#" class="status-badge {% if application.status == 'Accepted' %}approved{% else %}pending{% endif %}">{{ application.status }}</a>
+                                                    {% endif %}
                                                 </div>
                                                 <div class="actions">
                                                     <button class="edit">
@@ -70,11 +78,13 @@
                                                         </a>
                                                     </button>
                                                     {% if application.contract %}
-                                                        <button class="edit">
-                                                            <a href="{% url 'frontend:showContract' application.contract.id %}">
-                                                                Contract
-                                                            </a>
-                                                        </button>
+                                                        {% if application.contract.status != 'Active' %}
+                                                            <button class="edit">
+                                                                <a href="{% url 'frontend:showContract' application.contract.id %}">
+                                                                    Contract
+                                                                </a>
+                                                            </button>
+                                                        {% endif %}
                                                     {% endif %}
                                                 </div>
                                             </div>
