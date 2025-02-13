@@ -387,8 +387,8 @@ class ContractForm(forms.ModelForm):
     class Meta:
         model = Contract
         fields = [
-            'start_date', 'end_date', 'additional_terms', 'rent_due_date', 
-            'payment_method', 'rent_amount', 'security_deposit'
+            'start_date', 'end_date', 'additional_terms', 'rent_due_date',
+            'payment_method', 'rent_amount', 'security_deposit', 'rental_period_months'
         ]
         widgets = {
             'start_date': forms.DateInput(attrs={'class': 'form-control', 'type': 'date'}),
@@ -400,17 +400,7 @@ class ContractForm(forms.ModelForm):
             'security_deposit': forms.NumberInput(attrs={'class': 'form-control'}),
         }
 
-    def __init__(self, rent_application, *args, **kwargs):
+    def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)
-        self.rent_application = rent_application
-
-        # Set start date to today's date
-        self.fields['start_date'].initial = timezone.now().date()
-
-        # Set rent amount automatically from the Property model
-        self.fields['rent_amount'].initial = rent_application.property.price_rwf
-        self.fields['payment_status'].initial = 'Pending'
-        self.fields['status'].initial = 'Pending'
-
-        # Remove the rental period months calculation here (we'll use JS to set this)
+        # Keep the rental_period_months field hidden (it will be handled by JS)
         self.fields['rental_period_months'].required = False

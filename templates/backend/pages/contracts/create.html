@@ -23,7 +23,7 @@
                             {{ form.non_field_errors }}
 
                             <!-- Start Date Field -->
-                            <div class="col-md-3 mb-3">
+                            <div class="col-md-6 mb-3">
                                 <label class="form-label">{{ form.start_date.label }}</label>
                                 {{ form.start_date }}
                                 {% for error in form.start_date.errors %}
@@ -32,7 +32,7 @@
                             </div>
 
                             <!-- End Date Field -->
-                            <div class="col-md-3 mb-3">
+                            <div class="col-md-6 mb-3">
                                 <label class="form-label">{{ form.end_date.label }}</label>
                                 {{ form.end_date }}
                                 {% for error in form.end_date.errors %}

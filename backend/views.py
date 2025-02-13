@@ -606,24 +606,47 @@ def createContract(request, application_id):
         return redirect('backend:getRentApplications')
 
     if request.method == 'POST':
-        form = ContractForm(rent_application=application, data=request.POST)
+        form = ContractForm(request.POST)
         if form.is_valid():
-            # Manually assign the tenant and agent before saving
+            # Create the contract without saving yet
             contract = form.save(commit=False)
-            contract.tenant = application.user  # Assign tenant from RentApplication's user
-            contract.agent = application.property.created_by  # Assign agent from property creator
-            contract.property = application.property  # Assign property from RentApplication
+
+            # Manually assign fields not in the form
+            contract.tenant = application.user  # Tenant from RentApplication's user
+            contract.agent = application.property.created_by  # Agent from property creator
+            contract.property = application.property  # Property from RentApplication
+
             # Generate contract number (7 digit starting from 0000001)
             last_contract = Contract.objects.all().order_by('-id').first()
             next_contract_number = f"{last_contract.id + 1 if last_contract else 1:07d}"
             contract.contract_number = next_contract_number  # Set the contract number
+
+            # Set rent amount automatically from the Property model
+            contract.rent_amount = application.property.price_rwf
+            contract.payment_status = 'Pending'
+            contract.status = 'Pending'
+
+            # Set start date to today's date
+            contract.start_date = timezone.now().date()
+
+            # Set the rental period months if end date is provided
+            start_date = contract.start_date
+            end_date = form.cleaned_data.get('end_date')
+            if end_date:
+                rental_period_months = (end_date.year - start_date.year) * 12 + end_date.month - start_date.month
+                contract.rental_period_months = rental_period_months
+                contract.end_date = end_date
+            else:
+                contract.end_date = start_date  # Default to start date if not provided
+
+            # Save the contract
             contract.save()
             messages.success(request, _("Contract has been created successfully."))
             return redirect(reverse('backend:showContract', kwargs={'id': contract.id}))
         else:
             messages.error(request, _("Please correct the errors below and try again."))
     else:
-        form = ContractForm(rent_application=application)
+        form = ContractForm()
 
     context = {
         'form': form,
