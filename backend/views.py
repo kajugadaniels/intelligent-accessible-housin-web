@@ -556,14 +556,14 @@ def updateApplicationStatus(request, id):
             # Ensure the status is valid
             if status not in ['Accepted', 'Rejected', 'Moved Out']:
                 messages.error(request, "Invalid status.")
-                return redirect('backend:showApplication', id=id)
+                return redirect('backend:getRentApplications')
 
             # Update the application's status
             application.status = status
             application.save()
 
             messages.success(request, f"Application status updated to {status}.")
-            return redirect('backend:showApplication', id=id)
+            return redirect('backend:getRentApplications')
     else:
         raise PermissionDenied(_("You do not have permission to perform this action."))
 
