@@ -19,4 +19,7 @@ urlpatterns = [
     path('user/dashboard', userDashboard, name="userDashboard"),
     path('user/applications/', getUserApplications, name='getUserApplications'),
     path('user/application/<int:application_id>/', showApplicationDetail, name='showApplicationDetail'),
+
+    path('contract/<int:contract_id>/', showContract, name='showContract'),
+    path('contract/accept/<int:contract_id>/', acceptContract, name='acceptContract'),
 ]  + static(settings.STATIC_URL, document_root=settings.STATIC_ROOT)+ static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)
