@@ -1,7 +1,24 @@
 {% extends 'frontend/layouts/app.html' %}
 {% load humanize %}
-
 {% block content %}
+<style>
+    .status-active {
+        color: #28a745;
+        font-weight: bold;
+    }
+    .status-pending {
+        color: #ff9800;
+        font-weight: bold;
+    }
+    .status-terminated {
+        color: #dc3545;
+        font-weight: bold;
+    }
+    .status-expired {
+        color: #6c757d;
+        font-weight: bold;
+    }
+</style>
 <div class="hero-inner-section-area-sidebar">
     <img src="https://housebox-html-demo.vercel.app/assets/img/all-images/hero/hero-img1.png" alt="housebox" class="hero-img1" />
     <div class="container">
@@ -44,11 +61,21 @@
                                             <div class="conatent-area">
                                                 <div class="content">
                                                     <a href="{% url 'frontend:showContract' contract.id %}">Contract #{{ contract.contract_number }}</a>
-                                                    <p>Status: {{ contract.status }}</p>
-                                                    <p>Property: {{ contract.rent_application.property }}</p>
+                                                    
+                                                    <!-- Stylize Status Based on the Value -->
+                                                    <p class="status-label 
+                                                        {% if contract.status == 'Active' %} status-active 
+                                                        {% elif contract.status == 'Pending' %} status-pending
+                                                        {% elif contract.status == 'Terminated' %} status-terminated
+                                                        {% elif contract.status == 'Expired' %} status-expired
+                                                        {% endif %}">
+                                                        Status: {{ contract.status }}
+                                                    </p>
+
+                                                    <p>Property: {{ contract.rent_application.property|truncatechars:20 }}</p>
                                                 </div>
                                                 <div class="space14"></div>
-                                                <p>{{ contract.additional_terms }}</p>
+                                                <p>{{ contract.additional_terms|truncatechars:200 }}</p>
                                             </div>
                                         </div>
                                         {% empty %}
