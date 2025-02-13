@@ -280,3 +280,24 @@ def showContract(request, contract_id):
     }
 
     return render(request, 'frontend/pages/user/contracts/show.html', context)
+
+@login_required
+def acceptContract(request, contract_id):
+    """
+    Accept the contract and update its status to 'Active' and payment status to 'Paid'.
+    """
+    contract = get_object_or_404(Contract, id=contract_id)
+
+    if contract.rent_application.user != request.user:
+        messages.error(request, "You don't have permission to sign this contract.")
+        return redirect('frontend:getUserApplications')
+
+    # Update contract fields
+    contract.status = 'Active'
+    contract.payment_status = 'Paid'
+    contract.signed_date = timezone.now()
+
+    contract.save()
+
+    messages.success(request, "Contract has been signed successfully.")
+    return redirect('frontend:getUserApplications')
