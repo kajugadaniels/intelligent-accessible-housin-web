@@ -267,19 +267,12 @@ def showApplicationDetail(request, application_id):
 @login_required
 def getContracts(request):
     """
-    Retrieve all contracts for the logged-in user, grouped by status (Pending, Active, Terminated, Expired).
+    Retrieve all contracts for the logged-in user.
     """
-    # Retrieve contracts by status
-    active_contracts = Contract.objects.filter(status='Active').order_by('-created_at')
-    pending_contracts = Contract.objects.filter(status='Pending').order_by('-created_at')
-    terminated_contracts = Contract.objects.filter(status='Terminated').order_by('-created_at')
-    expired_contracts = Contract.objects.filter(status='Expired').order_by('-created_at')
+    contracts = Contract.objects.all().order_by('-created_at')
 
     context = {
-        'active_contracts': active_contracts,
-        'pending_contracts': pending_contracts,
-        'terminated_contracts': terminated_contracts,
-        'expired_contracts': expired_contracts,
+        'contracts': contracts,
     }
 
     return render(request, 'frontend/pages/user/contracts/index.html', context)
