@@ -405,7 +405,6 @@ class ContractForm(forms.ModelForm):
         self.rent_application = rent_application
 
         # Automatically populate non-visible fields
-        self.fields['tenant'].initial = rent_application.user  # tenant from RentApplication's user
         self.fields['agent'].initial = rent_application.property.created_by  # agent from property creator
         self.fields['property'].initial = rent_application.property  # property from RentApplication
 
@@ -424,7 +423,6 @@ class ContractForm(forms.ModelForm):
 
         # Remove the rental period months calculation here (we'll use JS to set this)
         self.fields['rental_period_months'].required = False
-
 
     def clean(self):
         cleaned_data = super().clean()
