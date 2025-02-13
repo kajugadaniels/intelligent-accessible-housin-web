@@ -265,6 +265,26 @@ def showApplicationDetail(request, application_id):
     return render(request, 'frontend/pages/user/applications/show.html', context)
 
 @login_required
+def getContracts(request):
+    """
+    Retrieve all contracts for the logged-in user, grouped by status (Pending, Active, Terminated, Expired).
+    """
+    # Retrieve contracts by status
+    active_contracts = Contract.objects.filter(status='Active').order_by('-created_at')
+    pending_contracts = Contract.objects.filter(status='Pending').order_by('-created_at')
+    terminated_contracts = Contract.objects.filter(status='Terminated').order_by('-created_at')
+    expired_contracts = Contract.objects.filter(status='Expired').order_by('-created_at')
+
+    context = {
+        'active_contracts': active_contracts,
+        'pending_contracts': pending_contracts,
+        'terminated_contracts': terminated_contracts,
+        'expired_contracts': expired_contracts,
+    }
+
+    return render(request, 'frontend/pages/user/contracts/index.html', context)
+
+@login_required
 def showContract(request, contract_id):
     """
     Show the details of the contract for the rent application.
