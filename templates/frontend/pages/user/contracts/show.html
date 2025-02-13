@@ -1,0 +1,39 @@
+{% extends 'frontend/layouts/app.html' %}
+{% load static %}
+{% block content %}
+<div class="container-fluid">
+    <div class="row">
+        <div class="col-sm-12">
+            <div class="card">
+                <div class="card-body">
+                    <h3>Contract Details</h3>
+                    <hr>
+                    <div>
+                        <h5>Property: {{ contract.property.name }}</h5>
+                        <p><strong>Tenant:</strong> {{ contract.tenant.name }}</p>
+                        <p><strong>Agent:</strong> {{ contract.agent.name }}</p>
+                        <p><strong>Start Date:</strong> {{ contract.start_date }}</p>
+                        <p><strong>End Date:</strong> {{ contract.end_date }}</p>
+                        <p><strong>Rent Amount:</strong> {{ contract.rent_amount }} RWF</p>
+                        <p><strong>Security Deposit:</strong> {{ contract.security_deposit }} RWF</p>
+                        <p><strong>Payment Method:</strong> {{ contract.payment_method }}</p>
+                        <p><strong>Additional Terms:</strong> {{ contract.additional_terms }}</p>
+                        <p><strong>Status:</strong> {{ contract.get_status_display }}</p>
+                        <p><strong>Payment Status:</strong> {{ contract.get_payment_status_display }}</p>
+
+                        <hr>
+
+                        {% if contract.status == "Pending" %}
+                            <a href="{% url 'frontend:acceptContract' contract.id %}" class="btn btn-success">
+                                Accept and Sign Contract
+                            </a>
+                        {% else %}
+                            <span class="badge badge-success">Contract Signed</span>
+                        {% endif %}
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}
