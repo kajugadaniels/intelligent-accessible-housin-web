@@ -611,20 +611,18 @@ def createContract(request, application_id):
             # Create the contract without saving yet
             contract = form.save(commit=False)
 
-            # Manually assign fields not in the form
+            # Automatically populate other fields not in the form
             contract.tenant = application.user  # Tenant from RentApplication's user
             contract.agent = application.property.created_by  # Agent from property creator
             contract.property = application.property  # Property from RentApplication
 
-            # Generate contract number (7 digit starting from 0000001)
+            # Set the contract number (7 digit starting from 0000001)
             last_contract = Contract.objects.all().order_by('-id').first()
             next_contract_number = f"{last_contract.id + 1 if last_contract else 1:07d}"
-            contract.contract_number = next_contract_number  # Set the contract number
+            contract.contract_number = next_contract_number
 
-            # Set rent amount automatically from the Property model
+            # Set rent amount automatically from the Property model (price_rwf)
             contract.rent_amount = application.property.price_rwf
-            contract.payment_status = 'Pending'
-            contract.status = 'Pending'
 
             # Set start date to today's date
             contract.start_date = timezone.now().date()
@@ -647,6 +645,9 @@ def createContract(request, application_id):
             messages.error(request, _("Please correct the errors below and try again."))
     else:
         form = ContractForm()
+
+        # Set rent amount automatically from the Property model (price_rwf)
+        form.fields['rent_amount'].initial = application.property.price_rwf
 
     context = {
         'form': form,
