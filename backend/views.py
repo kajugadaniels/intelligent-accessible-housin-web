@@ -601,25 +601,21 @@ def createContract(request, application_id):
         return redirect('backend:getRentApplications')
 
     # Check if the contract already exists for this RentApplication
-    if Contract.objects.filter(rent_application=application).exists():
+    if Contract.objects.filter(property=application.property).exists():
         messages.info(request, _("A contract has already been created for this application."))
         return redirect('backend:getRentApplications')
 
     if request.method == 'POST':
         form = ContractForm(rent_application=application, data=request.POST)
         if form.is_valid():
+            # Manually assign the tenant before saving
             contract = form.save(commit=False)
-            contract.rent_application = application  # Ensure rent_application is set to this application
+            contract.tenant = application.user  # Assign tenant from RentApplication's user
             contract.save()
             messages.success(request, _("Contract has been created successfully."))
             return redirect(reverse('backend:showContract', kwargs={'id': contract.id}))
         else:
-            # Display detailed error messages for each field
-            for field in form.errors:
-                for error in form.errors[field]:
-                    messages.error(request, f"{form.fields[field].label}: {error}")
             messages.error(request, _("Please correct the errors below and try again."))
-
     else:
         form = ContractForm(rent_application=application)
 
