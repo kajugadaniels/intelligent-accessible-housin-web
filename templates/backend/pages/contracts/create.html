@@ -11,7 +11,9 @@
                     <div class="list-client-header">
                         <div class="d-flex justify-content-between">
                             <h4>Send Contract</h4>
-                            <a class="btn btn-primary" href="{% url 'backend:getRentApplications' %}"><i class="fa fa-arrow-left"></i> Go Back</a>
+                            <a class="btn btn-primary" href="{% url 'backend:getRentApplications' %}">
+                                <i class="fa fa-arrow-left"></i> Go Back
+                            </a>
                         </div>
                     </div>
                     <hr>
@@ -19,35 +21,8 @@
                         <form method="post" class="row">
                             {% csrf_token %}
                             {{ form.non_field_errors }}
-                            <div class="col-md-3 mb-3">
-                                <label class="form-label">{{ form.tenant.label }}</label>
-                                {{ form.tenant }}
-                                {% for error in form.tenant.errors %}
-                                    <div class="text-danger">{{ error }}</div>
-                                {% endfor %}
-                            </div>
 
-                            <div class="col-md-3 mb-3">
-                                <label class="form-label">{{ form.agent.label }}</label>
-                                {{ form.agent }}
-                                {% for error in form.agent.errors %}
-                                    <div class="text-danger">{{ error }}</div>
-                                {% endfor %}
-                            </div>
-                            <div class="col-md-3 mb-3">
-                                <label class="form-label">{{ form.property.label }}</label>
-                                {{ form.property }}
-                                {% for error in form.property.errors %}
-                                    <div class="text-danger">{{ error }}</div>
-                                {% endfor %}
-                            </div>
-                            <div class="col-md-3 mb-3">
-                                <label class="form-label">{{ form.contract_number.label }}</label>
-                                {{ form.contract_number }}
-                                {% for error in form.contract_number.errors %}
-                                    <div class="text-danger">{{ error }}</div>
-                                {% endfor %}
-                            </div>
+                            <!-- Start Date Field -->
                             <div class="col-md-3 mb-3">
                                 <label class="form-label">{{ form.start_date.label }}</label>
                                 {{ form.start_date }}
@@ -55,6 +30,8 @@
                                     <div class="text-danger">{{ error }}</div>
                                 {% endfor %}
                             </div>
+
+                            <!-- End Date Field -->
                             <div class="col-md-3 mb-3">
                                 <label class="form-label">{{ form.end_date.label }}</label>
                                 {{ form.end_date }}
@@ -62,6 +39,8 @@
                                     <div class="text-danger">{{ error }}</div>
                                 {% endfor %}
                             </div>
+
+                            <!-- Rent Amount Field -->
                             <div class="col-md-3 mb-3">
                                 <label class="form-label">{{ form.rent_amount.label }}</label>
                                 {{ form.rent_amount }}
@@ -69,6 +48,8 @@
                                     <div class="text-danger">{{ error }}</div>
                                 {% endfor %}
                             </div>
+
+                            <!-- Security Deposit Field -->
                             <div class="col-md-3 mb-3">
                                 <label class="form-label">{{ form.security_deposit.label }}</label>
                                 {{ form.security_deposit }}
@@ -76,13 +57,8 @@
                                     <div class="text-danger">{{ error }}</div>
                                 {% endfor %}
                             </div>
-                            <div class="col-md-3 mb-3">
-                                <label class="form-label">{{ form.payment_status.label }}</label>
-                                {{ form.payment_status }}
-                                {% for error in form.payment_status.errors %}
-                                    <div class="text-danger">{{ error }}</div>
-                                {% endfor %}
-                            </div>
+
+                            <!-- Rent Due Date Field -->
                             <div class="col-md-3 mb-3">
                                 <label class="form-label">{{ form.rent_due_date.label }}</label>
                                 {{ form.rent_due_date }}
@@ -90,14 +66,17 @@
                                     <div class="text-danger">{{ error }}</div>
                                 {% endfor %}
                             </div>
+
+                            <!-- Payment Method Field -->
                             <div class="col-md-3 mb-3">
-                                <label class="form-label">{{ form.status.label }}</label>
-                                {{ form.status }}
-                                {% for error in form.status.errors %}
+                                <label class="form-label">{{ form.payment_method.label }}</label>
+                                {{ form.payment_method }}
+                                {% for error in form.payment_method.errors %}
                                     <div class="text-danger">{{ error }}</div>
                                 {% endfor %}
                             </div>
 
+                            <!-- Additional Terms Field -->
                             <div class="col-md-12 mb-3">
                                 <label class="form-label">{{ form.additional_terms.label }}</label>
                                 {{ form.additional_terms }}
@@ -105,8 +84,11 @@
                                     <div class="text-danger">{{ error }}</div>
                                 {% endfor %}
                             </div>
+
+                            <!-- Hidden Rental Period Months -->
                             <input type="hidden" name="rental_period_months" id="rental_period_months">
 
+                            <!-- Submit Button -->
                             <div class="row mt-2">
                                 <div class="col text-end">
                                     <button type="submit" class="btn btn-primary">Create Contract</button>
