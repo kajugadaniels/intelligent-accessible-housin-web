@@ -608,9 +608,10 @@ def createContract(request, application_id):
     if request.method == 'POST':
         form = ContractForm(rent_application=application, data=request.POST)
         if form.is_valid():
-            # Manually assign the tenant before saving
+            # Manually assign the tenant and agent before saving
             contract = form.save(commit=False)
             contract.tenant = application.user  # Assign tenant from RentApplication's user
+            contract.agent = application.property.created_by  # Assign agent from property creator
             contract.save()
             messages.success(request, _("Contract has been created successfully."))
             return redirect(reverse('backend:showContract', kwargs={'id': contract.id}))
@@ -625,6 +626,7 @@ def createContract(request, application_id):
     }
 
     return render(request, 'backend/pages/contracts/create.html', context)
+
 
 @login_required
 def showContract(request, id):

@@ -405,7 +405,6 @@ class ContractForm(forms.ModelForm):
         self.rent_application = rent_application
 
         # Automatically populate non-visible fields
-        self.fields['agent'].initial = rent_application.property.created_by  # agent from property creator
         self.fields['property'].initial = rent_application.property  # property from RentApplication
 
         # Generate contract number (7 digit starting from 0000001)
