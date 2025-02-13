@@ -612,7 +612,11 @@ def createContract(request, application_id):
             contract = form.save(commit=False)
             contract.tenant = application.user  # Assign tenant from RentApplication's user
             contract.agent = application.property.created_by  # Assign agent from property creator
-            contract.property = application.property  # Assign agent from property creator
+            contract.property = application.property  # Assign property from RentApplication
+            # Generate contract number (7 digit starting from 0000001)
+            last_contract = Contract.objects.all().order_by('-id').first()
+            next_contract_number = f"{last_contract.id + 1 if last_contract else 1:07d}"
+            contract.contract_number = next_contract_number  # Set the contract number
             contract.save()
             messages.success(request, _("Contract has been created successfully."))
             return redirect(reverse('backend:showContract', kwargs={'id': contract.id}))

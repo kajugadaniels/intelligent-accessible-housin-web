@@ -404,14 +404,6 @@ class ContractForm(forms.ModelForm):
         super().__init__(*args, **kwargs)
         self.rent_application = rent_application
 
-        # Automatically populate non-visible fields
-        # Don't add 'property' to fields list as it will be set programmatically
-
-        # Generate contract number (7 digit starting from 0000001)
-        last_contract = Contract.objects.all().order_by('-id').first()
-        next_contract_number = f"{last_contract.id + 1 if last_contract else 1:07d}"
-        self.fields['contract_number'].initial = next_contract_number
-
         # Set start date to today's date
         self.fields['start_date'].initial = timezone.now().date()
 
@@ -422,15 +414,3 @@ class ContractForm(forms.ModelForm):
 
         # Remove the rental period months calculation here (we'll use JS to set this)
         self.fields['rental_period_months'].required = False
-
-    def clean(self):
-        cleaned_data = super().clean()
-
-        # Ensure the rental period is valid
-        start_date = cleaned_data.get('start_date')
-        end_date = cleaned_data.get('end_date')
-        
-        if start_date and end_date:
-            rental_period_months = (end_date.year - start_date.year) * 12 + end_date.month - start_date.month
-            cleaned_data['rental_period_months'] = rental_period_months
-        return cleaned_data
