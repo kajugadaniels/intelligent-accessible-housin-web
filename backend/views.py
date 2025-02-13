@@ -612,6 +612,7 @@ def createContract(request, application_id):
             contract = form.save(commit=False)
             contract.tenant = application.user  # Assign tenant from RentApplication's user
             contract.agent = application.property.created_by  # Assign agent from property creator
+            contract.property = application.property  # Assign agent from property creator
             contract.save()
             messages.success(request, _("Contract has been created successfully."))
             return redirect(reverse('backend:showContract', kwargs={'id': contract.id}))
@@ -626,7 +627,6 @@ def createContract(request, application_id):
     }
 
     return render(request, 'backend/pages/contracts/create.html', context)
-
 
 @login_required
 def showContract(request, id):
