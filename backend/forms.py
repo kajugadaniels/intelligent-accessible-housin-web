@@ -397,6 +397,8 @@ class ContractForm(forms.ModelForm):
             'additional_terms': forms.Textarea(attrs={'class': 'form-control', 'rows': 5}),
             'rent_due_date': forms.DateInput(attrs={'class': 'form-control', 'type': 'date'}),
             'payment_method': forms.TextInput(attrs={'class': 'form-control'}),
+            'rent_amount': forms.NumberInput(attrs={'class': 'form-control'}),
+            'security_deposit': forms.NumberInput(attrs={'class': 'form-control'}),
         }
 
     def __init__(self, rent_application, *args, **kwargs):
