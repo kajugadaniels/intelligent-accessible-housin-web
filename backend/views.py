@@ -601,7 +601,7 @@ def createContract(request, application_id):
         return redirect('backend:getRentApplications')
 
     # Check if the contract already exists for this RentApplication
-    if Contract.objects.filter(property=application.property).exists():
+    if Contract.objects.filter(rent_application=application).exists():
         messages.info(request, _("A contract has already been created for this application."))
         return redirect('backend:getRentApplications')
 
@@ -615,6 +615,9 @@ def createContract(request, application_id):
             contract.tenant = application.user  # Tenant from RentApplication's user
             contract.agent = application.property.created_by  # Agent from property creator
             contract.property = application.property  # Property from RentApplication
+
+            # Set the rent_application field to associate the contract with the rent application
+            contract.rent_application = application  # Set rent_application field
 
             # Set the contract number (7 digit starting from 0000001)
             last_contract = Contract.objects.all().order_by('-id').first()

@@ -56,7 +56,7 @@ admin.site.register(PropertyReview, PropertyReviewAdmin)
 
 # ---- Contract Admin
 class ContractAdmin(admin.ModelAdmin):
-    list_display = ('contract_number', 'tenant', 'agent', 'property', 'status', 'start_date', 'end_date', 'created_at')
+    list_display = ('contract_number', 'rent_application', 'tenant', 'agent', 'property', 'status', 'start_date', 'end_date', 'created_at')
     list_filter = ('status', 'tenant', 'agent', 'property', 'created_at')
     search_fields = ('contract_number', 'tenant__name', 'agent__name', 'property__name')
     ordering = ('-created_at',)
