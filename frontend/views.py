@@ -77,6 +77,15 @@ def home(request):
 
     return render(request, 'frontend/pages/index.html', context)
 
+def about(request):
+    agents = User.objects.filter(role = 'House Provider').order_by('-created_at')
+
+    context = {
+        'agents': agents,
+    }
+
+    return render(request, 'frontend/pages/about.html', context)
+
 def getProperties(request):
     properties = Property.objects.all()
 

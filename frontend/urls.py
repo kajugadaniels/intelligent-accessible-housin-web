@@ -11,6 +11,7 @@ urlpatterns = [
     path('register', userRegister, name="register"),
 
     path('', home, name="home"),
+    path('about', about, name="about"),
 
     path('properties', getProperties, name="getProperties"),
     path('property/<slug:slug>/', showProperty, name="showProperty"),
