@@ -132,11 +132,11 @@
                                                 </div>
                                                 <div class="content-area">
                                                     <a href="{% url 'frontend:showProperty' property.slug %}" style="font-size: 18px;">
-                                                        {{ property.name }}
+                                                        {{ property.name|truncatechars:40 }}
                                                     </a>
                                                     <div class="space18"></div>
                                                     <p>
-                                                        {{ property.address }}
+                                                        {{ property.address|truncatechars:50 }}
                                                     </p>
                                                     <div class="space24"></div>
                                                     <ul>
