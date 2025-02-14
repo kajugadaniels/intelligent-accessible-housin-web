@@ -68,9 +68,11 @@ def home(request):
     Home view: Display the homepage with the 4 latest properties.
     """
     properties = Property.objects.order_by('-created_at')[:4]
+    agents = User.objects.filter(role = 'House Provider').order_by('-created')[:4]
 
     context = {
         'properties': properties,
+        'agents': agents,
     }
 
     return render(request, 'frontend/pages/index.html', context)
