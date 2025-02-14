@@ -188,33 +188,43 @@
                 </div>
             </div>
             <div class="row">
-                <div class="col-lg-3 col-md-6">
-                    <div class="team-widget-boxarea">
-                        <div class="img1 image-anime">
-                            <img src="https://housebox-html-demo.vercel.app/assets/img/all-images/team/team-img1.png" alt="housebox">
-                            <div class="share">
-                                <a href="#">
-                                    <svg xmlns="http://www.w3.org/2000/svg" width="17" height="18" viewBox="0 0 17 18" fill="none">
-                                        <path
-                                            d="M14.1333 12.7229C13.4578 12.7229 12.8533 12.994 12.3911 13.4187L6.05332 9.66867C6.09777 9.46084 6.13332 9.25301 6.13332 9.03614C6.13332 8.81928 6.09777 8.61145 6.05332 8.40361L12.32 4.68976C12.8 5.14157 13.4311 5.42169 14.1333 5.42169C15.6089 5.42169 16.8 4.21084 16.8 2.71084C16.8 1.21084 15.6089 0 14.1333 0C12.6578 0 11.4667 1.21084 11.4667 2.71084C11.4667 2.92771 11.5022 3.13554 11.5467 3.34337L5.27999 7.05723C4.79999 6.60542 4.16888 6.3253 3.46665 6.3253C1.9911 6.3253 0.799988 7.53614 0.799988 9.03614C0.799988 10.5361 1.9911 11.747 3.46665 11.747C4.16888 11.747 4.79999 11.4669 5.27999 11.0151L11.6089 14.7741C11.5644 14.9639 11.5378 15.1627 11.5378 15.3614C11.5378 16.8163 12.7022 18 14.1333 18C15.5644 18 16.7289 16.8163 16.7289 15.3614C16.7289 13.9066 15.5644 12.7229 14.1333 12.7229Z"
-                                            fill="white" />
-                                    </svg>
-                                </a>
+                {% for agent in agents %}
+                    <div class="col-lg-3 col-md-6">
+                        <div class="team-widget-boxarea">
+                            <div class="img1 image-anime">
+                                {% if agent.image %}
+                                    <img src="{{ agent.image.url }}" alt="{{ agent.name }}">
+                                {% else %}
+                                    <img src="https://upload.wikimedia.org/wikipedia/commons/1/14/No_Image_Available.jpg" alt="{{ agent.name }}">
+                                {% endif %}
+                                <div class="share">
+                                    <a href="#">
+                                        <svg xmlns="http://www.w3.org/2000/svg" width="17" height="18" viewBox="0 0 17 18" fill="none">
+                                            <path
+                                                d="M14.1333 12.7229C13.4578 12.7229 12.8533 12.994 12.3911 13.4187L6.05332 9.66867C6.09777 9.46084 6.13332 9.25301 6.13332 9.03614C6.13332 8.81928 6.09777 8.61145 6.05332 8.40361L12.32 4.68976C12.8 5.14157 13.4311 5.42169 14.1333 5.42169C15.6089 5.42169 16.8 4.21084 16.8 2.71084C16.8 1.21084 15.6089 0 14.1333 0C12.6578 0 11.4667 1.21084 11.4667 2.71084C11.4667 2.92771 11.5022 3.13554 11.5467 3.34337L5.27999 7.05723C4.79999 6.60542 4.16888 6.3253 3.46665 6.3253C1.9911 6.3253 0.799988 7.53614 0.799988 9.03614C0.799988 10.5361 1.9911 11.747 3.46665 11.747C4.16888 11.747 4.79999 11.4669 5.27999 11.0151L11.6089 14.7741C11.5644 14.9639 11.5378 15.1627 11.5378 15.3614C11.5378 16.8163 12.7022 18 14.1333 18C15.5644 18 16.7289 16.8163 16.7289 15.3614C16.7289 13.9066 15.5644 12.7229 14.1333 12.7229Z"
+                                                fill="white" />
+                                        </svg>
+                                    </a>
+                                </div>
+                                <ul>
+                                    <li><a href="#"><i class="fa-brands fa-facebook-f"></i></a></li>
+                                    <li><a href="#"><i class="fa-brands fa-linkedin-in"></i></a></li>
+                                    <li><a href="#" class="m-0"><i class="fa-brands fa-instagram"></i></a></li>
+                                </ul>
                             </div>
-                            <ul>
-                                <li><a href="#"><i class="fa-brands fa-facebook-f"></i></a></li>
-                                <li><a href="#"><i class="fa-brands fa-linkedin-in"></i></a></li>
-                                <li><a href="#" class="m-0"><i class="fa-brands fa-instagram"></i></a></li>
-                            </ul>
-                        </div>
-                        <div class="space24"></div>
-                        <div class="content-area">
-                            <a href="#">Henry Nicolas</a>
-                            <div class="space14"></div>
-                            <p>Founder & CEO</p>
+                            <div class="space24"></div>
+                            <div class="content-area">
+                                <a href="#">
+                                    {{ agent.name }}
+                                </a>
+                                <div class="space14"></div>
+                                <p>
+                                    Tel: <b>{{ agent.phone_number }}</b>
+                                </p>
+                            </div>
                         </div>
                     </div>
-                </div>
+                {% endfor %}
             </div>
         </div>
     </div>
