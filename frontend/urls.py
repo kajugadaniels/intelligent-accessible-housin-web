@@ -12,6 +12,7 @@ urlpatterns = [
 
     path('', home, name="home"),
     path('about', about, name="about"),
+    path('services', services, name="services"),
 
     path('properties', getProperties, name="getProperties"),
     path('property/<slug:slug>/', showProperty, name="showProperty"),

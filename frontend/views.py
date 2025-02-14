@@ -86,6 +86,9 @@ def about(request):
 
     return render(request, 'frontend/pages/about.html', context)
 
+def services(request):
+    return render(request, 'frontend/pages/services.html')
+
 def getProperties(request):
     properties = Property.objects.all()
 
