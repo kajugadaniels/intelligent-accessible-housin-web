@@ -1,0 +1,26 @@
+{% extends 'frontend/layouts/app.html' %}
+{% load humanize %}
+{% block content %}
+
+<div class="hero-inner-section-area-sidebar">
+    <img src="https://housebox-html-demo.vercel.app/assets/img/all-images/hero/hero-img1.png" alt="housebox" class="hero-img1" />
+    <div class="container">
+        <div class="row">
+            <div class="col-lg-12">
+                <div class="hero-header-area text-center">
+                    <a href="{% url 'frontend:home' %}">
+                        Home
+                        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor">
+                            <path d="M13.1717 12.0007L8.22192 7.05093L9.63614 5.63672L16.0001 12.0007L9.63614 18.3646L8.22192 16.9504L13.1717 12.0007Z"></path>
+                        </svg>
+                        Services
+                    </a>
+                    <div class="space24"></div>
+                    <h1>Services</h1>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+{% endblock content %}
