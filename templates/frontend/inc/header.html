@@ -1,3 +1,5 @@
+{% load static %}
+
 <header>
     <div class="header-area homepage2 header header-sticky d-none d-lg-block" id="header">
         <div class="container">
@@ -5,8 +7,8 @@
                 <div class="col-lg-12">
                     <div class="header-elements">
                         <div class="site-logo">
-                            <a href="{% url 'frontend:home' %}">
-                                <img src="https://housebox-html-demo.vercel.app/assets/img/logo/logo1.png" alt="">
+                            <a href="{% url 'frontend:home' %}" class="d-flex justify-content-between">
+                                <img src="{% static 'frontend/img/logo.png' %}" alt="" style="width: 160px;">
                             </a>
                         </div>
                         <div class="main-menu">
