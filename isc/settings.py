@@ -71,23 +71,30 @@ WSGI_APPLICATION = 'isc.wsgi.application'
 # Database
 # https://docs.djangoproject.com/en/5.0/ref/settings/#databases
 
-if str(os.getenv("NODE_ENV"))=="production":
+# if str(os.getenv("NODE_ENV"))=="production":
 
-    DATABASES =  {
-        'default': {
-            'ENGINE': 'django.db.backends.postgresql',
-            'NAME': os.getenv("POSTGRES_DB"),      
-            'USER': os.getenv("POSTGRES_USER"),       
-            'PASSWORD': os.getenv("POSTGRES_PASSWORD"), 
-            'HOST': os.getenv("PGHOST"),         
-            'PORT':os.getenv("PGPORT"), 
-            'OPTIONS': {
-                'sslmode': 'require',
-            }            
-        }
-    }
-else:
-    DATABASES = {
+#     DATABASES =  {
+#         'default': {
+#             'ENGINE': 'django.db.backends.postgresql',
+#             'NAME': os.getenv("POSTGRES_DB"),      
+#             'USER': os.getenv("POSTGRES_USER"),       
+#             'PASSWORD': os.getenv("POSTGRES_PASSWORD"), 
+#             'HOST': os.getenv("PGHOST"),         
+#             'PORT':os.getenv("PGPORT"), 
+#             'OPTIONS': {
+#                 'sslmode': 'require',
+#             }            
+#         }
+#     }
+# else:
+#     DATABASES = {
+#     'default': {
+#         'ENGINE': 'django.db.backends.sqlite3',
+#         'NAME': BASE_DIR / 'db.sqlite3',
+#     }
+# }
+
+DATABASES = {
     'default': {
         'ENGINE': 'django.db.backends.sqlite3',
         'NAME': BASE_DIR / 'db.sqlite3',
