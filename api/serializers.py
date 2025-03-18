@@ -1,3 +1,4 @@
+from backend.models import *
 from django.db.models import Q
 from rest_framework import serializers
 from django.contrib.auth import get_user_model
@@ -75,3 +76,64 @@ class RegisterSerializer(serializers.ModelSerializer):
             phone_number=validated_data['phone_number'],
         )
         return user
+
+class AmenitySerializer(serializers.ModelSerializer):
+    """
+    Serializer for Amenity data.
+    """
+    class Meta:
+        model = Amenity
+        fields = ['id', 'name']
+
+
+class PropertyImageSerializer(serializers.ModelSerializer):
+    """
+    Serializer for Property Image data.
+    """
+    class Meta:
+        model = PropertyImage
+        fields = ['id', 'image', 'created_at']
+
+
+class PropertyReviewSerializer(serializers.ModelSerializer):
+    """
+    Serializer for Property Review data.
+    """
+    class Meta:
+        model = PropertyReview
+        fields = [
+            'id', 'name', 'email', 'comment', 
+            'location', 'staff', 'cleanliness', 'value_for_money', 
+            'comfort', 'facilities', 'free_wifi', 'status', 'created_at'
+        ]
+
+
+class PropertySerializer(serializers.ModelSerializer):
+    """
+    Serializer for detailed property information.
+    """
+    city = serializers.CharField(source='get_city_display')
+    type = serializers.CharField(source='get_type_display')
+    category = serializers.CharField(source='get_category_display')
+    created_by = serializers.StringRelatedField()  # Serialize user
+    amenities = AmenitySerializer(many=True)
+    images = PropertyImageSerializer(many=True)
+    # reviews = PropertyReviewSerializer(many=True)
+    review_data = serializers.SerializerMethodField()
+
+    class Meta:
+        model = Property
+        fields = [
+            'id', 'name', 'slug', 'description', 
+            'price_usd', 'price_rwf', 'city', 'type', 'category',
+            'bathroom', 'capacity', 'size', 'image', 'address',
+            'created_by', 'created_at', 'updated_at', 
+            'amenities', 'images', 'review_data'
+        ]
+
+    # def get_review_data(self, obj):
+    #     """
+    #     Method to calculate and return review data.
+    #     """
+    #     review_data = obj.get_review_data()
+    #     return review_data
