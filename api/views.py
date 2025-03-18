@@ -58,7 +58,7 @@ class GetPropertiesView(APIView):
         # Optional: You can add filtering here based on query params, like city, price, etc.
 
         # If a serializer exists for Property
-        serializer = PropertySerializer(properties, many=True)
+        serializer = PropertySerializer(properties, many=True, context={'request': request})
 
         return Response(serializer.data, status=status.HTTP_200_OK)
 
@@ -73,6 +73,6 @@ class ShowPropertyView(APIView):
             return Response({"detail": "Property not found."}, status=status.HTTP_404_NOT_FOUND)
 
         # Assuming you have a PropertySerializer to return the property data
-        serializer = PropertySerializer(property)
+        serializer = PropertySerializer(property, context={'request': request})
 
         return Response(serializer.data, status=status.HTTP_200_OK)
