@@ -107,6 +107,15 @@ class PropertyReviewSerializer(serializers.ModelSerializer):
             'comfort', 'facilities', 'free_wifi', 'status', 'created_at'
         ]
 
+class UserSerializer(serializers.ModelSerializer):
+    """
+    Serializer for the User data.
+    This will provide detailed user information (the creator of the property).
+    """
+    class Meta:
+        model = User
+        fields = ['id', 'name', 'email', 'phone_number', 'role']
+
 
 class PropertySerializer(serializers.ModelSerializer):
     """
