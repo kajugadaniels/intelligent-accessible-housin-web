@@ -124,10 +124,10 @@ class PropertySerializer(serializers.ModelSerializer):
     city = serializers.CharField(source='get_city_display')
     type = serializers.CharField(source='get_type_display')
     category = serializers.CharField(source='get_category_display')
-    created_by = UserSerializer()
+    created_by = UserSerializer()  # Now retrieving full user details
     amenities = AmenitySerializer(many=True)
     images = PropertyImageSerializer(many=True)
-    # reviews = PropertyReviewSerializer(many=True)
+    reviews = PropertyReviewSerializer(many=True)
     review_data = serializers.SerializerMethodField()
 
     class Meta:
@@ -137,12 +137,40 @@ class PropertySerializer(serializers.ModelSerializer):
             'price_usd', 'price_rwf', 'city', 'type', 'category',
             'bathroom', 'capacity', 'size', 'image', 'address',
             'created_by', 'created_at', 'updated_at', 
-            'amenities', 'images', 'review_data'
+            'amenities', 'images', 'reviews', 'review_data'
         ]
 
-    # def get_review_data(self, obj):
-    #     """
-    #     Method to calculate and return review data.
-    #     """
-    #     review_data = obj.get_review_data()
-    #     return review_data
+    def get_review_data(self, obj):
+        """
+        Only returns review data if there are reviews.
+        Otherwise, returns None.
+        """
+        reviews = obj.propertyreview.filter(status=True)  # Filter for active reviews
+        if reviews.exists():
+            avg_ratings = reviews.aggregate(
+                avg_location=Avg('location'),
+                avg_staff=Avg('staff'),
+                avg_cleanliness=Avg('cleanliness'),
+                avg_value_for_money=Avg('value_for_money'),
+                avg_comfort=Avg('comfort'),
+                avg_facilities=Avg('facilities'),
+                avg_free_wifi=Avg('free_wifi')
+            )
+
+            # Calculate overall rating if there are reviews
+            overall_rating = (
+                avg_ratings['avg_location'] +
+                avg_ratings['avg_staff'] +
+                avg_ratings['avg_cleanliness'] +
+                avg_ratings['avg_value_for_money'] +
+                avg_ratings['avg_comfort'] +
+                avg_ratings['avg_facilities'] +
+                avg_ratings['avg_free_wifi']
+            ) / 7 if all(value is not None for value in avg_ratings.values()) else 0
+
+            return {
+                'total_reviews': reviews.count(),
+                'overall_rating': round(overall_rating, 2) if overall_rating else 0
+            }
+        else:
+            return None  # No reviews, so return None
