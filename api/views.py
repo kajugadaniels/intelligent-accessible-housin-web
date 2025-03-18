@@ -1,3 +1,4 @@
+from backend.models import *
 from api.serializers import *
 from rest_framework import status
 from rest_framework.views import APIView
@@ -46,3 +47,17 @@ class RegisterView(APIView):
             {"detail": "Validation error", "errors": serializer.errors},
             status=status.HTTP_400_BAD_REQUEST
         )
+
+class GetPropertiesView(APIView):
+    """
+    Retrieve a list of all properties. This is not protected.
+    """
+    def get(self, request, *args, **kwargs):
+        properties = Property.objects.all().order_by('-id')
+
+        # Optional: You can add filtering here based on query params, like city, price, etc.
+
+        # If a serializer exists for Property
+        serializer = PropertySerializer(properties, many=True)
+
+        return Response(serializer.data, status=status.HTTP_200_OK)
