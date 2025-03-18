@@ -127,7 +127,7 @@ class PropertySerializer(serializers.ModelSerializer):
     created_by = UserSerializer()  # Now retrieving full user details
     amenities = AmenitySerializer(many=True)
     images = PropertyImageSerializer(many=True)
-    reviews = PropertyReviewSerializer(many=True)
+    reviews = PropertyReviewSerializer(source='propertyreview', many=True)  # Corrected to use the reverse relation
     review_data = serializers.SerializerMethodField()
 
     class Meta:
