@@ -7,6 +7,7 @@ app_name = 'api'
 
 urlpatterns = [
     path('login/', LoginView.as_view(), name='login'),
+    path('logout/', LogoutView.as_view(), name='logout'),
     path('register/', RegisterView.as_view(), name='register'),
     path('properties/', GetPropertiesView.as_view(), name='getProperties'),
     path('property/<int:id>/', ShowPropertyView.as_view(), name='showProperty'),

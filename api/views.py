@@ -3,6 +3,7 @@ from api.serializers import *
 from rest_framework import status
 from rest_framework.views import APIView
 from rest_framework.response import Response
+from rest_framework_simplejwt.exceptions import InvalidToken
 
 class LoginView(APIView):
     """
@@ -28,6 +29,26 @@ class LoginView(APIView):
             {"detail": "Validation error", "errors": serializer.errors},
             status=status.HTTP_400_BAD_REQUEST
         )
+
+class LogoutView(APIView):
+    """
+    Handle logout by blacklisting the refresh token.
+    """
+    def post(self, request, *args, **kwargs):
+        try:
+            # Get the refresh token from the request headers
+            refresh_token = request.data.get('refresh', None)
+            if not refresh_token:
+                return Response({"detail": "Refresh token is required"}, status=status.HTTP_400_BAD_REQUEST)
+            
+            # Blacklist the refresh token
+            token = RefreshToken(refresh_token)
+            token.blacklist()
+
+            return Response({"detail": "Successfully logged out"}, status=status.HTTP_205_RESET_CONTENT)
+
+        except InvalidToken:
+            return Response({"detail": "Invalid refresh token"}, status=status.HTTP_400_BAD_REQUEST)
 
 class RegisterView(APIView):
     """
