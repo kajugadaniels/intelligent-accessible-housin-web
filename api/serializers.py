@@ -124,7 +124,7 @@ class PropertySerializer(serializers.ModelSerializer):
     city = serializers.CharField(source='get_city_display')
     type = serializers.CharField(source='get_type_display')
     category = serializers.CharField(source='get_category_display')
-    created_by = serializers.StringRelatedField()  # Serialize user
+    created_by = UserSerializer()
     amenities = AmenitySerializer(many=True)
     images = PropertyImageSerializer(many=True)
     # reviews = PropertyReviewSerializer(many=True)
