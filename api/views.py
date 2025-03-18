@@ -61,3 +61,18 @@ class GetPropertiesView(APIView):
         serializer = PropertySerializer(properties, many=True)
 
         return Response(serializer.data, status=status.HTTP_200_OK)
+
+class ShowPropertyView(APIView):
+    """
+    Retrieve a single property by ID. This is not protected.
+    """
+    def get(self, request, id, *args, **kwargs):
+        try:
+            property = Property.objects.get(id=id)
+        except Property.DoesNotExist:
+            return Response({"detail": "Property not found."}, status=status.HTTP_404_NOT_FOUND)
+
+        # Assuming you have a PropertySerializer to return the property data
+        serializer = PropertySerializer(property)
+
+        return Response(serializer.data, status=status.HTTP_200_OK)
