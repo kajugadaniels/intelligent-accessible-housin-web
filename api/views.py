@@ -27,3 +27,22 @@ class LoginView(APIView):
             {"detail": "Validation error", "errors": serializer.errors},
             status=status.HTTP_400_BAD_REQUEST
         )
+
+class RegisterView(APIView):
+    """
+    Handle new user registration.
+    """
+    def post(self, request, *args, **kwargs):
+        serializer = RegisterSerializer(data=request.data)
+
+        if serializer.is_valid():
+            user = serializer.save()
+            return Response(
+                {"detail": "User created successfully", "user": {"id": user.id, "email": user.email}},
+                status=status.HTTP_201_CREATED
+            )
+
+        return Response(
+            {"detail": "Validation error", "errors": serializer.errors},
+            status=status.HTTP_400_BAD_REQUEST
+        )
