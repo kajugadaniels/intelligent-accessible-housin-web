@@ -77,7 +77,7 @@ class GetCategoriesView(APIView):
         categories = Category.objects.all().order_by('-id')
 
         # Serialize the categories with their properties
-        serializer = CategorySerializer(categories, many=True, context={'request': request})
+        serializer = CategoryNestedSerializer(categories, many=True, context={'request': request})
 
         return Response(serializer.data, status=status.HTTP_200_OK)
 
@@ -92,7 +92,7 @@ class ShowCategoryView(APIView):
             return Response({"detail": "Category not found."}, status=status.HTTP_404_NOT_FOUND)
 
         # Serialize the category with its associated properties
-        serializer = CategorySerializer(category, context={'request': request})
+        serializer = CategoryNestedSerializer(category, context={'request': request})
 
         return Response(serializer.data, status=status.HTTP_200_OK)
 

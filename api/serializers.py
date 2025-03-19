@@ -123,7 +123,7 @@ class CategorySerializer(serializers.ModelSerializer):
     """
     class Meta:
         model = Category
-        fields = ['id', 'name', 'image']  # Add fields you need for category details
+        fields = ['id', 'name', 'image']
 
 class PropertySerializer(serializers.ModelSerializer):
     """
@@ -181,4 +181,15 @@ class PropertySerializer(serializers.ModelSerializer):
                 'overall_rating': round(overall_rating, 2) if overall_rating else 0
             }
         else:
-            return None  # No reviews, so return None
+            return None
+
+class CategoryNestedSerializer(serializers.ModelSerializer):
+    """
+    Serializer for Category data.
+    This will provide detailed information about the category, including properties.
+    """
+    properties = PropertySerializer(many=True, read_only=True)
+
+    class Meta:
+        model = Category
+        fields = ['id', 'name', 'image', 'properties']
