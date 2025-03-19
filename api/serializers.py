@@ -83,7 +83,7 @@ class AmenitySerializer(serializers.ModelSerializer):
     """
     class Meta:
         model = Amenity
-        fields = ['name']
+        fields = ['id', 'name']
 
 
 class PropertyImageSerializer(serializers.ModelSerializer):
