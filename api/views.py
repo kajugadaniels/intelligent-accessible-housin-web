@@ -69,6 +69,18 @@ class RegisterView(APIView):
             status=status.HTTP_400_BAD_REQUEST
         )
 
+class GetAmenitiesView(APIView):
+    """
+    Retrieve a list of all amenities with their properties.
+    """
+    def get(self, request, *args, **kwargs):
+        amenities = Amenity.objects.all()  # Get all amenities
+
+        # Serialize the amenities with their properties
+        serializer = AmenitySerializer(amenities, many=True, context={'request': request})
+
+        return Response(serializer.data, status=status.HTTP_200_OK)
+
 class GetCategoriesView(APIView):
     """
     Retrieve a list of all categories with their properties.
