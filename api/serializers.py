@@ -114,7 +114,7 @@ class UserSerializer(serializers.ModelSerializer):
     """
     class Meta:
         model = User
-        fields = ['id', 'name', 'email', 'phone_number', 'role']
+        fields = ['id', 'name', 'email', 'phone_number', 'role', 'image']
 
 class CategorySerializer(serializers.ModelSerializer):
     """
