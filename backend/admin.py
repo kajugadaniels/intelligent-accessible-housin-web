@@ -67,3 +67,19 @@ class PropertyImageAdmin(admin.ModelAdmin):
     class Meta:
         verbose_name = _('Property Image')
         verbose_name_plural = _('Property Images')
+
+@admin.register(PropertyReview)
+class PropertyReviewAdmin(admin.ModelAdmin):
+    list_display = ('property', 'name', 'location', 'staff', 'cleanliness', 'value_for_money', 'comfort', 'facilities', 'free_wifi', 'status', 'created_at')
+    search_fields = ('property__name', 'name', 'email', 'comment')
+    list_filter = ('status', 'created_at')
+    ordering = ('-created_at',)
+    readonly_fields = ('created_at',)
+
+    def get_queryset(self, request):
+        queryset = super().get_queryset(request)
+        return queryset.select_related('property')  # Optimize query by selecting related property
+
+    class Meta:
+        verbose_name = _('Property Review')
+        verbose_name_plural = _('Property Reviews')
