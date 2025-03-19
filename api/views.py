@@ -69,6 +69,18 @@ class RegisterView(APIView):
             status=status.HTTP_400_BAD_REQUEST
         )
 
+class GetCategoriesView(APIView):
+    """
+    Retrieve a list of all categories with their properties.
+    """
+    def get(self, request, *args, **kwargs):
+        categories = Category.objects.all().order_by('-id')
+
+        # Serialize the categories with their properties
+        serializer = CategorySerializer(categories, many=True, context={'request': request})
+
+        return Response(serializer.data, status=status.HTTP_200_OK)
+
 class GetPropertiesView(APIView):
     """
     Retrieve a list of all properties. This is not protected.
