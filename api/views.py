@@ -81,6 +81,21 @@ class GetAmenitiesView(APIView):
 
         return Response(serializer.data, status=status.HTTP_200_OK)
 
+class ShowAmenityView(APIView):
+    """
+    Retrieve a single amenity by ID along with all properties that have this amenity.
+    """
+    def get(self, request, id, *args, **kwargs):
+        try:
+            amenity = Amenity.objects.get(id=id)
+        except Amenity.DoesNotExist:
+            return Response({"detail": "Amenity not found."}, status=status.HTTP_404_NOT_FOUND)
+
+        # Serialize the amenity with its associated properties
+        serializer = AmenitySerializer(amenity, context={'request': request})
+
+        return Response(serializer.data, status=status.HTTP_200_OK)
+
 class GetCategoriesView(APIView):
     """
     Retrieve a list of all categories with their properties.
