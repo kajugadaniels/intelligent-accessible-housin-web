@@ -69,6 +69,37 @@ class RegisterView(APIView):
             status=status.HTTP_400_BAD_REQUEST
         )
 
+class VerifyTokenView(APIView):
+    """
+    Endpoint to verify the access token and retrieve user details.
+    """
+
+    permission_classes = [IsAuthenticated]  # Only authenticated users can access this
+
+    def get(self, request, *args, **kwargs):
+        """
+        This will check if the access token is valid and return user details.
+        """
+        try:
+            # Access the token from the request's Authorization header
+            token = AccessToken(request.headers.get('Authorization').split(' ')[1])
+
+            # If the token is valid, the payload is automatically decoded
+            user = User.objects.get(id=token['user_id'])
+
+            # Serialize user details and return them
+            user_data = UserSerializer(user).data
+
+            return Response(
+                {"detail": "Token is valid", "user": user_data},
+                status=status.HTTP_200_OK
+            )
+        except Exception as e:
+            return Response(
+                {"detail": "Invalid token or token expired."},
+                status=status.HTTP_401_UNAUTHORIZED
+            )
+
 class GetAmenitiesView(APIView):
     """
     Retrieve a list of all amenities with their properties.
