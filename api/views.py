@@ -4,6 +4,7 @@ from rest_framework import status
 from rest_framework.views import APIView
 from rest_framework.response import Response
 from rest_framework.permissions import IsAuthenticated
+from rest_framework_simplejwt.exceptions import TokenError
 from rest_framework_simplejwt.exceptions import InvalidToken
 
 class LoginView(APIView):
@@ -95,9 +96,15 @@ class VerifyTokenView(APIView):
                 {"detail": "Token is valid", "user": user_data},
                 status=status.HTTP_200_OK
             )
+        except TokenError as e:
+            # Handle invalid token errors (e.g. expired or malformed token)
+            return Response(
+                {"detail": f"Invalid token or token expired. {str(e)}"},
+                status=status.HTTP_401_UNAUTHORIZED
+            )
         except Exception as e:
             return Response(
-                {"detail": "Invalid token or token expired."},
+                {"detail": f"Error: {str(e)}"},
                 status=status.HTTP_401_UNAUTHORIZED
             )
 
