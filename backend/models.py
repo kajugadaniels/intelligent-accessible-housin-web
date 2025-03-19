@@ -185,6 +185,8 @@ class Property(models.Model):
     nearby_park = models.CharField(max_length=255, null=True, blank=True, help_text="Nearby park or recreational area")
     nearby_gym = models.CharField(max_length=255, null=True, blank=True, help_text="Nearby gym or fitness center")
 
+    location = models.TextField(null=True, blank=True)
+
     created_by = models.ForeignKey(User, on_delete=models.CASCADE, null=True, blank=True, related_name='properties_created')
     created_at = models.DateTimeField(default=timezone.now)
     updated_at = models.DateTimeField(auto_now=True)
