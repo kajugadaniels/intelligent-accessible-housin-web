@@ -193,3 +193,14 @@ class CategoryNestedSerializer(serializers.ModelSerializer):
     class Meta:
         model = Category
         fields = ['id', 'name', 'image', 'properties']
+
+class AmenityNestedSerializer(serializers.ModelSerializer):
+    """
+    Serializer for Amenity data.
+    This will provide detailed information about the amenity, including properties.
+    """
+    properties = PropertySerializer(many=True, read_only=True)  # Nested PropertySerializer to include properties
+
+    class Meta:
+        model = Amenity
+        fields = ['id', 'name', 'properties']

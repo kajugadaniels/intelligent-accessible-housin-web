@@ -77,7 +77,7 @@ class GetAmenitiesView(APIView):
         amenities = Amenity.objects.all()  # Get all amenities
 
         # Serialize the amenities with their properties
-        serializer = AmenitySerializer(amenities, many=True, context={'request': request})
+        serializer = AmenityNestedSerializer(amenities, many=True, context={'request': request})
 
         return Response(serializer.data, status=status.HTTP_200_OK)
 
@@ -92,7 +92,7 @@ class ShowAmenityView(APIView):
             return Response({"detail": "Amenity not found."}, status=status.HTTP_404_NOT_FOUND)
 
         # Serialize the amenity with its associated properties
-        serializer = AmenitySerializer(amenity, context={'request': request})
+        serializer = AmenityNestedSerializer(amenity, context={'request': request})
 
         return Response(serializer.data, status=status.HTTP_200_OK)
 
