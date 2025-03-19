@@ -116,6 +116,14 @@ class UserSerializer(serializers.ModelSerializer):
         model = User
         fields = ['id', 'name', 'email', 'phone_number', 'role']
 
+class CategorySerializer(serializers.ModelSerializer):
+    """
+    Serializer for Category data.
+    This will provide detailed information about the category.
+    """
+    class Meta:
+        model = Category
+        fields = ['id', 'name', 'image']  # Add fields you need for category details
 
 class PropertySerializer(serializers.ModelSerializer):
     """
@@ -123,8 +131,8 @@ class PropertySerializer(serializers.ModelSerializer):
     """
     city = serializers.CharField(source='get_city_display')
     type = serializers.CharField(source='get_type_display')
-    category = serializers.CharField(source='get_category_display')
-    created_by = UserSerializer()  # Now retrieving full user details
+    category = CategorySerializer()
+    created_by = UserSerializer()
     amenities = AmenitySerializer(many=True)
     images = PropertyImageSerializer(many=True)
     reviews = PropertyReviewSerializer(source='propertyreview', many=True)  # Corrected to use the reverse relation
