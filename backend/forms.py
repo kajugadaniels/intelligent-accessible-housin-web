@@ -290,6 +290,15 @@ class AmenityForm(forms.ModelForm):
         }
 
 class PropertyForm(forms.ModelForm):
+    category = forms.ModelChoiceField(
+        queryset=Category.objects.all(),
+        empty_label=_('Select a Category'),
+        widget=forms.Select(attrs={
+            'class': 'form-control',
+            'required': 'required',
+        })
+    )
+
     class Meta:
         model = Property
         fields = ['name', 'city', 'type', 'category', 'description', 'price_usd', 'price_rwf', 'bathroom', 'capacity', 'address', 'size', 'image', 'amenities']
@@ -304,10 +313,6 @@ class PropertyForm(forms.ModelForm):
                 'required': 'required',
             }),
             'type': forms.Select(attrs={
-                'class': 'form-control',
-                'required': 'required',
-            }),
-            'category': forms.Select(attrs={
                 'class': 'form-control',
                 'required': 'required',
             }),
