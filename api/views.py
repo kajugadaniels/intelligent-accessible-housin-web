@@ -74,7 +74,7 @@ class GetAmenitiesView(APIView):
     Retrieve a list of all amenities with their properties.
     """
     def get(self, request, *args, **kwargs):
-        amenities = Amenity.objects.all()  # Get all amenities
+        amenities = Amenity.objects.all().order_by('-id')
 
         # Serialize the amenities with their properties
         serializer = AmenityNestedSerializer(amenities, many=True, context={'request': request})
