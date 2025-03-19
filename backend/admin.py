@@ -83,3 +83,19 @@ class PropertyReviewAdmin(admin.ModelAdmin):
     class Meta:
         verbose_name = _('Property Review')
         verbose_name_plural = _('Property Reviews')
+
+@admin.register(Contract)
+class ContractAdmin(admin.ModelAdmin):
+    list_display = ('contract_number', 'tenant', 'agent', 'property', 'start_date', 'end_date', 'rent_amount', 'payment_status', 'status', 'created_at', 'updated_at')
+    search_fields = ('contract_number', 'tenant__name', 'agent__name', 'property__name')
+    list_filter = ('status', 'payment_status', 'created_at')
+    ordering = ('-created_at',)
+    readonly_fields = ('created_at', 'updated_at')
+
+    def get_queryset(self, request):
+        queryset = super().get_queryset(request)
+        return queryset.select_related('tenant', 'agent', 'property')  # Optimize query by selecting related models
+
+    class Meta:
+        verbose_name = _('Contract')
+        verbose_name_plural = _('Contracts')
