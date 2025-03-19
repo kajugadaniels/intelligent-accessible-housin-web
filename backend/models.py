@@ -104,6 +104,27 @@ class Amenity(models.Model):
     class Meta:
         verbose_name_plural = "Amenities"
 
+def category_image_path(instance, filename):
+    base_filename, file_extension = os.path.splitext(filename)
+    return f'categories/category_{slugify(instance.name)}{file_extension}'
+
+class Category(models.Model):
+    name = models.CharField(max_length=100, unique=True)
+    image = ProcessedImageField(
+        upload_to=category_image_path,
+        format='JPEG',
+        processors=[ResizeToFill(500, 500)],
+        options={'quality': 90},
+        null=True,
+        blank=True
+    )
+
+    def __str__(self):
+        return self.name
+
+    class Meta:
+        verbose_name_plural = "Categories"
+
 def property_image_path(instance, filename):
     base_filename, file_extension = os.path.splitext(filename)
     return f'properties/property_{slugify(instance.name)}_{instance.created_at}{file_extension}'
