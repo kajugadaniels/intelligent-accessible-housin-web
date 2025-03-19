@@ -177,6 +177,14 @@ class Property(models.Model):
     )
     amenities = models.ManyToManyField('Amenity', blank=True)
     address = models.CharField(max_length=255, default='Kigali Rwanda')
+
+    nearby_hospital = models.CharField(max_length=255, null=True, blank=True, help_text="Nearby hospital name or details")
+    nearby_school = models.CharField(max_length=255, null=True, blank=True, help_text="Nearby school name or details")
+    nearby_market = models.CharField(max_length=255, null=True, blank=True, help_text="Nearby market name or details")
+    nearby_transport = models.CharField(max_length=255, null=True, blank=True, help_text="Nearby transport options or station")
+    nearby_park = models.CharField(max_length=255, null=True, blank=True, help_text="Nearby park or recreational area")
+    nearby_gym = models.CharField(max_length=255, null=True, blank=True, help_text="Nearby gym or fitness center")
+
     created_by = models.ForeignKey(User, on_delete=models.CASCADE, null=True, blank=True, related_name='properties_created')
     created_at = models.DateTimeField(default=timezone.now)
     updated_at = models.DateTimeField(auto_now=True)
