@@ -161,7 +161,7 @@ class Property(models.Model):
 
     city = models.CharField(max_length=30, choices=CITY_CHOICES, null=True, blank=True)
     type = models.CharField(max_length=30, choices=TYPE_CHOICES, null=True, blank=True)
-    category = models.CharField(max_length=30, choices=CATEGORY_CHOICES, null=True, blank=True)
+    category = models.ForeignKey(Category, on_delete=models.SET_NULL, null=True, blank=True, related_name='properties')
     bathroom = models.IntegerField(null=True, blank=True)
     capacity = models.IntegerField(null=True, blank=True)
     size = models.CharField(max_length=255, null=True, blank=True)
