@@ -81,6 +81,21 @@ class GetCategoriesView(APIView):
 
         return Response(serializer.data, status=status.HTTP_200_OK)
 
+class ShowCategoryView(APIView):
+    """
+    Retrieve a single category by ID along with all properties in that category.
+    """
+    def get(self, request, id, *args, **kwargs):
+        try:
+            category = Category.objects.get(id=id)  # Fetch category by ID
+        except Category.DoesNotExist:
+            return Response({"detail": "Category not found."}, status=status.HTTP_404_NOT_FOUND)
+
+        # Serialize the category with its associated properties
+        serializer = CategorySerializer(category, context={'request': request})
+
+        return Response(serializer.data, status=status.HTTP_200_OK)
+
 class GetPropertiesView(APIView):
     """
     Retrieve a list of all properties. This is not protected.
