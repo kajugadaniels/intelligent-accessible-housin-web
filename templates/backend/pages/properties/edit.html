@@ -108,6 +108,52 @@
                                     <div class="text-danger">{{ error }}</div>
                                 {% endfor %}
                             </div>
+
+                            <h5>Nearby activities</h5>
+                            <div class="row">
+                                <div class="col-md-2 mb-3">
+                                    <label class="form-label">{{ form.nearby_hospital.label }}</label>
+                                    {{ form.nearby_hospital }}
+                                    {% for error in form.nearby_hospital.errors %}
+                                        <div class="text-danger">{{ error }}</div>
+                                    {% endfor %}
+                                </div>
+                                <div class="col-md-2 mb-3">
+                                    <label class="form-label">{{ form.nearby_school.label }}</label>
+                                    {{ form.nearby_school }}
+                                    {% for error in form.nearby_school.errors %}
+                                        <div class="text-danger">{{ error }}</div>
+                                    {% endfor %}
+                                </div>
+                                <div class="col-md-2 mb-3">
+                                    <label class="form-label">{{ form.nearby_market.label }}</label>
+                                    {{ form.nearby_market }}
+                                    {% for error in form.nearby_market.errors %}
+                                        <div class="text-danger">{{ error }}</div>
+                                    {% endfor %}
+                                </div>
+                                <div class="col-md-2 mb-3">
+                                    <label class="form-label">{{ form.nearby_transport.label }}</label>
+                                    {{ form.nearby_transport }}
+                                    {% for error in form.nearby_transport.errors %}
+                                        <div class="text-danger">{{ error }}</div>
+                                    {% endfor %}
+                                </div>
+                                <div class="col-md-2 mb-3">
+                                    <label class="form-label">{{ form.nearby_park.label }}</label>
+                                    {{ form.nearby_park }}
+                                    {% for error in form.nearby_park.errors %}
+                                        <div class="text-danger">{{ error }}</div>
+                                    {% endfor %}
+                                </div>
+                                <div class="col-md-2 mb-3">
+                                    <label class="form-label">{{ form.nearby_gym.label }}</label>
+                                    {{ form.nearby_gym }}
+                                    {% for error in form.nearby_gym.errors %}
+                                        <div class="text-danger">{{ error }}</div>
+                                    {% endfor %}
+                                </div>
+                            </div>
                             <!-- Field for uploading additional images -->
                             <div class="mb-3">
                                 <label class="form-label">Add More Images</label>
