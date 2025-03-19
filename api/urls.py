@@ -9,6 +9,8 @@ urlpatterns = [
     path('login/', LoginView.as_view(), name='login'),
     path('logout/', LogoutView.as_view(), name='logout'),
     path('register/', RegisterView.as_view(), name='register'),
+    path('categories/', GetCategoriesView.as_view(), name='getCategories'),
+    path('category/<int:id>/', ShowCategoryView.as_view(), name='showCategory'),
     path('properties/', GetPropertiesView.as_view(), name='getProperties'),
     path('property/<int:id>/', ShowPropertyView.as_view(), name='showProperty'),
 ]  + static(settings.STATIC_URL, document_root=settings.STATIC_ROOT)+ static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)
