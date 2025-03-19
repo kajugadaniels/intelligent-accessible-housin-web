@@ -99,3 +99,20 @@ class ContractAdmin(admin.ModelAdmin):
     class Meta:
         verbose_name = _('Contract')
         verbose_name_plural = _('Contracts')
+
+@admin.register(User)
+class UserAdmin(admin.ModelAdmin):
+    list_display = ('email', 'name', 'phone_number', 'role', 'is_active', 'is_staff', 'created_at', 'updated_at')
+    search_fields = ('email', 'name', 'phone_number')
+    list_filter = ('role', 'is_active', 'is_staff', 'created_at')
+    ordering = ('-created_at',)
+    readonly_fields = ('created_at', 'updated_at')
+    filter_horizontal = ('user_permissions',)
+
+    def get_queryset(self, request):
+        queryset = super().get_queryset(request)
+        return queryset.select_related('added_by')  # Optimize query by selecting related user (added_by)
+
+    class Meta:
+        verbose_name = _('User')
+        verbose_name_plural = _('Users')
