@@ -356,6 +356,30 @@ class PropertyForm(forms.ModelForm):
                 'class': 'form-control',
                 'required': 'required',
             }),
+            'nearby_hospital': forms.TextInput(attrs={
+                'class': 'form-control',
+                'placeholder': 'Enter nearby hospital details',
+            }),
+            'nearby_school': forms.TextInput(attrs={
+                'class': 'form-control',
+                'placeholder': 'Enter nearby school details',
+            }),
+            'nearby_market': forms.TextInput(attrs={
+                'class': 'form-control',
+                'placeholder': 'Enter nearby market details',
+            }),
+            'nearby_transport': forms.TextInput(attrs={
+                'class': 'form-control',
+                'placeholder': 'Enter nearby transport details',
+            }),
+            'nearby_park': forms.TextInput(attrs={
+                'class': 'form-control',
+                'placeholder': 'Enter nearby park details',
+            }),
+            'nearby_gym': forms.TextInput(attrs={
+                'class': 'form-control',
+                'placeholder': 'Enter nearby gym details',
+            }),
         }
         labels = {
             'name': _('Property Name'),
@@ -371,6 +395,12 @@ class PropertyForm(forms.ModelForm):
             'address': _('Property Address'),
             'image': _('Property Image'),
             'amenities': _('Amenities'),
+            'nearby_hospital': _('Nearby Hospital'),
+            'nearby_school': _('Nearby School'),
+            'nearby_market': _('Nearby Market'),
+            'nearby_transport': _('Nearby Transport'),
+            'nearby_park': _('Nearby Park'),
+            'nearby_gym': _('Nearby Gym'),
         }
         error_messages = {
             'name': {
