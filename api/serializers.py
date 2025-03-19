@@ -83,7 +83,7 @@ class AmenitySerializer(serializers.ModelSerializer):
     """
     class Meta:
         model = Amenity
-        fields = ['id', 'name']
+        fields = ['name']
 
 
 class PropertyImageSerializer(serializers.ModelSerializer):
@@ -199,7 +199,7 @@ class AmenityNestedSerializer(serializers.ModelSerializer):
     Serializer for Amenity data.
     This will provide detailed information about the amenity, including properties.
     """
-    properties = PropertySerializer(many=True, read_only=True)  # Nested PropertySerializer to include properties
+    properties = PropertySerializer(many=True, read_only=True)
 
     class Meta:
         model = Amenity
