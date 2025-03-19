@@ -301,7 +301,7 @@ class PropertyForm(forms.ModelForm):
 
     class Meta:
         model = Property
-        fields = ['name', 'city', 'type', 'category', 'description', 'price_usd', 'price_rwf', 'bathroom', 'capacity', 'address', 'size', 'image', 'amenities']
+        fields = ['name', 'city', 'type', 'category', 'description', 'price_usd', 'price_rwf', 'bathroom', 'capacity', 'address', 'size', 'image', 'amenities', 'nearby_hospital', 'nearby_school', 'nearby_market', 'nearby_transport', 'nearby_park', 'nearby_gym']
         widgets = {
             'name': forms.TextInput(attrs={
                 'class': 'form-control',
