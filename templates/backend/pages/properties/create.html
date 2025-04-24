@@ -161,7 +161,43 @@
                                 <input type="file" name="images" class="form-control" multiple>
                                 <small class="form-text text-muted">You can upload multiple images.</small>
                             </div>
-                            
+
+                            <!-- ——————— New Location & Map Section ——————— -->
+                            <h5>Location & Map</h5>
+                            <div class="mb-3">
+                                <label class="form-label">{{ form.location.label }}</label>
+                                {{ form.location }}
+                                {% for error in form.location.errors %}
+                                    <div class="text-danger">{{ error }}</div>
+                                {% endfor %}
+                            </div>
+                            <div class="mb-3">
+                                <label class="form-label">{{ form.map_embed.label }}</label>
+                                {{ form.map_embed }}
+                                {% for error in form.map_embed.errors %}
+                                    <div class="text-danger">{{ error }}</div>
+                                {% endfor %}
+                            </div>
+
+                            <!-- ——————— New Video Section ——————— -->
+                            <h5>Video Tour</h5>
+                            <div class="row">
+                                <div class="col-md-6 mb-3">
+                                    <label class="form-label">{{ form.video_url.label }}</label>
+                                    {{ form.video_url }}
+                                    {% for error in form.video_url.errors %}
+                                        <div class="text-danger">{{ error }}</div>
+                                    {% endfor %}
+                                </div>
+                                <div class="col-md-6 mb-3">
+                                    <label class="form-label">{{ form.video_thumbnail.label }}</label>
+                                    {{ form.video_thumbnail }}
+                                    {% for error in form.video_thumbnail.errors %}
+                                        <div class="text-danger">{{ error }}</div>
+                                    {% endfor %}
+                                </div>
+                            </div>
+
                             <div class="mb-3">
                                 <label class="form-label">{{ form.description.label }}</label>
                                 {{ form.description }}
