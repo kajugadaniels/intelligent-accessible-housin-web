@@ -289,6 +289,12 @@ class AmenityForm(forms.ModelForm):
             },
         }
 
+# forms.py
+
+from django import forms
+from django.utils.translation import gettext_lazy as _
+from .models import Property, Category, Amenity
+
 class PropertyForm(forms.ModelForm):
     category = forms.ModelChoiceField(
         queryset=Category.objects.all(),
@@ -301,7 +307,14 @@ class PropertyForm(forms.ModelForm):
 
     class Meta:
         model = Property
-        fields = ['name', 'city', 'type', 'category', 'description', 'price_usd', 'price_rwf', 'bathroom', 'capacity', 'address', 'size', 'image', 'amenities', 'nearby_hospital', 'nearby_school', 'nearby_market', 'nearby_transport', 'nearby_park', 'nearby_gym']
+        fields = [
+            'name', 'city', 'type', 'category', 'description',
+            'price_usd', 'price_rwf', 'bathroom', 'capacity',
+            'address', 'size', 'image', 'amenities',
+            'nearby_hospital', 'nearby_school', 'nearby_market',
+            'nearby_transport', 'nearby_park', 'nearby_gym',
+            'map_embed', 'video_url', 'video_thumbnail',
+        ]
         widgets = {
             'name': forms.TextInput(attrs={
                 'class': 'form-control',
@@ -331,7 +344,7 @@ class PropertyForm(forms.ModelForm):
             }),
             'bathroom': forms.NumberInput(attrs={
                 'class': 'form-control',
-                'placeholder': 'Enter number of bathroom',
+                'placeholder': 'Enter number of bathrooms',
                 'required': 'required',
             }),
             'capacity': forms.NumberInput(attrs={
@@ -346,7 +359,7 @@ class PropertyForm(forms.ModelForm):
             }),
             'address': forms.TextInput(attrs={
                 'class': 'form-control',
-                'placeholder': 'Enter property size',
+                'placeholder': 'Enter property address',
                 'required': 'required',
             }),
             'image': forms.ClearableFileInput(attrs={
@@ -380,6 +393,18 @@ class PropertyForm(forms.ModelForm):
                 'class': 'form-control',
                 'placeholder': 'Enter nearby gym details',
             }),
+            'map_embed': forms.Textarea(attrs={
+                'class': 'form-control',
+                'placeholder': 'Paste your Google Maps iframe HTML here',
+                'rows': 3,
+            }),
+            'video_url': forms.URLInput(attrs={
+                'class': 'form-control',
+                'placeholder': 'Enter URL for property video (e.g. YouTube)',
+            }),
+            'video_thumbnail': forms.ClearableFileInput(attrs={
+                'class': 'form-control',
+            }),
         }
         labels = {
             'name': _('Property Name'),
@@ -401,6 +426,9 @@ class PropertyForm(forms.ModelForm):
             'nearby_transport': _('Nearby Transport'),
             'nearby_park': _('Nearby Park'),
             'nearby_gym': _('Nearby Gym'),
+            'map_embed': _('Map Embed Code'),
+            'video_url': _('Video URL'),
+            'video_thumbnail': _('Video Thumbnail'),
         }
         error_messages = {
             'name': {
