@@ -170,7 +170,7 @@
                                             <div class="img1">
                                                 <img src="{{ property.video_thumbnail.url }}" alt="{{ property.name }}">
                                             </div>
-                                            <a href="{{ property.video_url }}" class="popup-youtube">
+                                            <a href="{{ property.video_url }}" class="popup-youtube" target="_blank">
                                                 <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor">
                                                     <path d="M6 20.1957V3.80421C6 3.01878 6.86395 2.53993 7.53 2.95621L20.6432 11.152C21.2699 11.5436 21.2699 12.4563 20.6432 12.848L7.53 21.0437C6.86395 21.46 6 20.9812 6 20.1957Z"></path>
                                                 </svg>
@@ -185,7 +185,13 @@
                                     <h3>Map Locations</h3>
                                     <div class="space32"></div>
                                     <div class="map-section">
-                                        <iframe src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d63799.91730331241!2d30.063018091226386!3d-1.9554758114524995!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x19dca6f907feabf7%3A0x207b54b64c8ffb34!2sAdventist%20University%20of%20Central%20Africa%2C%20Science%20and%20Technology%20Centre!5e0!3m2!1sen!2srw!4v1738842443789!5m2!1sen!2srw" width="600" height="450" style="border:0;" allowfullscreen="" loading="lazy" referrerpolicy="no-referrer-when-downgrade"></iframe>
+                                        {% if property.map_embed %}
+                                            <div class="property-map">
+                                                {{ property.map_embed|safe }}
+                                            </div>
+                                        {% else %}
+                                            <iframe src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d63799.91730331241!2d30.063018091226386!3d-1.9554758114524995!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x19dca6f907feabf7%3A0x207b54b64c8ffb34!2sAdventist%20University%20of%20Central%20Africa%2C%20Science%20and%20Technology%20Centre!5e0!3m2!1sen!2srw!4v1738842443789!5m2!1sen!2srw" width="600" height="450" style="border:0;" allowfullscreen="" loading="lazy" referrerpolicy="no-referrer-when-downgrade"></iframe>
+                                        {% endif %}
                                         <div class="space12"></div>
                                         <div class="list">
                                             <ul>
