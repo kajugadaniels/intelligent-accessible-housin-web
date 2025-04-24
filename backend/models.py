@@ -186,6 +186,16 @@ class Property(models.Model):
     nearby_gym = models.CharField(max_length=255, null=True, blank=True, help_text="Nearby gym or fitness center")
 
     location = models.TextField(null=True, blank=True)
+    video_url = models.TextField(null=True, blank=True)
+    video_thumbnail = ProcessedImageField(
+        upload_to='video_thumbnail',
+        format='JPEG',
+        processors=[ResizeToFill(1340, 894)],
+        options={'quality': 90},
+        null=True,
+        blank=True,
+    )
+    map_embed = models.TextField(null=True, blank=True)
 
     created_by = models.ForeignKey(User, on_delete=models.CASCADE, null=True, blank=True, related_name='properties_created')
     created_at = models.DateTimeField(default=timezone.now)
