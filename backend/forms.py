@@ -313,7 +313,8 @@ class PropertyForm(forms.ModelForm):
             'address', 'size', 'image', 'amenities',
             'nearby_hospital', 'nearby_school', 'nearby_market',
             'nearby_transport', 'nearby_park', 'nearby_gym',
-            'map_embed', 'video_url', 'video_thumbnail',
+            # newly added model fields:
+            'location', 'map_embed', 'video_url', 'video_thumbnail',
         ]
         widgets = {
             'name': forms.TextInput(attrs={
@@ -393,6 +394,12 @@ class PropertyForm(forms.ModelForm):
                 'class': 'form-control',
                 'placeholder': 'Enter nearby gym details',
             }),
+            # new field widgets
+            'location': forms.Textarea(attrs={
+                'class': 'form-control',
+                'placeholder': 'Enter more precise location or coordinates',
+                'rows': 2,
+            }),
             'map_embed': forms.Textarea(attrs={
                 'class': 'form-control',
                 'placeholder': 'Paste your Google Maps iframe HTML here',
@@ -426,6 +433,8 @@ class PropertyForm(forms.ModelForm):
             'nearby_transport': _('Nearby Transport'),
             'nearby_park': _('Nearby Park'),
             'nearby_gym': _('Nearby Gym'),
+            # new labels
+            'location': _('Nearby Location'),
             'map_embed': _('Map Embed Code'),
             'video_url': _('Video URL'),
             'video_thumbnail': _('Video Thumbnail'),
