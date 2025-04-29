@@ -144,3 +144,16 @@ def properties(request):
     }
 
     return render(request, 'backend/pages/users/properties/index.html', context)
+
+@login_required
+def getAgents(request):
+    if not (request.user.role == 'User'):
+        raise PermissionDenied(_("You are not authorized to access the House Providers page."))
+
+    houseProviders = User.objects.filter(role='House Provider').order_by('-created_at')
+
+    context = {
+        'houseProviders': houseProviders
+    }
+
+    return render(request, 'backend/pages/users/agents/index.html', context)
