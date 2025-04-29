@@ -40,7 +40,22 @@
                             <form method="post" action="">
                                 {% csrf_token %}
                                 {{ form.non_field_errors }}
+                                
+                                <!-- Role Selection -->
                                 <div class="row">
+                                    <div class="col-lg-12">
+                                        <p class="fs-14 fw-semibold">Select Your Role</p>
+                                        <div class="input-area">
+                                            {% for role_value, role_label in form.roles %}
+                                                <label>
+                                                    <input type="radio" name="role" value="{{ role_value }}" required>
+                                                    {{ role_label }}
+                                                </label>
+                                            {% endfor %}
+                                        </div>
+                                    </div>
+                                    
+                                    <!-- Email -->
                                     <div class="col-lg-12">
                                         <p class="fs-14 fw-semibold">{{ form.email.label }}</p>
                                         <div class="input-area">
@@ -52,6 +67,8 @@
                                             </div>
                                         {% endif %}
                                     </div>
+                                    
+                                    <!-- Password -->
                                     <div class="col-lg-12 mt-24">
                                         <p class="fs-14 fw-semibold">{{ form.password.label }}</p>
                                         <div class="input-area">
@@ -63,16 +80,13 @@
                                             </div>
                                         {% endif %}
                                     </div>
+
+                                    <!-- Submit Button -->
                                     <div class="col-lg-12">
                                         <div class="input-area">
                                             <button type="submit" class="theme-btn1 w-100">
                                                 Login 
                                                 <span class="arrow1">
-                                                    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" width="24" height="24" fill="currentColor">
-                                                        <path d="M12 13H4V11H12V4L20 12L12 20V13Z"></path>
-                                                    </svg>
-                                                </span>
-                                                <span class="arrow2">
                                                     <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" width="24" height="24" fill="currentColor">
                                                         <path d="M12 13H4V11H12V4L20 12L12 20V13Z"></path>
                                                     </svg>
