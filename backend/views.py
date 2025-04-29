@@ -147,7 +147,7 @@ def dashboard(request):
 @login_required
 def getHouseProviders(request):
     # Only Admin (or superuser) may view House Providers
-    if not (request.user.role == 'Admin'):
+    if not (request.user.role == 'Admin', 'User'):
         raise PermissionDenied(_("You are not authorized to access the House Providers page."))
 
     houseProviders = User.objects.filter(role='House Provider').order_by('-created_at')
@@ -185,7 +185,7 @@ def addHouseProvider(request):
 
 @login_required
 def showHouseProvider(request, id):
-    if not (request.user.role == 'Admin'):
+    if not (request.user.role == 'Admin', 'User'):
         raise PermissionDenied(_("You are not authorized to view this House Provider."))
 
     houseProvider = get_object_or_404(User, id=id, role='House Provider')
