@@ -144,3 +144,9 @@ def properties(request):
     }
 
     return render(request, 'backend/pages/users/properties/index.html', context)
+
+def notifications(request):
+    if request.user.role not in ['User'] and not request.user.is_superuser:
+        raise PermissionDenied(_("You are not authorized to view the dashboard."))
+
+    return render(request, 'backend/pages/users/notifications.html')
