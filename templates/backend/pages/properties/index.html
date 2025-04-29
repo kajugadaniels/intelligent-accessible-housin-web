@@ -30,16 +30,18 @@
 													<i class="icon-eye"></i>
 												</a>
 											</li>
-											<li>
-												<a href="{% url 'backend:editProperty' property.id %}">
-													<i class="icon-ruler-pencil"></i>
-												</a>
-											</li>
-											<li>
-												<a href="{% url 'backend:deleteProperty' property.id %}">
-													<i class="icon-trash"></i>
-												</a>
-											</li>
+											{% if user.role == 'Admin' %}
+												<li>
+													<a href="{% url 'backend:editProperty' property.id %}">
+														<i class="icon-ruler-pencil"></i>
+													</a>
+												</li>
+												<li>
+													<a href="{% url 'backend:deleteProperty' property.id %}">
+														<i class="icon-trash"></i>
+													</a>
+												</li>
+											{% endif %}
 										</ul>
 									</div>
 								</div>
