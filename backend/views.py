@@ -41,7 +41,7 @@ def userLogin(request):
             if user.role == 'Admin' or user.role == 'House Provider':
                 return redirect(reverse('backend:dashboard'))  # Redirect to the backend dashboard
             elif user.role == 'User':
-                return redirect(reverse('frontend:userDashboard'))  # Redirect to the frontend user dashboard
+                return redirect(reverse('users:dashboard'))  # Redirect to the frontend user dashboard
 
         else:
             for field, errors in form.errors.items():

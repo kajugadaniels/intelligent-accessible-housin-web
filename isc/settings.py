@@ -42,6 +42,7 @@ INSTALLED_APPS = [
     #Custom apps
     'backend',
     'users',
+    'frontend',
     'api',
 ]
 
