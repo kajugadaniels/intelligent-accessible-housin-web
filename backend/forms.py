@@ -33,6 +33,9 @@ class LoginForm(forms.Form):
             'required': _('Please enter your password.'),
         }
     )
+    
+    ROLE_CHOICES = User.ROLE_CHOICES
+    roles = forms.ChoiceField(choices=ROLE_CHOICES, widget=forms.RadioSelect)
 
     def clean(self):
         cleaned_data = super().clean()
