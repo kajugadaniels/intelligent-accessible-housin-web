@@ -104,6 +104,8 @@ def properties(request):
     # --- Handle Amenities ---
     amenities = filter_params.getlist('amenities')
     if amenities:
+        # Convert amenities to integers (if they are strings)
+        amenities = [int(amenity) for amenity in amenities]
         properties = properties.filter(amenities__id__in=amenities).distinct()
 
     # --- Sorting ---
