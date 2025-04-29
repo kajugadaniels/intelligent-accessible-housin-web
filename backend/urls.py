@@ -6,6 +6,8 @@ from django.conf.urls.static import static
 app_name = 'backend'
 
 urlpatterns = [
+    path('', home, name="home"),
+
     path('login/', userLogin, name="login"),
     path('register/', userRegister, name="register"),
     path('logout/', userLogout, name='logout'),

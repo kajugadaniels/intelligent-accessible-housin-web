@@ -12,6 +12,15 @@ from django.contrib.auth.decorators import login_required
 from django.shortcuts import render, redirect, get_object_or_404
 from django.contrib.auth import authenticate, login as auth_login, logout, update_session_auth_hash
 
+def home(request):
+    return render(request, 'backend/pages/index.html')
+
+def about(request):
+    return render(request, 'backend/pages/about.html')
+
+def services(request):
+    return render(request, 'backend/pages/services.html')
+
 # --------------------------------
 # Authentication and profile views
 # --------------------------------
