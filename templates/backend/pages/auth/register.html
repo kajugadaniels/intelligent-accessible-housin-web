@@ -1,0 +1,85 @@
+{% extends 'backend/layouts/base.html' %}
+{% block content %}
+
+    <div class="container-fluid">
+        <div class="row">
+            <div class="col-xl-7 d-none d-xl-block">
+                <img class="bg-img-cover bg-center" src="https://www.micemag.com/wp-content/uploads/2022/03/mice-rwanda-kigali-convention-centre-03-mice-magazine.jpg" alt="loginpage">
+            </div>
+            <div class="col-xl-5 p-0">
+                <div class="login-card login-dark">
+                    <div>
+                        <div>
+                            <a class="logo text-start" href="#">
+                                Welcome on Intelligent Accessible Housing
+                            </a>
+                        </div>
+                        <div class="login-main">
+                            <form class="theme-form" method="POST" action="{% url 'backend:register' %}">
+                                {% csrf_token %}
+                                <h4>Create your account</h4>
+                                <p>by entering the user's details</p>
+                                {% if messages %}
+                                    {% for message in messages %}
+                                        <div class="alert alert-{{ message.tags }} alert-dismissible fade show" role="alert">
+                                            {{ message }}
+                                            <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+                                        </div>
+                                    {% endfor %}
+                                {% endif %}
+                                <div class="form-group">
+                                    <label for="role" class="fs-14 fw-semibold">{{ form.role.label }}</label>
+                                    <div class="input-area">
+                                        {{ form.role }}
+                                    </div>
+                                    {% for error in form.role.errors %}
+                                        <div class="text-danger">{{ error }}</div>
+                                    {% endfor %}
+                                </div>
+                                <div class="form-group">
+                                    {{ form.name.label_tag }}
+                                    {{ form.name }}
+                                    {% for error in form.name.errors %}
+                                        <div class="text-danger">{{ error }}</div>
+                                    {% endfor %}
+                                </div>
+                                <div class="form-group">
+                                    {{ form.email.label_tag }}
+                                    {{ form.email }}
+                                    {% for error in form.email.errors %}
+                                        <div class="text-danger">{{ error }}</div>
+                                    {% endfor %}
+                                </div>
+                                <div class="form-group">
+                                    {{ form.phone_number.label_tag }}
+                                    {{ form.phone_number }}
+                                    {% for error in form.phone_number.errors %}
+                                        <div class="text-danger">{{ error }}</div>
+                                    {% endfor %}
+                                </div>
+                                <div class="form-group">
+                                    {{ form.password.label_tag }}
+                                    {{ form.password }}
+                                    {% for error in form.password.errors %}
+                                        <div class="text-danger">{{ error }}</div>
+                                    {% endfor %}
+                                </div>
+                                <div class="form-group">
+                                    {{ form.confirm_password.label_tag }}
+                                    {{ form.confirm_password }}
+                                    {% for error in form.confirm_password.errors %}
+                                        <div class="text-danger">{{ error }}</div>
+                                    {% endfor %}
+                                </div>
+                                <div class="form-group mb-0">
+                                    <button class="btn btn-primary btn-block w-100" type="submit" style="height: 50px;">Sign Up</button>
+                                </div>
+                            </form>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+{% endblock content %}

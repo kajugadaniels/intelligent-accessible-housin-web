@@ -93,6 +93,7 @@ class RegisterForm(forms.ModelForm):
     password = forms.CharField(
         widget=forms.PasswordInput(attrs={
             'placeholder': 'Enter Password',
+            'class': 'form-control',
             'required': 'required',
             'id': 'password',
         }),
@@ -103,6 +104,7 @@ class RegisterForm(forms.ModelForm):
         widget=forms.PasswordInput(attrs={
             'placeholder': 'Confirm Password',
             'required': 'required',
+            'class': 'form-control',
             'id': 'confirm_password',
         }),
         label=_('Confirm Password'),
@@ -125,14 +127,17 @@ class RegisterForm(forms.ModelForm):
             'name': forms.TextInput(attrs={
                 'placeholder': 'Enter your name',
                 'required': 'required',
+                'class': 'form-control',
             }),
             'email': forms.EmailInput(attrs={
                 'placeholder': 'Enter your email address',
                 'required': 'required',
+                'class': 'form-control',
             }),
             'phone_number': forms.TextInput(attrs={
                 'placeholder': 'Enter your phone number',
                 'required': 'required',
+                'class': 'form-control',
             }),
         }
         labels = {
