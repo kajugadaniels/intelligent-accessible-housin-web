@@ -80,6 +80,95 @@ class LoginForm(forms.Form):
 
         return cleaned_data
 
+class RegisterForm(forms.ModelForm):
+    """
+    Form for registering a new user with role 'User' by default.
+    """
+    password = forms.CharField(
+        widget=forms.PasswordInput(attrs={
+            'placeholder': 'Enter Password',
+            'required': 'required',
+            'id': 'password',
+        }),
+        label=_('Password'),
+        error_messages={'required': _('Please enter a password.')},
+    )
+    confirm_password = forms.CharField(
+        widget=forms.PasswordInput(attrs={
+            'placeholder': 'Confirm Password',
+            'required': 'required',
+            'id': 'confirm_password',
+        }),
+        label=_('Confirm Password'),
+        error_messages={'required': _('Please confirm your password.')},
+    )
+
+    class Meta:
+        model = User
+        fields = ['name', 'email', 'phone_number']
+        widgets = {
+            'name': forms.TextInput(attrs={
+                'placeholder': 'Enter your name',
+                'required': 'required',
+            }),
+            'email': forms.EmailInput(attrs={
+                'placeholder': 'Enter your email address',
+                'required': 'required',
+            }),
+            'phone_number': forms.TextInput(attrs={
+                'placeholder': 'Enter your phone number',
+                'required': 'required',
+            }),
+        }
+        labels = {
+            'name': _('Name'),
+            'email': _('Email Address'),
+            'phone_number': _('Phone Number'),
+        }
+        error_messages = {
+            'name': {'required': _('Please enter your name.')},
+            'email': {
+                'required': _('Please enter your email address.'),
+                'invalid': _('Enter a valid email address.'),
+            },
+            'phone_number': {'required': _('Please enter your phone number.')},
+        }
+
+    def clean(self):
+        cleaned_data = super().clean()
+        password = cleaned_data.get("password")
+        confirm_password = cleaned_data.get("confirm_password")
+
+        if password and confirm_password:
+            if password != confirm_password:
+                self.add_error('confirm_password', _('The passwords do not match.'))
+            try:
+                validate_password(password)
+            except forms.ValidationError as error:
+                self.add_error('password', error)
+        return cleaned_data
+
+    def clean_email(self):
+        email = self.cleaned_data.get('email')
+        if User.objects.filter(email=email).exists():
+            raise forms.ValidationError(_('This email address is already in use.'))
+        return email
+
+    def clean_phone_number(self):
+        phone_number = self.cleaned_data.get('phone_number')
+        if User.objects.filter(phone_number=phone_number).exists():
+            raise forms.ValidationError(_('This phone number is already in use.'))
+        return phone_number
+
+    def save(self, commit=True):
+        user = super().save(commit=False)
+        user.set_password(self.cleaned_data["password"])
+        # Set the default role to 'User'
+        user.role = "User"
+        if commit:
+            user.save()
+        return user
+
 class UserProfileForm(forms.ModelForm):
     """
     Form for updating user profile information.
