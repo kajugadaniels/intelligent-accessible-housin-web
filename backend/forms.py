@@ -84,6 +84,12 @@ class RegisterForm(forms.ModelForm):
     """
     Form for registering a new user with role 'User' by default.
     """
+    ROLE_CHOICES = (
+        ('Admin', 'Admin'),
+        ('User', 'User'),
+        ('House Provider', 'House Provider'),
+    )
+
     password = forms.CharField(
         widget=forms.PasswordInput(attrs={
             'placeholder': 'Enter Password',
@@ -101,6 +107,15 @@ class RegisterForm(forms.ModelForm):
         }),
         label=_('Confirm Password'),
         error_messages={'required': _('Please confirm your password.')},
+    )
+    role = forms.ChoiceField(
+        choices=ROLE_CHOICES,
+        widget=forms.RadioSelect(attrs={
+            'required': 'required',
+            'id': 'role',
+        }),
+        label=_('Role'),
+        error_messages={'required': _('Please select your role.')},
     )
 
     class Meta:
@@ -163,8 +178,7 @@ class RegisterForm(forms.ModelForm):
     def save(self, commit=True):
         user = super().save(commit=False)
         user.set_password(self.cleaned_data["password"])
-        # Set the default role to 'User'
-        user.role = "User"
+        user.role = self.cleaned_data["role"]  # Set the role selected by the user
         if commit:
             user.save()
         return user
