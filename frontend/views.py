@@ -15,7 +15,7 @@ def userLogin(request):
         messages.info(request, _("You have been logged out because you accessed the login page while already logged in."))
 
     if request.method == 'POST':
-        form = LoginForm(request.POST)
+        form = SignInForm(request.POST)
         if form.is_valid():
             user = form.cleaned_data.get('user')
             auth_login(request, user)
@@ -33,7 +33,7 @@ def userLogin(request):
                     messages.error(request, error)
             messages.error(request, _("Please address the errors below and try again."))
     else:
-        form = LoginForm()
+        form = SignInForm()
 
     context = {
         'form': form

@@ -1,5 +1,3 @@
-<!-- frontend/pages/auth/login.html -->
-
 {% extends 'frontend/layouts/app.html' %}
 {% load humanize %}
 {% block content %}
@@ -45,7 +43,7 @@
                                 <div class="row">
                                     <div class="col-lg-12">
                                         <p class="fs-14 fw-semibold">{{ form.role.label }}</p>
-                                        <div class="input-area">
+                                        <div class="d-flex input-area">
                                             {{ form.role }}
                                         </div>
                                         {% if form.role.errors %}
