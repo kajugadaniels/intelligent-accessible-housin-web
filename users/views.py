@@ -1,9 +1,11 @@
+from django.db.models import Q
 from backend.models import *
 from django.urls import reverse
 from django.core.exceptions import PermissionDenied
 from django.utils.translation import gettext_lazy as _
 from django.contrib.auth.decorators import login_required
 from django.shortcuts import render, redirect, get_object_or_404
+from django.core.paginator import Paginator, EmptyPage, PageNotAnInteger
 
 def dashboard(request):
     if request.user.role not in ['User'] and not request.user.is_superuser:
@@ -57,4 +59,83 @@ def properties(request):
     if request.user.role not in ['User'] and not request.user.is_superuser:
         raise PermissionDenied(_("You are not authorized to view the dashboard."))
 
-    return render(request, 'backend/pages/users/properties/index.html')
+    # Retrieve filter parameters from GET request
+    filter_params = request.GET
+
+    properties = Property.objects.all()
+
+    # --- Apply Filters ---
+    city = filter_params.get('city')
+    if city:
+        properties = properties.filter(city__iexact=city)
+
+    prop_type = filter_params.get('type')
+    if prop_type:
+        properties = properties.filter(type__iexact=prop_type)
+
+    category = filter_params.get('category')
+    if category:
+        properties = properties.filter(category__iexact=category)
+
+    capacity = filter_params.get('capacity')
+    if capacity:
+        properties = properties.filter(capacity=capacity)
+
+    bathroom = filter_params.get('bathroom')
+    if bathroom:
+        properties = properties.filter(bathroom=bathroom)
+
+    size = filter_params.get('size')
+    if size:
+        properties = properties.filter(size__icontains=size)
+
+    address = filter_params.get('address')
+    if address:
+        properties = properties.filter(address__icontains=address)
+
+    price_min = filter_params.get('price_min')
+    if price_min:
+        properties = properties.filter(price_usd__gte=price_min)
+
+    price_max = filter_params.get('price_max')
+    if price_max:
+        properties = properties.filter(price_usd__lte=price_max)
+
+    amenities = filter_params.getlist('amenities')
+    if amenities:
+        properties = properties.filter(amenities__id__in=amenities).distinct()
+
+    # --- Sorting ---
+    sort = filter_params.get('sort')
+    if sort:
+        if sort.lower() == 'oldest':
+            properties = properties.order_by('created_at')
+        elif sort.lower() == 'newest':
+            properties = properties.order_by('-created_at')
+        else:
+            properties = properties.order_by('-created_at')
+
+    # --- Pagination ---
+    limit = filter_params.get('limit', 12)
+    try:
+        limit = int(limit)
+    except ValueError:
+        limit = 12
+    paginator = Paginator(properties, limit)
+    page = filter_params.get('page')
+    try:
+        properties_page = paginator.page(page)
+    except PageNotAnInteger:
+        properties_page = paginator.page(1)
+    except EmptyPage:
+        properties_page = paginator.page(paginator.num_pages)
+
+    context = {
+        'properties': properties_page,
+        'filter_params': filter_params,
+        'properties_count': paginator.count,
+        'paginator': paginator,
+        'page_obj': properties_page,
+    }
+
+    return render(request, 'backend/pages/users/properties/index.html', context)
