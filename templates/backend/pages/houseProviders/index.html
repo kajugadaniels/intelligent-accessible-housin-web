@@ -56,12 +56,14 @@
                                                 <a href="{% url 'backend:showHouseProvider' user.id %}" class="btn btn-primary">
                                                     View
                                                 </a>
-                                                <a href="{% url 'backend:editHouseProvider' user.id %}" class="btn btn-warning">
-                                                    Edit
-                                                </a>
-                                                <a href="{% url 'backend:deleteHouseProvider' user.id %}" class="btn btn-danger" onclick="return confirm('Are you sure you want to delete {{ user.name }}?');">
-                                                    Delete
-                                                </a>
+                                                {% if user.role == 'Admin' %}
+                                                    <a href="{% url 'backend:editHouseProvider' user.id %}" class="btn btn-warning">
+                                                        Edit
+                                                    </a>
+                                                    <a href="{% url 'backend:deleteHouseProvider' user.id %}" class="btn btn-danger" onclick="return confirm('Are you sure you want to delete {{ user.name }}?');">
+                                                        Delete
+                                                    </a>
+                                                {% endif %}
                                             </div>
                                         </td>
                                     </tr>

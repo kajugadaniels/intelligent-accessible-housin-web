@@ -35,8 +35,14 @@
 						</tr>
 					</table>
 					<div class="text-end">
-						<a class="btn btn-primary" href="{% url 'backend:editHouseProvider' houseProvider.id %}"><i class="fa fa-edit"></i> Edit</a>
-						<a class="btn btn-danger" href="{% url 'backend:deleteHouseProvider' houseProvider.id %}"><i class="fa fa-trash"></i> Delete</a>
+						{% if user.role == 'Admin' %}
+							<a href="{% url 'backend:editHouseProvider' user.id %}" class="btn btn-warning">
+								Edit
+							</a>
+							<a href="{% url 'backend:deleteHouseProvider' user.id %}" class="btn btn-danger" onclick="return confirm('Are you sure you want to delete {{ user.name }}?');">
+								Delete
+							</a>
+						{% endif %}
 					</div>
 				</div>
 			</div>
