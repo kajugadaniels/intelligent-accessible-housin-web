@@ -1,8 +1,19 @@
 {% extends 'backend/layouts/app.html' %}
 {% load static %}
-{% load humanize %}
 {% block content %}
 
-    Properties
+    <h4>Filtered Properties</h4>
+
+    <div class="property-list">
+        {% for property in properties %}
+            <div class="property-item">
+                <h5>{{ property.name }}</h5>
+                <p>{{ property.address }}</p>
+                <p>{{ property.price_usd }} USD</p>
+            </div>
+        {% empty %}
+            <p>No properties found for the selected filters.</p>
+        {% endfor %}
+    </div>
 
 {% endblock %}
