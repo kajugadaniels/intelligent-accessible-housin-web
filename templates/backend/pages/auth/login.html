@@ -26,50 +26,7 @@
 
 <body>
     <div class="landing-page">
-        <div class="landing-home">
-            <div class="paginacontainer">
-                <div class="progress-wrap">
-                    <svg class="progress-circle svg-content" width="100%" height="100%" viewbox="-1 -1 102 102">
-                        <path d="M50,1 a49,49 0 0,1 0,98 a49,49 0 0,1 0,-98"></path>
-                    </svg>
-                </div>
-            </div>
-            <div class="container-fluid">
-                <div class="sticky-header">
-                    <header>
-                        <nav class="navbar navbar-b navbar-dark navbar-trans navbar-expand-xl fixed-top nav-padding" id="sidebar-menu">
-                            <a class="navbar-brand p-0" href="#">
-                                <img class="img-fluid" src="{% static 'frontend/img/logo.png' %}" alt="" style="width: 160px;">
-                            </a>
-                            <button class="navbar-toggler navabr_btn-set custom_nav" type="button" data-bs-toggle="collapse" data-bs-target="#navbarDefault" aria-controls="navbarDefault" aria-expanded="false" aria-label="Toggle navigation">
-                                <span></span>
-                                <span></span>
-                                <span></span>
-                            </button>
-                            <div class="navbar-collapse justify-content-center collapse hidenav" id="navbarDefault">
-                                <ul class="navbar-nav navbar_nav_modify" id="scroll-spy">
-                                    <li class="nav-item">
-                                        <a class="nav-link" href="#">
-                                            Home
-                                        </a>
-                                    </li>
-                                </ul>
-                            </div>
-                            <div class="buy-btn">
-                                <a class="nav-link js-scroll" href="#" target="_blank">
-                                    Login
-                                </a>
-                            </div>
-                            <div class="buy-btn">
-                                <a class="nav-link js-scroll" href="#" target="_blank">
-                                    Register
-                                </a>
-                            </div>
-                        </nav>
-                    </header>
-                </div>
-            </div>
-        </div>
+        {% include 'backend/inc/navbar.html' %}
         <div class="container-fluid">
             <div class="row">
                 <div class="col-xl-7 d-none d-xl-block">
