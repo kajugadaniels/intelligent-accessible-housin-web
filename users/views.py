@@ -75,7 +75,7 @@ def properties(request):
 
     category = filter_params.get('category')
     if category:
-        properties = properties.filter(category__iexact=category)
+        properties = properties.filter(category__name__iexact=category)  # Using 'category__name' for ForeignKey
 
     capacity = filter_params.get('capacity')
     if capacity:
@@ -101,6 +101,7 @@ def properties(request):
     if price_max:
         properties = properties.filter(price_usd__lte=price_max)
 
+    # --- Handle Amenities ---
     amenities = filter_params.getlist('amenities')
     if amenities:
         properties = properties.filter(amenities__id__in=amenities).distinct()
