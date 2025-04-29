@@ -15,9 +15,10 @@ class LoginForm(forms.Form):
 
     role = forms.ChoiceField(
         choices=ROLE_CHOICES,
-        widget=forms.Select(attrs={
-            'class': 'form-control',
+        widget=forms.RadioSelect(attrs={
             'required': 'required',
+            'class': 'checkbox1',
+            'type': 'radio',
             'id': 'role',
         }),
         label=_('Role'),
