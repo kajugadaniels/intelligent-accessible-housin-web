@@ -76,7 +76,7 @@ def userRegister(request):
     context = {
         'form': form,
     }
-    return render(request, 'frontend/pages/auth/register.html', context)
+    return render(request, 'backend/pages/auth/register.html', context)
 
 
 @login_required
