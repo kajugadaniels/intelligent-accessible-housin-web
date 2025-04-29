@@ -20,7 +20,13 @@ def userLogin(request):
             user = form.cleaned_data.get('user')
             auth_login(request, user)
             messages.success(request, _("Welcome back! You have successfully logged in."))
-            return redirect(reverse('frontend:userDashboard'))
+
+            # Redirect based on user role
+            if user.role == 'Admin' or user.role == 'House Provider':
+                return redirect(reverse('backend:dashboard'))  # Redirect to the backend dashboard
+            elif user.role == 'User':
+                return redirect(reverse('frontend:userDashboard'))  # Redirect to the frontend user dashboard
+
         else:
             for field, errors in form.errors.items():
                 for error in errors:
