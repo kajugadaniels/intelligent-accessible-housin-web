@@ -102,11 +102,13 @@ def properties(request):
         properties = properties.filter(price_usd__lte=price_max)
 
     # --- Handle Amenities ---
-    amenities = filter_params.getlist('amenities')
+    amenities = filter_params.getlist('amenities')  # Get list of selected amenities
     if amenities:
-        # Convert amenities to integers (if they are strings)
-        amenities = [int(amenity) for amenity in amenities]
-        properties = properties.filter(amenities__id__in=amenities).distinct()
+        try:
+            amenities = [int(amenity) for amenity in amenities]  # Convert to integers
+            properties = properties.filter(amenities__id__in=amenities).distinct()
+        except ValueError:
+            pass  # If the conversion fails, we simply don't filter by amenities
 
     # --- Sorting ---
     sort = filter_params.get('sort')
