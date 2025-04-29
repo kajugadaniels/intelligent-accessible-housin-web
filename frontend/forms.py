@@ -6,9 +6,28 @@ from django.utils.translation import gettext_lazy as _
 from django.contrib.auth.password_validation import validate_password
 
 class LoginForm(forms.Form):
+    ROLE_CHOICES = (
+        ('Admin', 'Admin'),
+        ('User', 'User'),
+        ('House Provider', 'House Provider'),
+    )
+
+    role = forms.ChoiceField(
+        choices=ROLE_CHOICES,
+        widget=forms.RadioSelect(attrs={
+            'required': 'required',
+            'id': 'role',
+        }),
+        label=_('Role'),
+        error_messages={
+            'required': _('Please select your role.'),
+        }
+    )
+
     email = forms.EmailField(
         max_length=255,
         widget=forms.EmailInput(attrs={
+            'class': 'form-control',
             'placeholder': 'Enter your email',
             'required': 'required',
             'id': 'emailaddress',
@@ -19,8 +38,10 @@ class LoginForm(forms.Form):
             'invalid': _('Enter a valid email address.'),
         }
     )
+    
     password = forms.CharField(
         widget=forms.PasswordInput(attrs={
+            'class': 'form-control',
             'placeholder': 'Enter your password',
             'required': 'required',
             'id': 'password',
@@ -33,21 +54,27 @@ class LoginForm(forms.Form):
 
     def clean(self):
         cleaned_data = super().clean()
+        role = cleaned_data.get('role')
         email = cleaned_data.get('email')
         password = cleaned_data.get('password')
 
-        if email and password:
+        if email and password and role:
             user = authenticate(email=email, password=password)
             if not user:
                 raise forms.ValidationError(_('The email or password you entered is incorrect. Please try again.'))
             if not user.is_active:
                 raise forms.ValidationError(_('Your account is currently inactive. Please contact support for assistance.'))
+            if user.role != role:
+                raise forms.ValidationError(_('The role does not match with the email and password entered.'))
             cleaned_data['user'] = user
         else:
             if not email:
                 self.add_error('email', _('Email address is required.'))
             if not password:
                 self.add_error('password', _('Password is required.'))
+            if not role:
+                self.add_error('role', _('Role is required.'))
+
         return cleaned_data
 
 class UserProfileForm(forms.ModelForm):
