@@ -23,29 +23,29 @@
                     <div class="navbar-collapse justify-content-center collapse hidenav" id="navbarDefault">
                         <ul class="navbar-nav navbar_nav_modify" id="scroll-spy">
                             <li class="nav-item">
-                                <a class="nav-link" href="#">
+                                <a class="nav-link" href="{% url 'backend:home' %}">
                                     Home
                                 </a>
                             </li>
                             <li class="nav-item">
-                                <a class="nav-link" href="#">
+                                <a class="nav-link" href="{% url 'backend:about' %}">
                                     About
                                 </a>
                             </li>
                             <li class="nav-item">
-                                <a class="nav-link" href="#">
+                                <a class="nav-link" href="{% url 'backend:services' %}">
                                     Services
                                 </a>
                             </li>
                         </ul>
                     </div>
                     <div class="buy-btn">
-                        <a class="nav-link js-scroll" href="{% url 'backend:login' %}" target="_blank">
+                        <a class="nav-link js-scroll" href="{% url 'backend:login' %}">
                             Login
                         </a>
                     </div>
                     <div class="buy-btn">
-                        <a class="nav-link js-scroll" href="#" target="_blank">
+                        <a class="nav-link js-scroll" href="{% url 'backend:register' %}">
                             Register
                         </a>
                     </div>
