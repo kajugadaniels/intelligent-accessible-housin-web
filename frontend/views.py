@@ -12,26 +12,36 @@ from django.contrib.auth import authenticate, login as auth_login, logout, updat
 def userLogin(request):
     if request.user.is_authenticated:
         logout(request)
-        messages.info(request, _("You have been logged out because you accessed the login page while already logged in."))
+        messages.info(request, "You have been logged out because you accessed the login page while already logged in.")
 
     if request.method == 'POST':
-        form = LoginForm(request.POST)
-        if form.is_valid():
-            user = form.cleaned_data.get('user')
-            auth_login(request, user)
-            messages.success(request, _("Welcome back! You have successfully logged in."))
-            return redirect(reverse('frontend:userDashboard'))
+        role = request.POST.get('role')  # Get the role selected by the user
+        email = request.POST.get('email')  # Get the email
+        password = request.POST.get('password')  # Get the password
+
+        # Validate the role, email, and password
+        if role and email and password:
+            try:
+                user = User.objects.get(email=email, role=role)  # Check if the user with this email and role exists
+                if user.check_password(password):  # Check if password matches
+                    auth_login(request, user)
+                    messages.success(request, "Welcome back! You have successfully logged in.")
+                    return redirect('frontend:userDashboard')
+                else:
+                    messages.error(request, "Invalid email, password, or role.")
+            except User.DoesNotExist:
+                messages.error(request, "Invalid email, password, or role.")
         else:
-            for field, errors in form.errors.items():
-                for error in errors:
-                    messages.error(request, error)
-            messages.error(request, _("Please address the errors below and try again."))
+            messages.error(request, "All fields are required.")
+    
     else:
         form = LoginForm()
 
     context = {
-        'form': form
+        'form': form,
+        'roles': User.ROLE_CHOICES  # Pass the roles to the template for the radio buttons
     }
+
     return render(request, 'frontend/pages/auth/login.html', context)
 
 def userLogout(request):
