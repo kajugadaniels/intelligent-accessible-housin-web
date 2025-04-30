@@ -30,7 +30,7 @@
 													<i class="icon-eye"></i>
 												</a>
 											</li>
-											{% if user.role == 'Admin' %}
+											{% if user.role == 'House Provider' %}
 												<li>
 													<a href="{% url 'backend:editProperty' property.id %}">
 														<i class="icon-ruler-pencil"></i>
