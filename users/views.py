@@ -9,11 +9,39 @@ from django.contrib.auth.decorators import login_required
 from django.shortcuts import render, redirect, get_object_or_404
 from django.core.paginator import Paginator, EmptyPage, PageNotAnInteger
 
+@login_required
 def dashboard(request):
     if request.user.role not in ['User'] and not request.user.is_superuser:
         raise PermissionDenied(_("You are not authorized to view the dashboard."))
 
-    return render(request, 'backend/pages/users/dashboard.html')
+    user = request.user
+
+    # Application metrics
+    total_apps       = RentApplication.objects.filter(user=user).count()
+    pending_apps     = RentApplication.objects.filter(user=user, status='Pending').count()
+    accepted_apps    = RentApplication.objects.filter(user=user, status='Accepted').count()
+    rejected_apps    = RentApplication.objects.filter(user=user, status='Rejected').count()
+    moved_out_apps   = RentApplication.objects.filter(user=user, status='Moved Out').count()
+
+    # Contract metrics
+    total_contracts  = Contract.objects.filter(tenant=user).count()
+    active_contracts = Contract.objects.filter(tenant=user, status='Active').count()
+    overdue_contracts= Contract.objects.filter(tenant=user, payment_status='Overdue').count()
+
+    context = {
+        'total_apps': total_apps,
+        'pending_apps': pending_apps,
+        'accepted_apps': accepted_apps,
+        'rejected_apps': rejected_apps,
+        'moved_out_apps': moved_out_apps,
+        'total_contracts': total_contracts,
+        'active_contracts': active_contracts,
+        'overdue_contracts': overdue_contracts,
+        # for Chart.js
+        'status_labels': ['Pending','Accepted','Rejected','Moved Out'],
+        'status_data': [pending_apps, accepted_apps, rejected_apps, moved_out_apps],
+    }
+    return render(request, 'backend/pages/users/dashboard.html', context)
 
 @login_required
 def search(request):
