@@ -170,7 +170,7 @@ def notifications(request):
     return render(request, 'backend/pages/users/notifications.html')
 
 @login_required
-def sendApplication(request):
+def sendApplication(request, id):
     if request.user.role not in ['User'] and not request.user.is_superuser:
         raise PermissionDenied(_("You are not authorized to view the dashboard."))
 
