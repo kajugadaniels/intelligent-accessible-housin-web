@@ -194,10 +194,42 @@ def properties(request):
 
 @login_required
 def notifications(request):
+    # Only 'User' or superuser can access
     if request.user.role not in ['User'] and not request.user.is_superuser:
-        raise PermissionDenied(_("You are not authorized to view the dashboard."))
+        raise PermissionDenied(_("You are not authorized to view notifications."))
 
-    return render(request, 'backend/pages/users/notifications.html')
+    context = {}
+
+    if request.user.role == 'User':
+        # New properties (last 10)
+        new_properties = Property.objects.order_by('-created_at')[:10]
+
+        # User's own rent applications (last 10)
+        user_apps = RentApplication.objects.filter(user=request.user).order_by('-created_at')[:10]
+
+        # Contracts received by user (last 10)
+        user_contracts = Contract.objects.filter(tenant=request.user).order_by('-created_at')[:10]
+
+        context.update({
+            'notif_type': 'user',
+            'new_properties': new_properties,
+            'user_apps': user_apps,
+            'user_contracts': user_contracts,
+        })
+
+    else:  # House Provider
+        # Contracts on this provider's properties that have been accepted (last 10)
+        accepted_contracts = Contract.objects.filter(
+            property__created_by=request.user,
+            status='Accepted'
+        ).order_by('-updated_at')[:10]
+
+        context.update({
+            'notif_type': 'provider',
+            'accepted_contracts': accepted_contracts,
+        })
+
+    return render(request, 'backend/pages/users/notifications.html', context)
 
 @login_required
 def getApplications(request):
