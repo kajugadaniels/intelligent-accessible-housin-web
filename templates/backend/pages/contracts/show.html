@@ -15,7 +15,7 @@
             <tr>
                 <th>
                     {% if contract.status == "Pending" %}
-                        <a href="{% url 'user:acceptContract' contract.id %}" class="btn btn-success">
+                        <a href="{% url 'users:acceptContract' contract.id %}" class="btn btn-success">
                             Accept and Sign Contract
                         </a>
                     {% else %}

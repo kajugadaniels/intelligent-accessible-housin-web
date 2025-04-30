@@ -17,4 +17,5 @@ urlpatterns = [
     path('property/<int:id>/apply/', sendApplication, name="sendApplication"),
 
     path('contracts/', getContracts, name='getContracts'),
+    path('contract/accept/<int:contract_id>/', acceptContract, name='acceptContract'),
 ]  + static(settings.STATIC_URL, document_root=settings.STATIC_ROOT)+ static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)
