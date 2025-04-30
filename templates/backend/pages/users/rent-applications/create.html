@@ -12,26 +12,35 @@
 		</div>
 		<div class="card-body">
 			<div class="row">
-				<div class="col-xl-6 col-sm-12">
-					<form method="POST">
+				<div class="col-xl-8 col-sm-12">
+					<form method="POST" enctype="multipart/form-data">
                         {% csrf_token %}
                         {{ form.non_field_errors }}
 						<div class="row">
-							<div class="mb-3 col-sm-12">
-								<label>
-                                    {{ form.preferred_move_in_date.label }}
-                                </label>
-								{{ form.preferred_move_in_date }}
-							</div>
-							<div class="mb-3 col-sm-12">
-								<label>{{ form.rental_period_months.label }}</label>
-								{{ form.rental_period_months }}
-							</div>
-							<div class="mb-3 col-sm-12">
-								<label>{{ form.message.label }}</label>
-								{{ form.message }}
-							</div>
-						</div>
+                            <!-- Move-in & period -->
+                            <div class="col-md-6 mb-3">{{ form.preferred_move_in_date.label_tag }}{{ form.preferred_move_in_date }}</div>
+                            <div class="col-md-6 mb-3">{{ form.rental_period_months.label_tag }}{{ form.rental_period_months }}</div>
+                            <!-- ID & applicant image -->
+                            <div class="col-md-6 mb-3">{{ form.id_number_image.label_tag }}{{ form.id_number_image }}</div>
+                            <div class="col-md-6 mb-3">{{ form.applicant_image.label_tag }}{{ form.applicant_image }}</div>
+                            <!-- Children -->
+                            <div class="col-md-4 form-check mb-3">{{ form.has_children }} {{ form.has_children.label_tag }}</div>
+                            <div class="col-md-8 mb-3">{{ form.number_of_children.label_tag }}{{ form.number_of_children }}</div>
+                            <!-- Pets -->
+                            <div class="col-md-4 form-check mb-3">{{ form.has_pet }} {{ form.has_pet.label_tag }}</div>
+                            <div class="col-md-8 mb-3">{{ form.pet_details.label_tag }}{{ form.pet_details }}</div>
+                            <!-- Disability -->
+                            <div class="col-md-4 form-check mb-3">{{ form.has_disability }} {{ form.has_disability.label_tag }}</div>
+                            <div class="col-md-8 mb-3">{{ form.disability_details.label_tag }}{{ form.disability_details }}</div>
+                            <!-- Marital & Employment -->
+                            <div class="col-md-6 mb-3">{{ form.marital_status.label_tag }}{{ form.marital_status }}</div>
+                            <div class="col-md-6 mb-3">{{ form.employment_status.label_tag }}{{ form.employment_status }}</div>
+                            <!-- Income & References -->
+                            <div class="col-md-6 mb-3">{{ form.monthly_income.label_tag }}{{ form.monthly_income }}</div>
+                            <div class="col-md-6 mb-3">{{ form.references.label_tag }}{{ form.references }}</div>
+                            <!-- Message -->
+                            <div class="col-12 mb-3">{{ form.message.label_tag }}{{ form.message }}</div>
+                        </div>
                         <div class="row mt-2">
                             <div class="col text-end">
                                 <button type="submit" class="btn btn-primary">Submit</button>
@@ -39,7 +48,7 @@
                         </div>
 					</form>
 				</div>
-				<div class="col-xl-6 col-sm-12">
+				<div class="col-xl-4 col-sm-12">
 					<div class="checkout-details">
 						<div class="order-box">
 							<div class="title-box">
