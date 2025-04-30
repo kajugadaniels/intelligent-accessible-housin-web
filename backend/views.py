@@ -435,10 +435,10 @@ def addProperty(request):
 
 @login_required
 def showProperty(request, id):
-    if request.user.role != 'House Provider':
+    if not (request.user.role == 'House Provider', 'User'):
         raise PermissionDenied(_("You are not authorized to view this Property."))
 
-    property_instance = get_object_or_404(Property, id=id, created_by=request.user)
+    property_instance = get_object_or_404(Property, id=id)
 
     context = {
         'property': property_instance,

@@ -152,27 +152,15 @@ def properties(request):
     except (PageNotAnInteger, EmptyPage):
         page_obj = paginator.page(1)
 
-    return render(request, 'backend/pages/users/properties/index.html', {
+    context = {
         'properties': page_obj,
         'filter_params': params,
         'properties_count': paginator.count,
         'paginator': paginator,
         'page_obj': page_obj,
-    })
-
-@login_required
-def showProperty(request, id):
-    if request.user.role not in ['User'] and not request.user.is_superuser:
-        raise PermissionDenied(_("You are not authorized to view the dashboard."))
-
-    property_instance = get_object_or_404(Property, id=id, created_by=request.user)
-
-    context = {
-        'property': property_instance,
-        'title': _('Property: %(property)s') % {'property': property_instance.name}
     }
 
-    return render(request, 'backend/pages/users/properties/show.html', context)
+    return render(request, 'backend/pages/users/properties/index.html', context)
 
 @login_required
 def notifications(request):

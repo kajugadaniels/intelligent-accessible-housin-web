@@ -25,10 +25,22 @@
                                     <div class="product-hover">
                                         <ul>
                                             <li>
-                                                <a href="{% url 'users:showProperty' property.id %}">
+                                                <a href="{% url 'backend:showProperty' property.id %}">
                                                     <i class="icon-eye"></i>
                                                 </a>
                                             </li>
+                                            {% if user.role == 'House Provider' %}
+                                                <li>
+                                                    <a href="{% url 'backend:editProperty' property.id %}">
+                                                        <i class="icon-ruler-pencil"></i>
+                                                    </a>
+                                                </li>
+                                                <li>
+                                                    <a href="{% url 'backend:deleteProperty' property.id %}">
+                                                        <i class="icon-trash"></i>
+                                                    </a>
+                                                </li>
+                                            {% endif %}
                                         </ul>
                                     </div>
                                 </div>
@@ -47,7 +59,7 @@
                                             {{ property.bathroom }} Bath
                                         </div>
                                     </div>
-                                    <a href="{% url 'users:showProperty' property.id %}" class="mb-3">
+                                    <a href="{% url 'backend:showProperty' property.id %}" class="mb-3">
                                         <h4 style="font-size: 18px;">{{ property.name }}</h4>
                                     </a>
                                     <p class="mb-3">
