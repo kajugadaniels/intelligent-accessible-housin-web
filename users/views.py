@@ -13,47 +13,42 @@ def dashboard(request):
 
     return render(request, 'backend/pages/users/dashboard.html')
 
+@login_required
 def search(request):
     if request.user.role not in ['User'] and not request.user.is_superuser:
         raise PermissionDenied(_("You are not authorized to view the dashboard."))
 
+    # On initial GET, load choices from the database
     if request.method == 'GET':
         context = {
             'city_choices': Property.CITY_CHOICES,
             'property_types': Property.TYPE_CHOICES,
-            'property_categories': Property.CATEGORY_CHOICES,
+            'property_categories': Category.objects.all(),
             'amenities_list': Amenity.objects.all(),
         }
         return render(request, 'backend/pages/users/search.html', context)
 
-    # If the form is submitted (via GET method), we'll filter properties based on the provided criteria.
+    # Handle form submission
     if request.method == 'POST':
-        city = request.POST.get('city')
-        prop_type = request.POST.get('type')
-        category = request.POST.get('category')
-        capacity = request.POST.get('capacity')
-        bathroom = request.POST.get('bathroom')
-        size = request.POST.get('size')
-        address = request.POST.get('address')
-        price_min = request.POST.get('price_min')
-        price_max = request.POST.get('price_max')
-        amenities = request.POST.getlist('amenities')
-
-        # Create a dictionary for query parameters to pass to the properties function
         filter_params = {
-            'city': city,
-            'type': prop_type,
-            'category': category,
-            'capacity': capacity,
-            'bathroom': bathroom,
-            'size': size,
-            'address': address,
-            'price_min': price_min,
-            'price_max': price_max,
-            'amenities': amenities,
+            'city': request.POST.get('city', ''),
+            'type': request.POST.get('type', ''),
+            'category': request.POST.get('category', ''),  # now an ID
+            'capacity': request.POST.get('capacity', ''),
+            'bathroom': request.POST.get('bathroom', ''),
+            'size': request.POST.get('size', ''),
+            'address': request.POST.get('address', ''),
+            'price_min': request.POST.get('price_min', ''),
+            'price_max': request.POST.get('price_max', ''),
         }
+        # collect amenities IDs
+        amenities = request.POST.getlist('amenities')
+        if amenities:
+            filter_params['amenities'] = amenities
 
-        return redirect(reverse('users:properties') + '?' + '&'.join([f'{k}={v}' for k, v in filter_params.items() if v]))
+        # build querystring
+        qs = '&'.join(f"{k}={v}" for k,v in filter_params.items() if v)
+        return redirect(f"{reverse('users:properties')}?{qs}")
 
 def properties(request):
     if request.user.role not in ['User'] and not request.user.is_superuser:
