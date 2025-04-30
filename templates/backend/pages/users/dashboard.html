@@ -1,8 +1,95 @@
 {% extends 'backend/layouts/app.html' %}
 {% load static %}
-{% load humanize %}
 {% block content %}
 
-    Dashboard
+<div class="container-fluid py-4">
+	<div class="row g-4">
+		<!-- Applications Overview -->
+		<div class="col-md-3">
+			<div class="card text-white bg-primary h-100">
+				<div class="card-body">
+					<h5 class="card-title">Total Applications</h5>
+					<p class="display-6">{{ total_apps }}</p>
+				</div>
+			</div>
+		</div>
+		<div class="col-md-3">
+			<div class="card text-white bg-warning h-100">
+				<div class="card-body">
+					<h5 class="card-title">Pending</h5>
+					<p class="display-6">{{ pending_apps }}</p>
+				</div>
+			</div>
+		</div>
+		<div class="col-md-3">
+			<div class="card text-white bg-success h-100">
+				<div class="card-body">
+					<h5 class="card-title">Accepted</h5>
+					<p class="display-6">{{ accepted_apps }}</p>
+				</div>
+			</div>
+		</div>
+		<div class="col-md-3">
+			<div class="card text-white bg-danger h-100">
+				<div class="card-body">
+					<h5 class="card-title">Rejected</h5>
+					<p class="display-6">{{ rejected_apps }}</p>
+				</div>
+			</div>
+		</div>
+		<!-- Contracts Overview -->
+		<div class="col-md-4">
+			<div class="card h-100">
+				<div class="card-body">
+					<h5 class="card-title">Contracts</h5>
+					<p>Total: <strong>{{ total_contracts }}</strong></p>
+					<p>Active: <strong class="text-success">{{ active_contracts }}</strong></p>
+					<p>Overdue: <strong class="text-danger">{{ overdue_contracts }}</strong></p>
+				</div>
+			</div>
+		</div>
+		<!-- Application Status Chart -->
+		<div class="col-md-8">
+			<div class="card h-100">
+				<div class="card-body">
+					<h5 class="card-title">Application Status Breakdown</h5>
+					<canvas id="statusChart" height="120"></canvas>
+				</div>
+			</div>
+		</div>
+	</div>
+</div>
+
+<!-- Chart.js CDN -->
+<script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+<script>
+    document.addEventListener('DOMContentLoaded', () => {
+        const ctx = document.getElementById('statusChart').getContext('2d');
+        new Chart(ctx, {
+            type: 'line',
+            data: {
+                labels: {{ status_labels|safe }},
+                datasets: [{
+                    label: 'Applications',
+                    data: {{ status_data|safe }},
+                    backgroundColor: [
+                        'rgba(255, 205, 86, 0.7)',
+                        'rgba(75, 192, 192, 0.7)',
+                        'rgba(255, 99, 132, 0.7)',
+                        'rgba(201, 203, 207, 0.7)'
+                    ]
+                }]
+            },
+            options: {
+                scales: {
+                    y: { beginAtZero: true }
+                },
+                plugins: {
+                    legend: { display: false }
+                }
+            }
+        });
+    });
+</script>
 
 {% endblock %}
