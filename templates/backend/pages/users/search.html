@@ -1,81 +1,98 @@
 {% extends 'backend/layouts/app.html' %}
 {% load static %}
+
 {% block content %}
+<div class="search-filter-area">
+    <h4>Filter Properties</h4>
+    <form method="POST" action="{% url 'users:search' %}">
+        {% csrf_token %}
+        <!-- City -->
+        <div class="form-group">
+            <label for="city">City</label>
+            <select name="city" id="city" class="form-control">
+                <option value="">All Cities</option>
+                {% for code, name in city_choices %}
+                    <option value="{{ code }}">{{ name }}</option>
+                {% endfor %}
+            </select>
+        </div>
 
-    <div class="search-filter-area">
-        <h4>Filter Properties</h4>
-        <form method="POST" action="{% url 'users:search' %}">
-            {% csrf_token %}
-            <div class="form-group">
-                <label for="city">City</label>
-                <select name="city" id="city" class="form-control">
-                    <option value="">All Cities</option>
-                    {% for code, name in city_choices %}
-                        <option value="{{ code }}">{{ name }}</option>
-                    {% endfor %}
-                </select>
-            </div>
-            <div class="form-group">
-                <label for="type">Property Type</label>
-                <select name="type" id="type" class="form-control">
-                    <option value="">All Property Types</option>
-                    {% for code, name in property_types %}
-                        <option value="{{ code }}">{{ name }}</option>
-                    {% endfor %}
-                </select>
-            </div>
-            <div class="form-group">
-                <label for="category">Property Category</label>
-                <select name="category" id="category" class="form-control">
-                    <option value="">All Categories</option>
-                    {% for code, name in property_categories %}
-                        <option value="{{ code }}">{{ name }}</option>
-                    {% endfor %}
-                </select>
-            </div>
-            <div class="form-group">
-                <label for="capacity">Bedrooms</label>
-                <select name="capacity" id="capacity" class="form-control">
-                    <option value="">All Bedrooms</option>
-                    <option value="1">1</option>
-                    <option value="2">2</option>
-                    <option value="3">3</option>
-                    <option value="4">4</option>
-                    <option value="5">5+</option>
-                </select>
-            </div>
-            <div class="form-group">
-                <label for="bathroom">Bathrooms</label>
-                <select name="bathroom" id="bathroom" class="form-control">
-                    <option value="">All Bathrooms</option>
-                    <option value="1">1</option>
-                    <option value="2">2</option>
-                    <option value="3">3</option>
-                    <option value="4">4+</option>
-                </select>
-            </div>
-            <div class="form-group">
-                <label for="size">Size</label>
-                <input type="text" name="size" id="size" class="form-control" placeholder="Enter size" value="{{ filter_params.size }}">
-            </div>
-            <div class="form-group">
+        <!-- Type -->
+        <div class="form-group">
+            <label for="type">Property Type</label>
+            <select name="type" id="type" class="form-control">
+                <option value="">All Property Types</option>
+                {% for code, name in property_types %}
+                    <option value="{{ code }}">{{ name }}</option>
+                {% endfor %}
+            </select>
+        </div>
+
+        <!-- Category (from DB) -->
+        <div class="form-group">
+            <label for="category">Property Category</label>
+            <select name="category" id="category" class="form-control">
+                <option value="">All Categories</option>
+                {% for cat in property_categories %}
+                    <option value="{{ cat.id }}">{{ cat.name }}</option>
+                {% endfor %}
+            </select>
+        </div>
+
+        <!-- Bedrooms -->
+        <div class="form-group">
+            <label for="capacity">Bedrooms</label>
+            <select name="capacity" id="capacity" class="form-control">
+                <option value="">All Bedrooms</option>
+                <option value="1">1</option>
+                <option value="2">2</option>
+                <option value="3">3</option>
+                <option value="4">4</option>
+                <option value="5">5+</option>
+            </select>
+        </div>
+
+        <!-- Bathrooms -->
+        <div class="form-group">
+            <label for="bathroom">Bathrooms</label>
+            <select name="bathroom" id="bathroom" class="form-control">
+                <option value="">All Bathrooms</option>
+                <option value="1">1</option>
+                <option value="2">2</option>
+                <option value="3">3</option>
+                <option value="4">4+</option>
+            </select>
+        </div>
+
+        <!-- Size -->
+        <div class="form-group">
+            <label for="size">Size</label>
+            <input type="text" name="size" id="size" class="form-control" placeholder="Enter size">
+        </div>
+
+        <!-- Price -->
+        <div class="form-row">
+            <div class="form-group col">
                 <label for="price_min">Price Min</label>
-                <input type="number" name="price_min" id="price_min" class="form-control" placeholder="Minimum Price" value="{{ filter_params.price_min }}">
+                <input type="number" name="price_min" id="price_min" class="form-control" placeholder="Min">
             </div>
-            <div class="form-group">
+            <div class="form-group col">
                 <label for="price_max">Price Max</label>
-                <input type="number" name="price_max" id="price_max" class="form-control" placeholder="Maximum Price" value="{{ filter_params.price_max }}">
+                <input type="number" name="price_max" id="price_max" class="form-control" placeholder="Max">
             </div>
-            <div class="form-group">
-                <label for="amenities">Amenities</label>
-                <select name="amenities" id="amenities" class="form-control" multiple>
-                    {% for amenity in amenities_list %}
-                        <option value="{{ amenity.id }}">{{ amenity.name }}</option>
-                    {% endfor %}
-                </select>
-            </div>
-            <button type="submit" class="btn btn-primary">Filter Properties</button>
-        </form>
-    </div>
+        </div>
 
+        <!-- Amenities -->
+        <div class="form-group">
+            <label for="amenities">Amenities</label>
+            <select name="amenities" id="amenities" class="form-control" multiple>
+                {% for amenity in amenities_list %}
+                    <option value="{{ amenity.id }}">{{ amenity.name }}</option>
+                {% endfor %}
+            </select>
+        </div>
+
+        <button type="submit" class="btn btn-primary">Filter Properties</button>
+    </form>
+</div>
 {% endblock %}
