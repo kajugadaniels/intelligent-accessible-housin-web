@@ -234,7 +234,7 @@ def getContracts(request):
     """
     Retrieve all contracts for the logged-in user.
     """
-    contracts = Contract.objects.filter(user=request.user).order_by('-created_at')
+    contracts = Contract.objects.filter(tenant=request.user).order_by('-created_at')
 
     context = {
         'contracts': contracts,
