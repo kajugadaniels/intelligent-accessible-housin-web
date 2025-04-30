@@ -440,8 +440,16 @@ def showProperty(request, id):
 
     property_instance = get_object_or_404(Property, id=id)
 
+    # Check if the user is authenticated and if they have already applied for this property
+    application_status = None
+    if request.user.is_authenticated:
+        application = RentApplication.objects.filter(user=request.user, property=property_instance).first()
+        if application:
+            application_status = application.status
+
     context = {
         'property': property_instance,
+        'application_status': application_status,
         'title': _('Property: %(property)s') % {'property': property_instance.name}
     }
 
