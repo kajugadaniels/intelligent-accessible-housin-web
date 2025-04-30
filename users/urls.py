@@ -12,4 +12,6 @@ urlpatterns = [
     path('properties/', properties, name="properties"),
 
     path('notifications/', notifications, name="notifications"),
+
+    path('sendApplication/', sendApplication, name="sendApplication"),
 ]  + static(settings.STATIC_URL, document_root=settings.STATIC_ROOT)+ static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)
