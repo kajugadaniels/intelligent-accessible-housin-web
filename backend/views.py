@@ -3,6 +3,7 @@ from users.models import *
 from backend.forms import *
 from backend.models import *
 from django.urls import reverse
+from django.db.models import Count
 from django.contrib import messages
 from django.http import JsonResponse
 from django.core.exceptions import PermissionDenied
@@ -133,11 +134,57 @@ def userProfile(request):
 
 @login_required
 def dashboard(request):
-    # Only Admin and House Provider are allowed to access the dashboard.
+    # Only Admin and House Provider can access
     if request.user.role not in ['Admin', 'House Provider'] and not request.user.is_superuser:
         raise PermissionDenied(_("You are not authorized to view the dashboard."))
 
-    return render(request, 'backend/pages/dashboard.html')
+    user = request.user
+    context = {}
+
+    if user.role == 'Admin' or user.is_superuser:
+        # Admin overview
+        context.update({
+            'dashboard_type': 'admin',
+            'total_users': User.objects.filter(role='User').count(),
+            'total_providers': User.objects.filter(role='House Provider').count(),
+            'total_properties': Property.objects.count(),
+            'total_applications': RentApplication.objects.count(),
+            'app_status_counts': list(
+                RentApplication.objects
+                    .values('status')
+                    .annotate(count=Count('id'))
+            ),
+            'total_contracts': Contract.objects.count(),
+            'contract_status_counts': list(
+                Contract.objects
+                    .values('status')
+                    .annotate(count=Count('id'))
+            ),
+        })
+    else:
+        # House Provider overview (only their properties)
+        provider_props = Property.objects.filter(created_by=user)
+        provider_apps  = RentApplication.objects.filter(property__created_by=user)
+        provider_contracts = Contract.objects.filter(property__created_by=user)
+
+        context.update({
+            'dashboard_type': 'provider',
+            'total_properties': provider_props.count(),
+            'total_applications': provider_apps.count(),
+            'app_status_counts': list(
+                provider_apps
+                    .values('status')
+                    .annotate(count=Count('id'))
+            ),
+            'total_contracts': provider_contracts.count(),
+            'contract_status_counts': list(
+                provider_contracts
+                    .values('status')
+                    .annotate(count=Count('id'))
+            ),
+        })
+
+    return render(request, 'backend/pages/dashboard.html', context)
 
 
 # -------------------------------
