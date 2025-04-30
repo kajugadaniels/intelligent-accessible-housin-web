@@ -1,0 +1,173 @@
+{% extends 'backend/layouts/app.html' %}
+{% load static %}
+{% load humanize %}
+{% block content %}
+
+<div class="container-fluid">
+	<div>
+		<div class="list-product-header">
+			<div class="d-flex justify-content-between">
+				<h4>Details on Property</h4>
+				<a class="btn btn-primary" href="{% url 'backend:getProperties' %}"><i class="fa fa-arrow-left"></i> Go Back</a>
+			</div>
+		</div>
+		<div class="row product-page-main p-0">
+			<div class="col-md-5 box-col-4">
+				<div class="card">
+					<div class="card-body">
+						<img src="{{ property.image.url }}" alt="" style="width: 100%;">
+					</div>
+				</div>
+			</div>
+			<div class="col-md-7 box-col-8 order-xxl-0 order-1">
+				<div class="card">
+					<div class="card-body">
+						<div class="product-page-details">
+							<h3 class="f-w-600" style="font-size: 18px;">
+								{{ property.name }}
+							</h3>
+						</div>
+						<div class="product-price" style="font-size: 14px;">
+							{{ property.price_rwf|intcomma }} RWF
+						</div>
+						<hr>
+						<p>
+                            {{ property.description|truncatechars:200 }}
+                        </p>
+						<hr>
+						<div>
+							<table class="product-page-width">
+								<tbody>
+									<tr>
+										<td> <b>Rooms &nbsp;&nbsp;&nbsp;:</b></td>
+										<td>{{ property.capacity }}</td>
+                                    </tr>
+									<tr>
+										<td> <b>Plot Size &nbsp;&nbsp;&nbsp;:</b></td>
+										<td>{{ property.size }}</td>
+                                    </tr>
+									<tr>
+										<td> <b>Address &nbsp;&nbsp;&nbsp;:</b></td>
+										<td>{{ property.address }}</td>
+                                    </tr>
+								</tbody>
+							</table>
+						</div>
+						<hr>
+						<div class="row">
+							<div class="col-md-4">
+								<h5 class="f-w-600 product-title">share it</h5>
+							</div>
+							<div class="col-md-8">
+								<div class="product-icon">
+									<ul class="product-social">
+										<li class="d-inline-block"><a href="https://www.facebook.com/" target="_blank"><i class="fa fa-facebook"></i></a></li>
+										<li class="d-inline-block"><a href="https://whatsapp.com/" target="_blank"><i class="fa fa-whatsapp"></i></a></li>
+										<li class="d-inline-block"><a href="https://www.instagram.com/" target="_blank"><i class="fa fa-instagram"></i></a></li>
+									</ul>
+									<form class="d-inline-block f-right"></form>
+								</div>
+							</div>
+						</div>
+						<hr>
+						<div class="row">
+							<div class="col-md-4">
+								<h5 class="f-w-600 product-title">Rate Now</h5>
+							</div>
+							<div class="col-md-8">
+								<div class="d-flex">
+									{% for amenity in property.amenities.all %}
+									    <span class="ms-1">
+                                            {{ amenity.name }},
+                                        </span>
+                                    {% endfor %}
+								</div>
+							</div>
+						</div>
+					</div>
+				</div>
+			</div>
+		</div>
+	</div>
+	<div class="card">
+		<div class="row product-page-main">
+			<div class="col-sm-12">
+				<ul class="nav nav-tabs border-tab nav-primary mb-0" id="top-tab" role="tablist">
+					<li class="nav-item">
+						<a class="nav-link active" id="top-home-tab" data-bs-toggle="tab" href="#top-home" role="tab" aria-controls="top-home" aria-selected="false">Description</a>
+						<div class="material-border"></div>
+					</li>
+					<li class="nav-item">
+						<a class="nav-link" id="nearby-tab" data-bs-toggle="tab" href="#nearby" role="tab" aria-controls="nearby" aria-selected="false">Nearby</a>
+						<div class="material-border"></div>
+					</li>
+				</ul>
+				<div class="tab-content" id="top-tabContent">
+					<div class="tab-pane fade active show" id="top-home" role="tabpanel" aria-labelledby="top-home-tab">
+						<p class="mb-0 m-t-20">
+							{{ property.description }}
+						</p>
+					</div>
+					<div class="tab-pane fade" id="nearby" role="tabpanel" aria-labelledby="nearby-tab">
+						<div class="d-flex justify-content-between">
+							<div class="mb-0 m-t-20">
+								<svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24">
+									<path fill="#000" fill-rule="evenodd" d="M10.75 2h2c1.886 0 2.828 0 3.414.586S16.75 4.114 16.75 6v15.25h5a.75.75 0 0 1 0 1.5h-20a.75.75 0 0 1 0-1.5h5V6c0-1.886 0-2.828.586-3.414S8.864 2 10.75 2m1 2.25a.75.75 0 0 1 .75.75v1.25h1.25a.75.75 0 0 1 0 1.5H12.5V9A.75.75 0 0 1 11 9V7.75H9.75a.75.75 0 0 1 0-1.5H11V5a.75.75 0 0 1 .75-.75M9 12a.75.75 0 0 1 .75-.75h4a.75.75 0 0 1 0 1.5h-4A.75.75 0 0 1 9 12m0 3a.75.75 0 0 1 .75-.75h4a.75.75 0 0 1 0 1.5h-4A.75.75 0 0 1 9 15m2.75 3.25a.75.75 0 0 1 .75.75v2.25H11V19a.75.75 0 0 1 .75-.75" clip-rule="evenodd" />
+									<path fill="#000" d="M20.913 5.889c.337.504.337 1.206.337 2.611v12.75h.5a.75.75 0 0 1 0 1.5h-20a.75.75 0 1 1 0-1.5h.5V8.5c0-1.405 0-2.107.337-2.611a2 2 0 0 1 .552-.552c.441-.295 2.537-.332 3.618-.336q-.005.437-.004.91V7.25H4.25a.75.75 0 1 0 0 1.5h2.503v1.5H4.25a.75.75 0 0 0 0 1.5h2.503v1.5H4.25a.75.75 0 0 0 0 1.5h2.503v6.5h10v-6.5h2.497a.75.75 0 1 0 0-1.5h-2.497v-1.5h2.497a.75.75 0 1 0 0-1.5h-2.497v-1.5h2.497a.75.75 0 0 0 0-1.5h-2.497V5.91q.001-.471-.004-.91c1.081.005 3.17.042 3.612.337a2 2 0 0 1 .552.552" opacity="0.5" />
+								</svg>
+								<p>
+									{{ property.nearby_hospital }}M Hospital
+								</p>
+							</div>
+							<div class="mb-0 m-t-20">
+								<svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24">
+									<g fill="none" stroke="#000" stroke-linecap="round" stroke-linejoin="round" stroke-width="2">
+										<path d="M14 22v-4a2 2 0 1 0-4 0v4" />
+										<path d="m18 10l3.447 1.724a1 1 0 0 1 .553.894V20a2 2 0 0 1-2 2H4a2 2 0 0 1-2-2v-7.382a1 1 0 0 1 .553-.894L6 10m12-5v17M4 6l7.106-3.553a2 2 0 0 1 1.788 0L20 6M6 5v17" />
+										<circle cx="12" cy="9" r="2" />
+									</g>
+								</svg>
+								<p>
+									{{ property.nearby_school }}M School
+								</p>
+							</div>
+							<div class="mb-0 m-t-20">
+								<svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24">
+									<g fill="none" stroke="#000" stroke-linecap="round" stroke-width="1.5">
+										<path d="M10 2.009c-2.48.036-3.885.22-4.828 1.163C4 4.343 4 6.229 4 10v2c0 3.771 0 5.657 1.172 6.828S8.229 20 12 20s5.657 0 6.828-1.172S20 15.771 20 12v-2c0-3.771 0-5.657-1.172-6.828c-.943-.943-2.348-1.127-4.828-1.163" />
+										<path stroke-linejoin="round" d="M20 13h-4M4 13h8m3.5 3H17M7 16h1.5M6 19.5V21a1 1 0 0 0 1 1h1.5a1 1 0 0 0 1-1v-1m8.5-.5V21a1 1 0 0 1-1 1h-1.5a1 1 0 0 1-1-1v-1M20 9h1a1 1 0 0 1 1 1v1a1 1 0 0 1-.4.8L20 13M4 9H3a1 1 0 0 0-1 1v1a1 1 0 0 0 .4.8L4 13" />
+										<path d="M4.5 5h3.75M19.5 5H12" />
+									</g>
+								</svg>
+								<p>
+									{{ property.nearby_transport }}M Bus Park
+								</p>
+							</div>
+							<div class="mb-0 m-t-20">
+								<svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24">
+									<path fill="#000" d="M13.2 11H10V7h3.2a2 2 0 0 1 2 2a2 2 0 0 1-2 2M13 3H6v18h4v-6h3a6 6 0 0 0 6-6c0-3.32-2.69-6-6-6" />
+								</svg>
+								<p>
+									{{ property.nearby_park }}M Parking
+								</p>
+							</div>
+							<div class="mb-0 m-t-20">
+								<svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24">
+									<g fill="none" stroke="#000" stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5">
+										<path d="M7.4 7H4.6a.6.6 0 0 0-.6.6v8.8a.6.6 0 0 0 .6.6h2.8a.6.6 0 0 0 .6-.6V7.6a.6.6 0 0 0-.6-.6m12 0h-2.8a.6.6 0 0 0-.6.6v8.8a.6.6 0 0 0 .6.6h2.8a.6.6 0 0 0 .6-.6V7.6a.6.6 0 0 0-.6-.6" />
+										<path d="M1 14.4V9.6a.6.6 0 0 1 .6-.6h1.8a.6.6 0 0 1 .6.6v4.8a.6.6 0 0 1-.6.6H1.6a.6.6 0 0 1-.6-.6m22 0V9.6a.6.6 0 0 0-.6-.6h-1.8a.6.6 0 0 0-.6.6v4.8a.6.6 0 0 0 .6.6h1.8a.6.6 0 0 0 .6-.6M8 12h8" />
+									</g>
+								</svg>
+								<p>
+									{{ property.nearby_gym }}M GYM
+								</p>
+							</div>
+						</div>
+					</div>
+				</div>
+			</div>
+		</div>
+	</div>
+</div>
+
+{% endblock %}
