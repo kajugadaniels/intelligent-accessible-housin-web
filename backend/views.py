@@ -776,4 +776,4 @@ def getNotifications(request):
         'signed_contracts': signed_contracts,
     }
 
-    return render(request, 'backend/pages/notifications.html', context)
+    return render(request, 'backend/pages/notifications/index.html', context)

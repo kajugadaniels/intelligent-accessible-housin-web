@@ -1,0 +1,53 @@
+{% extends 'backend/layouts/app.html' %}
+{% load humanize %}
+{% block content %}
+
+<div class="container-fluid py-4">
+  <h4>Your Notifications</h4>
+  <hr>
+
+  <!-- New Rent Applications -->
+  <div class="mb-5">
+    <h5>New Rent Applications</h5>
+    <ul class="list-group">
+      {% for app in new_applications %}
+        <li class="list-group-item d-flex justify-content-between align-items-center">
+          <div>
+            <i class="fa fa-file-alt text-primary me-2"></i>
+            <strong>{{ app.user.name }}</strong> applied for
+            <a href="{% url 'backend:showProperty' app.property.id %}">
+              {{ app.property.name }}
+            </a>
+          </div>
+          <small class="text-muted">{{ app.created_at|naturaltime }}</small>
+        </li>
+      {% empty %}
+        <li class="list-group-item">No new applications.</li>
+      {% endfor %}
+    </ul>
+  </div>
+
+  <!-- Signed Contracts -->
+  <div class="mb-5">
+    <h5>Contracts Signed</h5>
+    <ul class="list-group">
+      {% for c in signed_contracts %}
+        <li class="list-group-item d-flex justify-content-between align-items-center">
+          <div>
+            <i class="fa fa-file-contract text-success me-2"></i>
+            Contract <strong>#{{ c.contract_number }}</strong> signed by
+            <em>{{ c.tenant.name }}</em>
+            for <a href="{% url 'backend:showProperty' c.property.id %}">
+              {{ c.property.name }}
+            </a>
+          </div>
+          <small class="text-muted">{{ c.signed_date|naturaltime }}</small>
+        </li>
+      {% empty %}
+        <li class="list-group-item">No recently signed contracts.</li>
+      {% endfor %}
+    </ul>
+  </div>
+</div>
+
+{% endblock %}
