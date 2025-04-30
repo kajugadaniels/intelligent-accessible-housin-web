@@ -160,6 +160,21 @@ def properties(request):
         'page_obj': page_obj,
     })
 
+@login_required
+def showProperty(request, id):
+    if request.user.role not in ['User'] and not request.user.is_superuser:
+        raise PermissionDenied(_("You are not authorized to view the dashboard."))
+
+    property_instance = get_object_or_404(Property, id=id, created_by=request.user)
+
+    context = {
+        'property': property_instance,
+        'title': _('Property: %(property)s') % {'property': property_instance.name}
+    }
+
+    return render(request, 'backend/pages/users/properties/show.html', context)
+
+@login_required
 def notifications(request):
     if request.user.role not in ['User'] and not request.user.is_superuser:
         raise PermissionDenied(_("You are not authorized to view the dashboard."))

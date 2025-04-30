@@ -8,6 +8,9 @@ app_name = 'users'
 urlpatterns = [
     path('dashboard/', dashboard, name="dashboard"),
     path('search/', search, name="search"),
+
     path('properties/', properties, name="properties"),
+    path('property/<int:id>/', showProperty, name="showProperty"),
+
     path('notifications/', notifications, name="notifications"),
 ]  + static(settings.STATIC_URL, document_root=settings.STATIC_ROOT)+ static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)
