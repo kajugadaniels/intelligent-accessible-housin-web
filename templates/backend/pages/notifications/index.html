@@ -3,83 +3,50 @@
 {% block content %}
 
 <div class="container-fluid py-4">
-	<h4>Notifications</h4>
+	<h4>Your Notifications</h4>
 	<hr>
-	{% if notif_type == 'user' %}
-	<!-- New Properties -->
-	<div class="mb-4">
-		<h5>New Properties</h5>
+	<!-- New Rent Applications -->
+	<div class="mb-5">
+		<h5>New Rent Applications</h5>
 		<ul class="list-group">
-			{% for prop in new_properties %}
+			{% for app in new_applications %}
 			<li class="list-group-item d-flex justify-content-between align-items-center">
-				<span>
-				<i class="fa fa-home me-2"></i>
-				<a href="{% url 'backend:showProperty' prop.id %}">{{ prop.name }}</a>
-				</span>
-				<small class="text-muted">{{ prop.created_at|naturaltime }}</small>
-			</li>
-			{% empty %}
-			<li class="list-group-item">No new properties.</li>
-			{% endfor %}
-		</ul>
-	</div>
-	<!-- Your Applications -->
-	<div class="mb-4">
-		<h5>Your Applications</h5>
-		<ul class="list-group">
-			{% for app in user_apps %}
-			<li class="list-group-item d-flex justify-content-between">
-				<span>
-				<i class="fa fa-file-alt me-2"></i>
-				Applied to <strong>{{ app.property.name }}</strong>
-				</span>
-				<span>
-				<span class="badge bg-{{ app.status|lower }} me-2">{{ app.status }}</span>
-				<small class="text-muted">{{ app.created_at|naturaltime }}</small>
-				</span>
-			</li>
-			{% empty %}
-			<li class="list-group-item">You have not submitted any applications.</li>
-			{% endfor %}
-		</ul>
-	</div>
-	<!-- Your Contracts -->
-	<div class="mb-4">
-		<h5>Your Contracts</h5>
-		<ul class="list-group">
-			{% for c in user_contracts %}
-			<li class="list-group-item d-flex justify-content-between">
-				<span>
-				<i class="fa fa-file-contract me-2"></i>
-				Contract #{{ c.contract_number }} for <strong>{{ c.property.name }}</strong>
-				</span>
-				<small class="text-muted">{{ c.created_at|naturaltime }}</small>
-			</li>
-			{% empty %}
-			<li class="list-group-item">No contracts yet.</li>
-			{% endfor %}
-		</ul>
-	</div>
-	{% else %}
-	<!-- Provider: Accepted Contracts -->
-	<div class="mb-4">
-		<h5>Accepted Contracts</h5>
-		<ul class="list-group">
-			{% for c in accepted_contracts %}
-			<li class="list-group-item d-flex justify-content-between">
 				<div>
-					<i class="fa fa-check-circle text-success me-2"></i>
-					<strong>{{ c.tenant.name }}</strong> signed contract
-					<em>#{{ c.contract_number }}</em>
+					<i class="fa fa-file-alt text-primary me-2"></i>
+					<strong>{{ app.user.name }}</strong> applied for
+					<a href="{% url 'backend:showProperty' app.property.id %}">
+					{{ app.property.name }}
+					</a>
 				</div>
-				<small class="text-muted">{{ c.updated_at|naturaltime }}</small>
+				<small class="text-muted">{{ app.created_at|naturaltime }}</small>
 			</li>
 			{% empty %}
-			<li class="list-group-item">No newly accepted contracts.</li>
+			<li class="list-group-item">No new applications.</li>
 			{% endfor %}
 		</ul>
 	</div>
-	{% endif %}
+	<!-- Signed Contracts -->
+	<div class="mb-5">
+		<h5>Contracts Signed</h5>
+		<ul class="list-group">
+			{% for c in signed_contracts %}
+			<li class="list-group-item d-flex justify-content-between align-items-center">
+				<div>
+					<i class="fa fa-file-contract text-success me-2"></i>
+					Contract <strong>#{{ c.contract_number }}</strong> signed by
+					<em>{{ c.tenant.name }}</em>
+					for <a href="{% url 'backend:showProperty' c.property.id %}">
+					{{ c.property.name }}
+					</a>
+				</div>
+				{# Use date format since signed_date is a DateField #}
+				<small class="text-muted">{{ c.signed_date|date:"F j, Y" }}</small>
+			</li>
+			{% empty %}
+			<li class="list-group-item">No recently signed contracts.</li>
+			{% endfor %}
+		</ul>
+	</div>
 </div>
 
 {% endblock %}
