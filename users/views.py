@@ -1,6 +1,8 @@
-from django.db.models import Q
+from users.forms import *
 from backend.models import *
+from django.db.models import Q
 from django.urls import reverse
+from django.contrib import messages
 from django.core.exceptions import PermissionDenied
 from django.utils.translation import gettext_lazy as _
 from django.contrib.auth.decorators import login_required
@@ -174,4 +176,45 @@ def sendApplication(request, id):
     if request.user.role not in ['User'] and not request.user.is_superuser:
         raise PermissionDenied(_("You are not authorized to view the dashboard."))
 
-    return render(request, 'backend/pages/users/rent-applications/create.html')
+    property_obj = get_object_or_404(Property, id=id)
+
+    # Check if the user has already applied to this property
+    existing_application = RentApplication.objects.filter(
+        user=request.user,
+        property=property_obj
+    ).first()
+
+    # If there's an existing application, check the status
+    if existing_application:
+        if existing_application.status in ['Pending', 'Accepted']:
+            messages.warning(request, "You have already applied for this property.")
+            return redirect('frontend:showProperty', id=id)
+        elif existing_application.status in ['Rejected', 'Moved Out']:
+            # Allow the user to reapply if the status is Rejected or Moved Out
+            pass
+        else:
+            messages.warning(request, "Invalid application status.")
+            return redirect('frontend:showProperty', id=id)
+
+    # If the user has not applied yet or has a rejected/moved-out application, allow them to apply
+    if request.method == 'POST':
+        form = RentApplicationForm(request.POST)
+        if form.is_valid():
+            application = form.save(commit=False)
+            application.user = request.user
+            application.property = property_obj
+            application.save()
+
+            messages.success(request, "Your rent application has been submitted successfully.")
+            return redirect('frontend:showProperty', id=id)
+        else:
+            messages.error(request, "Please correct the errors below.")
+    else:
+        form = RentApplicationForm()
+
+    context = {
+        'form': form,
+        'property': property_obj,
+    }
+
+    return render(request, 'backend/pages/users/rent-applications/create.html', context)
