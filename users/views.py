@@ -228,3 +228,16 @@ def sendApplication(request, id):
     }
 
     return render(request, 'backend/pages/users/rent-applications/create.html', context)
+
+@login_required
+def getContracts(request):
+    """
+    Retrieve all contracts for the logged-in user.
+    """
+    contracts = Contract.objects.filter(user=request.user).order_by('-created_at')
+
+    context = {
+        'contracts': contracts,
+    }
+
+    return render(request, 'backend/pages/users/contracts/index.html', context)
