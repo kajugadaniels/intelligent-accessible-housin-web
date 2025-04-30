@@ -1,7 +1,7 @@
 import random
+from users.models import *
 from backend.forms import *
 from backend.models import *
-from frontend.models import *
 from django.urls import reverse
 from django.contrib import messages
 from django.http import JsonResponse

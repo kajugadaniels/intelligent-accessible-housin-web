@@ -188,13 +188,13 @@ def sendApplication(request, id):
     if existing_application:
         if existing_application.status in ['Pending', 'Accepted']:
             messages.warning(request, "You have already applied for this property.")
-            return redirect('frontend:showProperty', id=id)
+            return redirect('backend:showProperty', id=id)
         elif existing_application.status in ['Rejected', 'Moved Out']:
             # Allow the user to reapply if the status is Rejected or Moved Out
             pass
         else:
             messages.warning(request, "Invalid application status.")
-            return redirect('frontend:showProperty', id=id)
+            return redirect('backend:showProperty', id=id)
 
     # If the user has not applied yet or has a rejected/moved-out application, allow them to apply
     if request.method == 'POST':
@@ -206,7 +206,7 @@ def sendApplication(request, id):
             application.save()
 
             messages.success(request, "Your rent application has been submitted successfully.")
-            return redirect('frontend:showProperty', id=id)
+            return redirect('backend:showProperty', id=id)
         else:
             messages.error(request, "Please correct the errors below.")
     else:

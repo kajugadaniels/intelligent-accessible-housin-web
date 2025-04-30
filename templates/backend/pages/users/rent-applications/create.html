@@ -3,6 +3,131 @@
 {% load humanize %}
 {% block content %}
 
-    Send Rent Application
+<div class="container-fluid">
+	<div class="card">
+		<div class="card-header">
+			<h4>
+                Apply for Renting: {{ property.name }}
+            </h4>
+		</div>
+		<div class="card-body">
+			<div class="row">
+				<div class="col-xl-6 col-sm-12">
+					<form method="POST">
+                        {% csrf_token %}
+                        {{ form.non_field_errors }}
+						<div class="row">
+							<div class="mb-3 col-sm-12">
+								<label>
+                                    {{ form.preferred_move_in_date.label }}
+                                </label>
+								{{ form.preferred_move_in_date }}
+							</div>
+							<div class="mb-3 col-sm-12">
+								<label>{{ form.rental_period_months.label }}</label>
+								{{ form.rental_period_months }}
+							</div>
+							<div class="mb-3 col-sm-12">
+								<label>{{ form.message.label }}</label>
+								{{ form.message }}
+							</div>
+						</div>
+                        <div class="row mt-2">
+                            <div class="col text-end">
+                                <button type="submit" class="btn btn-primary">Submit</button>
+                            </div>
+                        </div>
+					</form>
+				</div>
+				<div class="col-xl-6 col-sm-12">
+					<div class="checkout-details">
+						<div class="order-box">
+							<div class="title-box">
+								<div class="checkbox-title">
+									<h4>{{ property.name }} </h4>
+								</div>
+							</div>
+							<ul class="qty">
+								<li>Price <span>{{ property.price_rwf|intcomma }} RWF</span></li>
+                                <hr>
+								<li>Rooms <span>{{ property.capacity }}</span></li>
+                                <hr>
+								<li>Plot Size <span>{{ property.size }}</span></li>
+                                <hr>
+								<li>Address <span>{{ property.address }}</span></li>
+							</ul>
+                            <h5 class="mb-3">
+                                Nearby Activities
+                            </h5>
+							<ul class="qty">
+								<li>
+                                    <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24">
+                                        <path fill="#000" fill-rule="evenodd" d="M10.75 2h2c1.886 0 2.828 0 3.414.586S16.75 4.114 16.75 6v15.25h5a.75.75 0 0 1 0 1.5h-20a.75.75 0 0 1 0-1.5h5V6c0-1.886 0-2.828.586-3.414S8.864 2 10.75 2m1 2.25a.75.75 0 0 1 .75.75v1.25h1.25a.75.75 0 0 1 0 1.5H12.5V9A.75.75 0 0 1 11 9V7.75H9.75a.75.75 0 0 1 0-1.5H11V5a.75.75 0 0 1 .75-.75M9 12a.75.75 0 0 1 .75-.75h4a.75.75 0 0 1 0 1.5h-4A.75.75 0 0 1 9 12m0 3a.75.75 0 0 1 .75-.75h4a.75.75 0 0 1 0 1.5h-4A.75.75 0 0 1 9 15m2.75 3.25a.75.75 0 0 1 .75.75v2.25H11V19a.75.75 0 0 1 .75-.75" clip-rule="evenodd" />
+                                        <path fill="#000" d="M20.913 5.889c.337.504.337 1.206.337 2.611v12.75h.5a.75.75 0 0 1 0 1.5h-20a.75.75 0 1 1 0-1.5h.5V8.5c0-1.405 0-2.107.337-2.611a2 2 0 0 1 .552-.552c.441-.295 2.537-.332 3.618-.336q-.005.437-.004.91V7.25H4.25a.75.75 0 1 0 0 1.5h2.503v1.5H4.25a.75.75 0 0 0 0 1.5h2.503v1.5H4.25a.75.75 0 0 0 0 1.5h2.503v6.5h10v-6.5h2.497a.75.75 0 1 0 0-1.5h-2.497v-1.5h2.497a.75.75 0 1 0 0-1.5h-2.497v-1.5h2.497a.75.75 0 0 0 0-1.5h-2.497V5.91q.001-.471-.004-.91c1.081.005 3.17.042 3.612.337a2 2 0 0 1 .552.552" opacity="0.5" />
+                                    </svg>
+                                    Hospital 
+                                    <span>
+                                        {{ property.nearby_hospital }}M
+                                    </span>
+                                </li>
+                                <hr>
+								<li>
+                                    <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24">
+                                        <g fill="none" stroke="#000" stroke-linecap="round" stroke-linejoin="round" stroke-width="2">
+                                            <path d="M14 22v-4a2 2 0 1 0-4 0v4" />
+                                            <path d="m18 10l3.447 1.724a1 1 0 0 1 .553.894V20a2 2 0 0 1-2 2H4a2 2 0 0 1-2-2v-7.382a1 1 0 0 1 .553-.894L6 10m12-5v17M4 6l7.106-3.553a2 2 0 0 1 1.788 0L20 6M6 5v17" />
+                                            <circle cx="12" cy="9" r="2" />
+                                        </g>
+                                    </svg>
+                                    School 
+                                    <span>
+                                        {{ property.nearby_school }}M
+                                    </span>
+                                </li>
+                                <hr>
+								<li>
+                                    <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24">
+                                        <g fill="none" stroke="#000" stroke-linecap="round" stroke-width="1.5">
+                                            <path d="M10 2.009c-2.48.036-3.885.22-4.828 1.163C4 4.343 4 6.229 4 10v2c0 3.771 0 5.657 1.172 6.828S8.229 20 12 20s5.657 0 6.828-1.172S20 15.771 20 12v-2c0-3.771 0-5.657-1.172-6.828c-.943-.943-2.348-1.127-4.828-1.163" />
+                                            <path stroke-linejoin="round" d="M20 13h-4M4 13h8m3.5 3H17M7 16h1.5M6 19.5V21a1 1 0 0 0 1 1h1.5a1 1 0 0 0 1-1v-1m8.5-.5V21a1 1 0 0 1-1 1h-1.5a1 1 0 0 1-1-1v-1M20 9h1a1 1 0 0 1 1 1v1a1 1 0 0 1-.4.8L20 13M4 9H3a1 1 0 0 0-1 1v1a1 1 0 0 0 .4.8L4 13" />
+                                            <path d="M4.5 5h3.75M19.5 5H12" />
+                                        </g>
+                                    </svg>
+                                    Bus Park 
+                                    <span>
+                                        {{ property.nearby_transport }}M
+                                    </span>
+                                </li>
+                                <hr>
+								<li>
+                                    <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24">
+                                        <path fill="#000" d="M13.2 11H10V7h3.2a2 2 0 0 1 2 2a2 2 0 0 1-2 2M13 3H6v18h4v-6h3a6 6 0 0 0 6-6c0-3.32-2.69-6-6-6" />
+                                    </svg>
+                                    Parking 
+                                    <span>
+                                        {{ property.nearby_park }}M
+                                    </span>
+                                </li>
+                                <hr>
+								<li>
+                                    <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24">
+                                        <g fill="none" stroke="#000" stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5">
+                                            <path d="M7.4 7H4.6a.6.6 0 0 0-.6.6v8.8a.6.6 0 0 0 .6.6h2.8a.6.6 0 0 0 .6-.6V7.6a.6.6 0 0 0-.6-.6m12 0h-2.8a.6.6 0 0 0-.6.6v8.8a.6.6 0 0 0 .6.6h2.8a.6.6 0 0 0 .6-.6V7.6a.6.6 0 0 0-.6-.6" />
+                                            <path d="M1 14.4V9.6a.6.6 0 0 1 .6-.6h1.8a.6.6 0 0 1 .6.6v4.8a.6.6 0 0 1-.6.6H1.6a.6.6 0 0 1-.6-.6m22 0V9.6a.6.6 0 0 0-.6-.6h-1.8a.6.6 0 0 0-.6.6v4.8a.6.6 0 0 0 .6.6h1.8a.6.6 0 0 0 .6-.6M8 12h8" />
+                                        </g>
+                                    </svg>
+                                    GYM 
+                                    <span>
+                                        {{ property.nearby_gym }}M
+                                    </span>
+                                </li>
+							</ul>
+						</div>
+					</div>
+				</div>
+			</div>
+		</div>
+	</div>
+</div>
 
 {% endblock %}
