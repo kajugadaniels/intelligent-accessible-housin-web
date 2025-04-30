@@ -172,6 +172,16 @@ def notifications(request):
     return render(request, 'backend/pages/users/notifications.html')
 
 @login_required
+def getApplications(request):
+    applications = RentApplication.objects.filter(user=request.user).order_by('-created_at')
+    
+    context = {
+        'applications': applications,
+    }
+
+    return render(request, 'backend/pages/users/rent-applications/index.html', context)
+
+@login_required
 def sendApplication(request, id):
     if request.user.role not in ['User'] and not request.user.is_superuser:
         raise PermissionDenied(_("You are not authorized to view the dashboard."))
