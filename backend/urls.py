@@ -43,4 +43,6 @@ urlpatterns = [
     path('contracts/', getContracts, name='getContracts'),
     path('contract/send/<int:application_id>/', createContract, name="createContract"),
     path('contract/<int:id>/', showContract, name='showContract'),
+
+    path('notifications/', getNotifications, name="getNotifications"),
 ]  + static(settings.STATIC_URL, document_root=settings.STATIC_ROOT)+ static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)

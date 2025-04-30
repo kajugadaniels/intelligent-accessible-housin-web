@@ -569,14 +569,6 @@ def deleteProperty(request, id):
     return render(request, 'backend/pages/properties/delete.html', context)
 
 @login_required
-def getNotifications(request):
-    # Notifications page: allowed only for House Providers.
-    if request.user.role != 'House Provider':
-        raise PermissionDenied(_("You are not authorized to view the Notifications page."))
-
-    return render(request, 'backend/pages/notifications/index.html')
-
-@login_required
 def getRentApplications(request):
     """
     View to get rent applications.
@@ -761,3 +753,27 @@ def showContract(request, id):
     }
 
     return render(request, 'backend/pages/contracts/show.html', context)
+
+@login_required
+def getNotifications(request):
+    # Notifications page: allowed only for House Providers.
+    if request.user.role != 'House Provider':
+        raise PermissionDenied(_("You are not authorized to view the Notifications page."))
+
+    # Recent applications submitted to this provider's properties
+    new_applications = RentApplication.objects.filter(
+        property__created_by=request.user
+    ).order_by('-created_at')[:10]
+
+    # Recent contracts signed (status='Active') for this provider's properties
+    signed_contracts = Contract.objects.filter(
+        property__created_by=request.user,
+        status='Active'
+    ).order_by('-signed_date')[:10]
+
+    context = {
+        'new_applications': new_applications,
+        'signed_contracts': signed_contracts,
+    }
+
+    return render(request, 'backend/pages/.html', context)
