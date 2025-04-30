@@ -1,7 +1,7 @@
 /*! -----------------------------------------------------------------------------------
 
     Template Name: Mofi Admin
-    Template URI: http://admin.pixelstrap.com/Mofi/theme
+    Template URI: http://admin.pixelstrap.com/mofi/theme
     Description: This is Admin theme
     Author: Pixelstrap
     Author URI: https://themeforest.net/user/pixelstrap
@@ -156,9 +156,9 @@
       $("body").addClass("light");
     }
   });
-  // $("body").addClass(
-  //   localStorage.getItem("mode") ? localStorage.getItem("mode") : "light"
-  // );
+  $("body").addClass(
+    localStorage.getItem("mode") ? localStorage.getItem("mode") : "light"
+  );
   $(".mode").addClass(
     localStorage.getItem("mode") === "dark-only" ? "active" : " "
   );
@@ -392,3 +392,9 @@
   });
 })(jQuery);
 
+// layout-dark
+let darkClass = document.body.classList.contains('dark-only')
+if(darkClass){
+  document.body.classList.remove('light')
+  document.body.classList.add('dark-only')
+}
