@@ -50,95 +50,94 @@ def search(request):
         qs = '&'.join(f"{k}={v}" for k,v in filter_params.items() if v)
         return redirect(f"{reverse('users:properties')}?{qs}")
 
+@login_required
 def properties(request):
     if request.user.role not in ['User'] and not request.user.is_superuser:
         raise PermissionDenied(_("You are not authorized to view the dashboard."))
 
-    # Retrieve filter parameters from GET request
     filter_params = request.GET
+    qs = Property.objects.all()
 
-    properties = Property.objects.all()
-
-    # --- Apply Filters ---
+    # City
     city = filter_params.get('city')
     if city:
-        properties = properties.filter(city__iexact=city)
+        qs = qs.filter(city__iexact=city)
 
+    # Property Type
     prop_type = filter_params.get('type')
     if prop_type:
-        properties = properties.filter(type__iexact=prop_type)
+        qs = qs.filter(type__iexact=prop_type)
 
-    category = filter_params.get('category')
-    if category:
-        properties = properties.filter(category__name__iexact=category)  # Using 'category__name' for ForeignKey
+    # Category by ID
+    category_id = filter_params.get('category')
+    if category_id:
+        qs = qs.filter(category_id=category_id)
 
+    # Bedrooms
     capacity = filter_params.get('capacity')
     if capacity:
-        properties = properties.filter(capacity=capacity)
+        qs = qs.filter(capacity=capacity)
 
+    # Bathrooms
     bathroom = filter_params.get('bathroom')
     if bathroom:
-        properties = properties.filter(bathroom=bathroom)
+        qs = qs.filter(bathroom=bathroom)
 
+    # Size (text search)
     size = filter_params.get('size')
     if size:
-        properties = properties.filter(size__icontains=size)
+        qs = qs.filter(size__icontains=size)
 
+    # Address
     address = filter_params.get('address')
     if address:
-        properties = properties.filter(address__icontains=address)
+        qs = qs.filter(address__icontains=address)
 
+    # Price range
     price_min = filter_params.get('price_min')
     if price_min:
-        properties = properties.filter(price_usd__gte=price_min)
-
+        qs = qs.filter(price_usd__gte=price_min)
     price_max = filter_params.get('price_max')
     if price_max:
-        properties = properties.filter(price_usd__lte=price_max)
+        qs = qs.filter(price_usd__lte=price_max)
 
-    # --- Handle Amenities ---
-    amenities = filter_params.getlist('amenities')  # Get list of selected amenities
+    # Amenities (multiple)
+    amenities = filter_params.getlist('amenities')
     if amenities:
         try:
-            amenities = [int(amenity) for amenity in amenities]  # Convert to integers
-            properties = properties.filter(amenities__id__in=amenities).distinct()
+            amenity_ids = [int(a) for a in amenities]
+            qs = qs.filter(amenities__id__in=amenity_ids).distinct()
         except ValueError:
-            pass  # If the conversion fails, we simply don't filter by amenities
+            pass  # ignore invalid IDs
 
-    # --- Sorting ---
-    sort = filter_params.get('sort')
-    if sort:
-        if sort.lower() == 'oldest':
-            properties = properties.order_by('created_at')
-        elif sort.lower() == 'newest':
-            properties = properties.order_by('-created_at')
-        else:
-            properties = properties.order_by('-created_at')
+    # Sorting
+    sort = filter_params.get('sort', '').lower()
+    if sort == 'oldest':
+        qs = qs.order_by('created_at')
+    else:
+        qs = qs.order_by('-created_at')
 
-    # --- Pagination ---
-    limit = filter_params.get('limit', 12)
+    # Pagination
+    limit = 12
     try:
-        limit = int(limit)
+        limit = int(filter_params.get('limit', limit))
     except ValueError:
-        limit = 12
-    paginator = Paginator(properties, limit)
+        pass
+
+    paginator = Paginator(qs, limit)
     page = filter_params.get('page')
     try:
-        properties_page = paginator.page(page)
-    except PageNotAnInteger:
-        properties_page = paginator.page(1)
-    except EmptyPage:
-        properties_page = paginator.page(paginator.num_pages)
+        page_obj = paginator.page(page)
+    except (PageNotAnInteger, EmptyPage):
+        page_obj = paginator.page(1)
 
-    context = {
-        'properties': properties_page,
+    return render(request, 'backend/pages/users/properties/index.html', {
+        'properties': page_obj,
         'filter_params': filter_params,
         'properties_count': paginator.count,
         'paginator': paginator,
-        'page_obj': properties_page,
-    }
-
-    return render(request, 'backend/pages/users/properties/index.html', context)
+        'page_obj': page_obj,
+    })
 
 def notifications(request):
     if request.user.role not in ['User'] and not request.user.is_superuser:
