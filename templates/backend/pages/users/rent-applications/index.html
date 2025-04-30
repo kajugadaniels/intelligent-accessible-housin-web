@@ -3,6 +3,107 @@
 {% load humanize %}
 {% block content %}
 
-    Rent Applications
+<div class="container-fluid">
+    <div class="row">
+        <div class="col-sm-12">
+            <div class="card">
+                <div class="card-body">
+                    <div class="list-product-header">
+                        <div class="d-flex justify-content-between">
+                            <h4>Rent Applications</h4>
+                        </div>
+                    </div>
+                    <hr>
+                    <div class="list-product">
+                        <table class="table" id="project-status">
+                            <thead>
+                                <tr>
+                                    <th>
+                                        <div class="form-check">
+                                            <input class="form-check-input checkbox-primary" type="checkbox">
+                                        </div>
+                                    </th>
+                                    <th><span class="f-light f-w-600">Property</span></th>
+                                    <th><span class="f-light f-w-600">User</span></th>
+                                    <th><span class="f-light f-w-600">Status</span></th>
+                                    <th><span class="f-light f-w-600">Sent</span></th>
+                                    <th><span class="f-light f-w-600">Action</span></th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                {% for application in applications %}
+                                    <tr class="product-removes">
+                                        <td>
+                                            <div class="form-check">
+                                                <input class="form-check-input checkbox-primary" type="checkbox">
+                                            </div>
+                                        </td>
+                                        <td>
+                                            <p class="f-light">{{ application.property.name }}</p>
+                                        </td>
+                                        <td>
+                                            <p class="f-light">{{ application.user.name }}</p>
+                                        </td>
+                                        <td>
+                                            {% if application.contract %}
+                                                {% if application.contract.status == 'Pending' %}
+                                                    <span class="badge badge-light-warning">Contract Sent</span>
+                                                {% elif application.contract.status == 'Active' %}
+                                                    <span class="badge badge-light-success">Rented</span>
+                                                {% elif application.contract.status == 'Terminated' %}
+                                                    <span class="badge badge-light-danger">Contract Terminated</span>
+                                                {% elif application.contract.status == 'Expired' %}
+                                                    <span class="badge badge-light-secondary">Contract Expired</span>
+                                                {% endif %}
+                                            {% else %}
+                                                <p class="f-light">{{ application.status }}</p>
+                                            {% endif %}
+                                        </td>
+                                        <td>
+                                            <p class="f-light">{{ application.created_at|naturaltime }}</p>
+                                        </td>
+                                        <td>
+                                            <div class="product-action">
+                                                <a href="{% url 'backend:showApplication' application.id %}" class="btn btn-primary">
+                                                    View
+                                                </a>
+                                                {% if user.role == 'House Provider' %}
+                                                    {% if application.contract %}
+                                                        {% if application.contract.status == 'Pending' %}
+                                                            <span class="badge badge-light-warning">Contract Sent</span>
+                                                        {% elif application.contract.status == 'Active' %}
+                                                            <span class="badge badge-light-success">Rented</span>
+                                                        {% elif application.contract.status == 'Terminated' %}
+                                                            <span class="badge badge-light-danger">Contract Terminated</span>
+                                                        {% elif application.contract.status == 'Expired' %}
+                                                            <span class="badge badge-light-secondary">Contract Expired</span>
+                                                        {% endif %}
+                                                    {% else %}
+                                                        {% if application.status == "Pending" %}
+                                                            <a href="{% url 'backend:updateApplicationStatus' application.id %}" class="btn btn-warning">
+                                                                Manage Application
+                                                            </a>
+                                                        {% elif application.status == "Accepted" %}
+                                                            <!-- Show the "Send Contract" button only if the contract doesn't exist or is pending -->
+                                                            {% if not application.contract or application.contract.status == 'Pending' %}
+                                                                <a href="{% url 'backend:createContract' application.id %}" class="btn btn-success">
+                                                                    Send Contract
+                                                                </a>
+                                                            {% endif %}
+                                                        {% endif %}
+                                                    {% endif %}
+                                                {% endif %}
+                                            </div>
+                                        </td>
+                                    </tr>
+                                {% endfor %}
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
 
 {% endblock %}

@@ -561,7 +561,7 @@ def showApplication(request, id):
     application = get_object_or_404(RentApplication, id=id)
 
     # Check if the user is authorized to view the application
-    if request.user.role == 'Admin' or application.property.created_by == request.user:
+    if request.user.role == 'Admin' or application.property.created_by == request.user or application.user == request.user:
         if request.method == 'POST':
             # Handle status change based on the form submission
             new_status = request.POST.get('status')
