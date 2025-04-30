@@ -11,6 +11,19 @@
         <tr><th>Rent Amount</th><td>{{ contract.rent_amount }}</td></tr>
         <tr><th>Status</th><td>{{ contract.status }}</td></tr>
         <tr><th>Additional Terms</th><td>{{ contract.additional_terms }}</td></tr>
+        {% if user.role == 'User' %}
+            <tr>
+                <th>
+                    {% if contract.status == "Pending" %}
+                        <a href="{% url 'user:acceptContract' contract.id %}" class="btn btn-success">
+                            Accept and Sign Contract
+                        </a>
+                    {% else %}
+                        <span class="badge badge-success">Contract Signed</span>
+                    {% endif %}
+                </th>
+            </tr>
+        {% endif %}
     </table>
 </div>
 {% endblock %}
