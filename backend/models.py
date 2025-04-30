@@ -1,7 +1,7 @@
 import os
 import random
+from users.models import *
 from django.db import models
-from frontend.models import *
 from backend.managers import *
 from django.db.models import Avg
 from django.utils import timezone
