@@ -318,3 +318,34 @@ class NotificationsAPIView(APIView):
                     for c in accepted_contracts
                 ]
             }, status=status.HTTP_200_OK)
+
+class ApplicationsAPIView(APIView):
+    """
+    Retrieve all rent applications for the authenticated user.
+    """
+    permission_classes = [IsAuthenticated]
+
+    def get(self, request, *args, **kwargs):
+        user = request.user
+        if user.role != 'User' and not user.is_superuser:
+            return Response(
+                {'detail': 'You are not authorized to view this resource.'},
+                status=status.HTTP_403_FORBIDDEN
+            )
+
+        applications = RentApplication.objects.filter(user=user).order_by('-created_at')
+        data = []
+        for app in applications:
+            data.append({
+                'id': app.id,
+                'property': {
+                    'id': app.property.id,
+                    'name': app.property.name,
+                },
+                'preferred_move_in_date': app.preferred_move_in_date.isoformat() if app.preferred_move_in_date else None,
+                'rental_period_months': app.rental_period_months,
+                'status': app.status,
+                'created_at': app.created_at.isoformat(),
+            })
+
+        return Response(data, status=status.HTTP_200_OK)
