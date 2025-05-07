@@ -21,4 +21,6 @@ urlpatterns = [
 
     path('properties/', GetPropertiesView.as_view(), name='getProperties'),
     path('property/<int:id>/', ShowPropertyView.as_view(), name='showProperty'),
+
+    path('notifications/',  NotificationsAPIView.as_view(), name='notifications'),
 ]  + static(settings.STATIC_URL, document_root=settings.STATIC_ROOT)+ static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)
