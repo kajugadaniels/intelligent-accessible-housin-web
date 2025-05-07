@@ -1,3 +1,4 @@
+from users.models import *
 from backend.models import *
 from django.db.models import Q
 from rest_framework import serializers
@@ -204,3 +205,42 @@ class AmenityNestedSerializer(serializers.ModelSerializer):
     class Meta:
         model = Amenity
         fields = ['id', 'name', 'properties']
+
+class RentApplicationSerializer(serializers.ModelSerializer):
+    """
+    Serializer for creating and retrieving RentApplication instances.
+    """
+    user = serializers.PrimaryKeyRelatedField(read_only=True)
+    property = serializers.PrimaryKeyRelatedField(read_only=True)
+
+    class Meta:
+        model = RentApplication
+        fields = [
+            'id',
+            'user',
+            'property',
+            'preferred_move_in_date',
+            'rental_period_months',
+            'id_number_image',
+            'applicant_image',
+            'has_children',
+            'number_of_children',
+            'has_pet',
+            'pet_details',
+            'has_disability',
+            'disability_details',
+            'marital_status',
+            'employment_status',
+            'monthly_income',
+            'references',
+            'message',
+            'status',
+            'created_at',
+        ]
+        read_only_fields = [
+            'id',
+            'user',
+            'property',
+            'status',
+            'created_at',
+        ]
