@@ -23,4 +23,6 @@ urlpatterns = [
     path('property/<int:id>/', ShowPropertyView.as_view(), name='showProperty'),
 
     path('notifications/',  NotificationsAPIView.as_view(), name='notifications'),
+
+    path('applications/', ApplicationsAPIView.as_view(), name='applications'),
 ]  + static(settings.STATIC_URL, document_root=settings.STATIC_ROOT)+ static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)
