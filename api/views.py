@@ -1,3 +1,4 @@
+from users.models import *
 from backend.models import *
 from api.serializers import *
 from rest_framework import status
@@ -123,6 +124,50 @@ class VerifyTokenView(APIView):
                 "detail": "An unexpected error occurred.",
                 "error": str(e)
             }, status=status.HTTP_500_INTERNAL_SERVER_ERROR)
+
+class DashboardAPIView(APIView):
+    """
+    Retrieve summary metrics for the logged-in user:
+      - application counts by status
+      - contract counts by status/payment
+      - chart data (labels + values)
+    """
+    permission_classes = [IsAuthenticated]
+
+    def get(self, request, *args, **kwargs):
+        user = request.user
+        if user.role != 'User' and not user.is_superuser:
+            return Response(
+                {'detail': 'You are not authorized to view this resource.'},
+                status=status.HTTP_403_FORBIDDEN
+            )
+
+        # Application metrics
+        total_apps       = RentApplication.objects.filter(user=user).count()
+        pending_apps     = RentApplication.objects.filter(user=user, status='Pending').count()
+        accepted_apps    = RentApplication.objects.filter(user=user, status='Accepted').count()
+        rejected_apps    = RentApplication.objects.filter(user=user, status='Rejected').count()
+        moved_out_apps   = RentApplication.objects.filter(user=user, status='Moved Out').count()
+
+        # Contract metrics
+        total_contracts  = Contract.objects.filter(tenant=user).count()
+        active_contracts = Contract.objects.filter(tenant=user, status='Active').count()
+        overdue_contracts= Contract.objects.filter(tenant=user, payment_status='Overdue').count()
+
+        data = {
+            'total_applications': total_apps,
+            'pending_applications': pending_apps,
+            'accepted_applications': accepted_apps,
+            'rejected_applications': rejected_apps,
+            'moved_out_applications': moved_out_apps,
+            'total_contracts': total_contracts,
+            'active_contracts': active_contracts,
+            'overdue_contracts': overdue_contracts,
+            'status_labels': ['Pending', 'Accepted', 'Rejected', 'Moved Out'],
+            'status_data': [pending_apps, accepted_apps, rejected_apps, moved_out_apps],
+        }
+
+        return Response(data, status=status.HTTP_200_OK)
 
 class GetAmenitiesView(APIView):
     """
