@@ -389,3 +389,22 @@ class SendApplicationAPIView(APIView):
             )
 
         return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+
+class ContractsAPIView(APIView):
+    """
+    Retrieve all contracts belonging to the authenticated user.
+    """
+    permission_classes = [IsAuthenticated]
+
+    def get(self, request, *args, **kwargs):
+        user = request.user
+        # Only normal users and superusers may fetch their contracts
+        if user.role != 'User' and not user.is_superuser:
+            return Response(
+                {'detail': 'You are not authorized to view this resource.'},
+                status=status.HTTP_403_FORBIDDEN
+            )
+
+        contracts = Contract.objects.filter(tenant=user).order_by('-created_at')
+        serializer = ContractSerializer(contracts, many=True, context={'request': request})
+        return Response(serializer.data, status=status.HTTP_200_OK)
