@@ -408,3 +408,31 @@ class ContractsAPIView(APIView):
         contracts = Contract.objects.filter(tenant=user).order_by('-created_at')
         serializer = ContractSerializer(contracts, many=True, context={'request': request})
         return Response(serializer.data, status=status.HTTP_200_OK)
+
+class AcceptContractAPIView(APIView):
+    """
+    Accept a pending contract:
+      - Only the tenant who owns the contract may accept it.
+      - Sets status → 'Active', payment_status → 'Paid', and signed_date → now.
+      - Returns the updated contract data.
+    """
+    permission_classes = [IsAuthenticated]
+
+    def post(self, request, contract_id, *args, **kwargs):
+        contract = get_object_or_404(Contract, id=contract_id)
+
+        # Ensure only the tenant may accept their own contract
+        if contract.tenant != request.user:
+            return Response(
+                {'detail': 'You do not have permission to accept this contract.'},
+                status=status.HTTP_403_FORBIDDEN
+            )
+
+        # Update contract fields
+        contract.status = 'Active'
+        contract.payment_status = 'Paid'
+        contract.signed_date = timezone.now()
+        contract.save()
+
+        serializer = ContractSerializer(contract, context={'request': request})
+        return Response(serializer.data, status=status.HTTP_200_OK)
