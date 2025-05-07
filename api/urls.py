@@ -25,4 +25,5 @@ urlpatterns = [
     path('notifications/',  NotificationsAPIView.as_view(), name='notifications'),
 
     path('applications/', ApplicationsAPIView.as_view(), name='applications'),
+    path('property/<int:id>/apply/', SendApplicationAPIView.as_view(), name='sendApplication'),
 ]  + static(settings.STATIC_URL, document_root=settings.STATIC_ROOT)+ static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)
