@@ -251,3 +251,70 @@ class ShowPropertyView(APIView):
         serializer = PropertySerializer(property, context={'request': request})
 
         return Response(serializer.data, status=status.HTTP_200_OK)
+
+class NotificationsAPIView(APIView):
+    """
+    Retrieve the latest notifications for the logged-in user.
+    
+    - For regular users:
+        • new_properties: last 10 properties added
+        • user_applications: last 10 of their rent applications
+        • user_contracts:   last 10 of their contracts
+    - For house providers:
+        • accepted_contracts: last 10 contracts on their properties with status='Accepted'
+    """
+    permission_classes = [IsAuthenticated]
+
+    def get(self, request, *args, **kwargs):
+        user = request.user
+
+        if user.role == 'User' or user.is_superuser:
+            # Regular user notifications
+            new_properties = Property.objects.order_by('-created_at')[:10]
+            user_apps = RentApplication.objects.filter(user=user).order_by('-created_at')[:10]
+            user_contracts = Contract.objects.filter(tenant=user).order_by('-created_at')[:10]
+
+            return Response({
+                "notif_type": "user",
+                "new_properties": PropertySerializer(new_properties, many=True, context={'request': request}).data,
+                "user_applications": [
+                    {
+                        "id": app.id,
+                        "property": app.property.name,
+                        "status": app.status,
+                        "submitted_at": app.created_at
+                    }
+                    for app in user_apps
+                ],
+                "user_contracts": [
+                    {
+                        "id": c.id,
+                        "contract_number": c.contract_number,
+                        "status": c.status,
+                        "payment_status": c.payment_status,
+                        "updated_at": c.updated_at
+                    }
+                    for c in user_contracts
+                ]
+            }, status=status.HTTP_200_OK)
+
+        else:
+            # House provider notifications
+            accepted_contracts = Contract.objects.filter(
+                property__created_by=user,
+                status='Accepted'
+            ).order_by('-updated_at')[:10]
+
+            return Response({
+                "notif_type": "provider",
+                "accepted_contracts": [
+                    {
+                        "id": c.id,
+                        "contract_number": c.contract_number,
+                        "tenant": c.tenant.name,
+                        "status": c.status,
+                        "updated_at": c.updated_at
+                    }
+                    for c in accepted_contracts
+                ]
+            }, status=status.HTTP_200_OK)
