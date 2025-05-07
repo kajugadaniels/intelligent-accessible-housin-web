@@ -349,3 +349,42 @@ class ApplicationsAPIView(APIView):
             })
 
         return Response(data, status=status.HTTP_200_OK)
+
+class SendApplicationAPIView(APIView):
+    """
+    Submit a rent application for a given property.
+    """
+    permission_classes = [IsAuthenticated]
+
+    def post(self, request, id, *args, **kwargs):
+        user = request.user
+        if user.role != 'User' and not user.is_superuser:
+            return Response(
+                {'detail': 'You are not authorized to apply for properties.'},
+                status=status.HTTP_403_FORBIDDEN
+            )
+
+        property_obj = get_object_or_404(Property, id=id)
+
+        existing = RentApplication.objects.filter(user=user, property=property_obj).first()
+        if existing:
+            if existing.status in ['Pending', 'Accepted']:
+                return Response(
+                    {'detail': 'You have already applied for this property.'},
+                    status=status.HTTP_400_BAD_REQUEST
+                )
+            elif existing.status not in ['Rejected', 'Moved Out']:
+                return Response(
+                    {'detail': 'Invalid application status.'},
+                    status=status.HTTP_400_BAD_REQUEST
+                )
+
+        serializer = RentApplicationSerializer(data=request.data)
+        if serializer.is_valid():
+            application = serializer.save(user=user, property=property_obj)
+            return Response(
+                RentApplicationSerializer(application).data,
+                status=status.HTTP_201_CREATED
+            )
+
+        return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
