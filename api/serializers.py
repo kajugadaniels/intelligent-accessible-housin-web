@@ -244,3 +244,31 @@ class RentApplicationSerializer(serializers.ModelSerializer):
             'status',
             'created_at',
         ]
+
+class ContractSerializer(serializers.ModelSerializer):
+    tenant   = serializers.StringRelatedField()
+    agent    = serializers.StringRelatedField()
+    property = serializers.StringRelatedField()
+
+    class Meta:
+        model  = Contract
+        fields = [
+            'id',
+            'contract_number',
+            'start_date',
+            'end_date',
+            'rental_period_months',
+            'rent_amount',
+            'security_deposit',
+            'payment_status',
+            'status',
+            'signed_date',
+            'rent_due_date',
+            'payment_method',
+            'additional_terms',
+            'tenant',
+            'agent',
+            'property',
+            'created_at',
+            'updated_at',
+        ]
