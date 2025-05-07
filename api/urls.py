@@ -28,4 +28,5 @@ urlpatterns = [
     path('property/<int:id>/apply/', SendApplicationAPIView.as_view(), name='sendApplication'),
 
     path('contracts/', ContractsAPIView.as_view(), name='getContracts'),
+    path('contracts/<int:contract_id>/accept/', AcceptContractAPIView.as_view(), name='acceptContract'),
 ]  + static(settings.STATIC_URL, document_root=settings.STATIC_ROOT)+ static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)
