@@ -194,11 +194,7 @@ SIMPLE_JWT = {
     'LEEWAY': 0,
 }
 
-CSRF_TRUSTED_ORIGINS = [
-    'http://localhost:5173',
-    'http://localhost:8081/',
-    'https://*.127.0.0.1'
-]
+CSRF_TRUSTED_ORIGINS = True
 
 CORS_ALLOW_ALL_ORIGINS = True
 
