@@ -1,6 +1,7 @@
 from users.forms import *
 from backend.models import *
-from django.db.models import Q
+from django.db.models import Q, IntegerField
+from django.db.models.functions import Cast
 from django.urls import reverse
 from django.contrib import messages
 from django.core.exceptions import PermissionDenied
