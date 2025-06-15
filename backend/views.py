@@ -5,11 +5,12 @@ from backend.models import *
 from django.urls import reverse
 from django.db.models import Count
 from django.contrib import messages
-from django.http import JsonResponse
 from django.core.exceptions import PermissionDenied
 from django.views.decorators.csrf import csrf_exempt
 from django.utils.translation import gettext_lazy as _
+from .utils.pdf_reports import generate_application_pdf
 from django.contrib.auth.decorators import login_required
+from django.http import FileResponse, Http404, JsonResponse
 from django.shortcuts import render, redirect, get_object_or_404
 from django.contrib.auth import authenticate, login as auth_login, logout, update_session_auth_hash
 

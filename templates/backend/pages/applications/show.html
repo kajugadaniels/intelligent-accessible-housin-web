@@ -20,6 +20,11 @@
 					<i class="fa fa-arrow-left"></i> Back to Applications
 				</a>
 			{% endif %}
+			{% if request.user.role == 'Admin' or application.property.created_by == request.user or application.user == request.user %}
+				<a href="{% url 'backend:download_application_report' id=application.id %}" class="btn btn-info mb-3">
+					<i class="fa fa-download"></i> Download Application Report (PDF)
+				</a>
+			{% endif %}
 		</div>
 	</div>
 	<div class="row">
