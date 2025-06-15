@@ -38,6 +38,7 @@ urlpatterns = [
 
     path('rent-applications/', getRentApplications, name="getRentApplications"),
     path('application/<int:id>/', showApplication, name="showApplication"),
+    path('application/<int:id>/download-report/', download_application_report, name='download_application_report'),
     path('application/status/update/<int:id>/', updateApplicationStatus, name="updateApplicationStatus"),
 
     path('contracts/', getContracts, name='getContracts'),
