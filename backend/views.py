@@ -771,6 +771,21 @@ def showContract(request, id):
     return render(request, 'backend/pages/contracts/show.html', context)
 
 @login_required
+def download_contract_report(request, id):
+    contract = get_object_or_404(Contract, id=id)
+
+    # Basic permission check — adjust as needed for your logic
+    if not (request.user.role == 'Admin' or contract.agent == request.user or contract.tenant == request.user):
+        raise PermissionDenied("You do not have permission to download this contract report.")
+
+    try:
+        pdf_buffer = generate_contract_pdf(contract)
+        filename = f"contract_report_{contract.contract_number}.pdf"
+        return FileResponse(pdf_buffer, as_attachment=True, filename=filename)
+    except Exception as e:
+        raise Http404(f"Error generating contract report: {str(e)}")
+
+@login_required
 def getNotifications(request):
     # Notifications page: allowed only for House Providers.
     if request.user.role != 'House Provider':
