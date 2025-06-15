@@ -63,3 +63,47 @@ def generate_application_pdf(application):
     c.save()
     buffer.seek(0)
     return buffer
+
+def generate_contract_pdf(contract):
+    from reportlab.lib.pagesizes import letter
+    from io import BytesIO
+    from reportlab.pdfgen import canvas
+
+    buffer = BytesIO()
+    c = canvas.Canvas(buffer, pagesize=letter)
+    width, height = letter
+
+    margin = 50
+    y = height - margin
+
+    def draw_text(text, font_size=12, offset=15, bold=False):
+        nonlocal y
+        if bold:
+            c.setFont("Helvetica-Bold", font_size)
+        else:
+            c.setFont("Helvetica", font_size)
+        c.drawString(margin, y, text)
+        y -= offset
+
+    # Title
+    draw_text(f"Contract Report - #{contract.contract_number}", font_size=16, offset=30, bold=True)
+
+    # Contract Details
+    draw_text("Contract Details:", font_size=14, offset=20, bold=True)
+    draw_text(f"Tenant: {contract.tenant.name}")
+    draw_text(f"Agent: {contract.agent.name}")
+    draw_text(f"Property: {contract.property.name}")
+    draw_text(f"Start Date: {contract.start_date}")
+    draw_text(f"End Date: {contract.end_date}")
+    draw_text(f"Rent Amount: ${contract.rent_amount}")
+    draw_text(f"Status: {contract.status}")
+
+    if contract.additional_terms:
+        draw_text("Additional Terms:", offset=20, bold=True)
+        for line in contract.additional_terms.splitlines():
+            draw_text(f"  {line}", offset=12)
+
+    c.showPage()
+    c.save()
+    buffer.seek(0)
+    return buffer
