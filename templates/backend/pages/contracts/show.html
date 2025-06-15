@@ -1,6 +1,12 @@
 {% extends 'backend/layouts/app.html' %}
 {% block content %}
 <div class="container-fluid">
+    {% if user.role == 'Admin' or contract.agent == user or contract.tenant == user %}
+        <a href="{% url 'backend:download_contract_report' id=contract.id %}" class="btn btn-info mb-3">
+            <i class="fa fa-download"></i> Download Contract Report (PDF)
+        </a>
+    {% endif %}
+
     <h4>Contract #{{ contract.contract_number }}</h4>
     <table class="table">
         <tr><th>Tenant</th><td>{{ contract.tenant.name }}</td></tr>

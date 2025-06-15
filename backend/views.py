@@ -3,12 +3,12 @@ from users.models import *
 from backend.forms import *
 from backend.models import *
 from django.urls import reverse
+from .utils.pdf_reports import *
 from django.db.models import Count
 from django.contrib import messages
 from django.core.exceptions import PermissionDenied
 from django.views.decorators.csrf import csrf_exempt
 from django.utils.translation import gettext_lazy as _
-from .utils.pdf_reports import generate_application_pdf
 from django.contrib.auth.decorators import login_required
 from django.http import FileResponse, Http404, JsonResponse
 from django.shortcuts import render, redirect, get_object_or_404
