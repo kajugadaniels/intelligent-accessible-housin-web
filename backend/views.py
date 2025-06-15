@@ -623,6 +623,21 @@ def showApplication(request, id):
     return render(request, 'backend/pages/applications/show.html', context)
 
 @login_required
+def download_application_report(request, id):
+    application = get_object_or_404(RentApplication, id=id)
+
+    # Permission check - must be same as in showApplication
+    if not (request.user.role == 'Admin' or application.property.created_by == request.user or application.user == request.user):
+        raise PermissionDenied("You do not have permission to download this report.")
+
+    try:
+        pdf_buffer = generate_application_pdf(application)
+        filename = f"application_report_{application.id}.pdf"
+        return FileResponse(pdf_buffer, as_attachment=True, filename=filename)
+    except Exception as e:
+        raise Http404(f"Error generating report: {str(e)}")
+
+@login_required
 def updateApplicationStatus(request, id):
     """
     View to update rent application status.
