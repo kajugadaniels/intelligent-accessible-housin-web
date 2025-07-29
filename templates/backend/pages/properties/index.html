@@ -10,6 +10,12 @@
                 <div class="list-product-header">
                     <div class="d-flex justify-content-between">
                         <h4>Filtered Properties</h4>
+                        {% if user.role == 'House Provider' %}
+                        <a class="btn btn-primary" href="{% url 'backend:addProperty' %}">
+                            <i class="fa fa-plus"></i> 
+                            Add Property
+                        </a>
+                        {% endif %}
                     </div>
                 </div>
             </div>
