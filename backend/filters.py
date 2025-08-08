@@ -1,5 +1,6 @@
 import django_filters
 from django import forms
+from users.models import *
 from backend.models import *
 
 class PropertyFilter(django_filters.FilterSet):
@@ -21,3 +22,28 @@ class PropertyFilter(django_filters.FilterSet):
         model = Property
         # You can extend these later (city, type, category, etc.)
         fields = ["start_date", "end_date"]
+
+class RentApplicationFilter(django_filters.FilterSet):
+    start_date = django_filters.DateFilter(
+        field_name="created_at__date",
+        lookup_expr="gte",
+        label="From",
+        widget=forms.DateInput(attrs={"type": "date", "class": "form-control"})
+    )
+    end_date = django_filters.DateFilter(
+        field_name="created_at__date",
+        lookup_expr="lte",
+        label="To",
+        widget=forms.DateInput(attrs={"type": "date", "class": "form-control"})
+    )
+    status = django_filters.ChoiceFilter(
+        field_name="status",
+        label="Application Status",
+        choices=[("Pending","Pending"),("Accepted","Accepted"),("Rejected","Rejected"),("Moved Out","Moved Out")],
+        empty_label="All",
+        widget=forms.Select(attrs={"class":"form-select"})
+    )
+
+    class Meta:
+        model = RentApplication
+        fields = ["start_date", "end_date", "status"]
