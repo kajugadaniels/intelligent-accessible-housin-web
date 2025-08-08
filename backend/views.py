@@ -619,20 +619,24 @@ def showApplication(request, id):
     - Admin and House Provider can view details of applications.
     - Only Admin or House Providers who created the property can update the application status.
     """
-    application = get_object_or_404(RentApplication, id=id)
+    application = get_object_or_404(
+        RentApplication.objects
+            .select_related('user', 'property')        # follow FK
+            .select_related('contract')                # reverse O2O (Contract.rent_application -> related_name='contract')
+            .prefetch_related('property__images'),     # gallery images
+        id=id
+    )
 
     # Check if the user is authorized to view the application
     if request.user.role == 'Admin' or application.property.created_by == request.user or application.user == request.user:
         if request.method == 'POST':
-            # Handle status change based on the form submission
             new_status = request.POST.get('status')
-            if new_status in ['Accepted', 'Rejected', 'Moved Out']:
+            if new_status in ['Accepted', 'Rejected', 'Moved Out', 'Pending']:
                 application.status = new_status
                 application.save()
                 messages.success(request, _("The application status has been updated to '%s' successfully.") % new_status)
             else:
                 messages.error(request, _("Invalid status update."))
-
             return redirect('backend:showApplication', id=application.id)
     else:
         raise PermissionDenied(_("You do not have permission to view or update this application."))
