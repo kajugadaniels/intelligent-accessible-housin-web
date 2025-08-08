@@ -39,6 +39,7 @@ INSTALLED_APPS = [
     "whitenoise.runserver_nostatic",
     'drf_yasg',
     'rest_framework_simplejwt.token_blacklist',
+    'django_filters',
 
     #Custom apps
     'backend',
