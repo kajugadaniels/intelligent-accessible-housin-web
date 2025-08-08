@@ -590,20 +590,24 @@ def deleteProperty(request, id):
 def getRentApplications(request):
     """
     View to get rent applications.
-    - Admin can see all applications.
-    - House Providers can only see applications for properties they created.
+    - Admin & superusers: see all applications.
+    - House Providers: only applications for properties they created.
     """
-    if request.user.role == 'Admin':
-        # Admin can see all rent applications
-        applications = RentApplication.objects.all().order_by('-created_at')
-    elif request.user.role == 'House Provider':
-        # House Provider can only see applications for properties they created
-        applications = RentApplication.objects.filter(property__created_by=request.user).order_by('-created_at')
+    user = request.user
+
+    if user.is_superuser or user.role == 'Admin':
+        base_qs = RentApplication.objects.all()
+    elif user.role == 'House Provider':
+        base_qs = RentApplication.objects.filter(property__created_by=user)
     else:
         raise PermissionDenied(_("You are not authorized to access the applications page."))
 
+    app_filter = RentApplicationFilter(request.GET or None, queryset=base_qs.order_by('-created_at'))
+    applications = app_filter.qs
+
     context = {
-        'applications': applications
+        'applications': applications,
+        'filter': app_filter,
     }
 
     return render(request, 'backend/pages/applications/index.html', context)
