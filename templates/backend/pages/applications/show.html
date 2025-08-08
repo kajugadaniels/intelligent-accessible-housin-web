@@ -4,208 +4,201 @@
 {% block content %}
 
 <div class="container-fluid">
-	<div class="list-product-header mb-4">
-		<div class="d-flex justify-content-between align-items-center">
-			<h4>Application Details</h4>
-			{% if user.role == 'Admin' %}
-				<a class="btn btn-secondary" href="{% url 'backend:getRentApplications' %}">
-					<i class="fa fa-arrow-left"></i> Back to Applications
-				</a>
-			{% elif user.role == 'House Provider' %}
-				<a class="btn btn-secondary" href="{% url 'backend:getRentApplications' %}">
-					<i class="fa fa-arrow-left"></i> Back to Applications
-				</a>
-			{% elif user.role == 'User' %}
-				<a class="btn btn-secondary" href="{% url 'users:getApplications' %}">
-					<i class="fa fa-arrow-left"></i> Back to Applications
-				</a>
-			{% endif %}
-			{% if request.user.role == 'Admin' or application.property.created_by == request.user or application.user == request.user %}
-				<a href="{% url 'backend:download_application_report' id=application.id %}" class="btn btn-info mb-3">
-					<i class="fa fa-download"></i> Download Application Report (PDF)
-				</a>
-			{% endif %}
-		</div>
-	</div>
-	<div class="row">
-		<div class="col-md-6">
-			<div class="card">
-				<div class="card-body">
-					<div class="product-slider owl-carousel owl-theme" id="sync1">
-						{% if application.property.images.all %}
-							{% for image in application.property.images.all %}
-								<div class="item">
-									<img src="{{ image.image.url }}" alt="">
-								</div>
-							{% endfor %}
-						{% else %}
-								<img src="https://salonlfc.com/wp-content/uploads/2018/01/image-not-found-scaled.png" alt="{{ application.property.name }}">
-						{% endif %}
-					</div>
-					<div class="owl-carousel owl-theme" id="sync2">
-						{% if application.property.images.all %}
-							{% for image in application.property.images.all %}
-								<div class="item">
-									<img src="{{ image.image.url }}" alt="">
-								</div>
-							{% endfor %}
-						{% else %}
-								<img src="https://salonlfc.com/wp-content/uploads/2018/01/image-not-found-scaled.png" alt="{{ application.property.name }}">
-						{% endif %}
-					</div>
-				</div>
-			</div>
-		</div>
-		<div class="col-md-6">
-			<div class="card mb-4">
-				<div class="card-header">
-					<h6>Applicant Information</h6>
-				</div>
-				<div class="card-body">
-					<div class="row mb-3">
-						{% if application.id_number_image %}
-						<div class="col-sm-6 text-center">
-							<label class="form-label">ID Document</label>
-							<img src="{{ application.id_number_image.url }}" class="img-fluid rounded" alt="ID Document">
-						</div>
-						{% endif %}
-						{% if application.applicant_image %}
-						<div class="col-sm-6 text-center">
-							<label class="form-label">Applicant Photo</label>
-							<img src="{{ application.applicant_image.url }}" class="img-fluid rounded-circle" style="width:120px" alt="Applicant Photo">
-						</div>
-						{% endif %}
-					</div>
-					<table class="table">
-						<tbody>
-							<tr>
-								<th>Marital Status</th>
-								<td>{{ application.marital_status }}</td>
-							</tr>
-							<tr>
-								<th>Employment Status</th>
-								<td>{{ application.employment_status }}</td>
-							</tr>
-							{% if application.monthly_income %}
-							<tr>
-								<th>Monthly Income</th>
-								<td>${{ application.monthly_income }}</td>
-							</tr>
-							{% endif %}
-							<tr>
-								<th>Has Children?</th>
-								<td>{{ application.has_children|yesno:"Yes,No" }}</td>
-							</tr>
-							{% if application.has_children %}
-							<tr>
-								<th>Number of Children</th>
-								<td>{{ application.number_of_children }}</td>
-							</tr>
-							{% endif %}
-							<tr>
-								<th>Has Pet?</th>
-								<td>{{ application.has_pet|yesno:"Yes,No" }}</td>
-							</tr>
-							{% if application.has_pet %}
-							<tr>
-								<th>Pet Details</th>
-								<td>{{ application.pet_details }}</td>
-							</tr>
-							{% endif %}
-							<tr>
-								<th>Has Disability?</th>
-								<td>{{ application.has_disability|yesno:"Yes,No" }}</td>
-							</tr>
-							{% if application.has_disability %}
-							<tr>
-								<th>Disability Details</th>
-								<td>{{ application.disability_details }}</td>
-							</tr>
-							{% endif %}
-							{% if application.references %}
-							<tr>
-								<th>References</th>
-								<td>{{ application.references|linebreaksbr }}</td>
-							</tr>
-							{% endif %}
-							{% if application.message %}
-							<tr>
-								<th>Additional Message</th>
-								<td>{{ application.message|linebreaksbr }}</td>
-							</tr>
-							{% endif %}
-						</tbody>
-					</table>
-				</div>
-			</div>
-		</div>
-		<div class="col-md-6">
-			<div class="card mb-4">
-				<div class="card-body">
-					<h5 class="card-title">{{ application.property.name }}</h5>
-					<p class="text-muted">{{ application.property.address }}</p>
-					<table class="table table-borderless">
-						<tbody>
-							<tr>
-								<th>Applicant Name:</th>
-								<td>{{ application.user.name }}</td>
-							</tr>
-							<tr>
-								<th>Email:</th>
-								<td>{{ application.user.email }}</td>
-							</tr>
-							<tr>
-								<th>Phone:</th>
-								<td>{{ application.user.phone_number }}</td>
-							</tr>
-							<tr>
-								<th>Status:</th>
-								<td>
-									<span class="badge 
-										{% if application.status == 'Accepted' %}badge-success
-										{% elif application.status == 'Rejected' %}badge-danger
-										{% elif application.status == 'Moved Out' %}badge-warning
-										{% else %}badge-secondary{% endif %}">
-									{{ application.status }}
-									</span>
-								</td>
-							</tr>
-							<tr>
-								<th>Preferred Move-In:</th>
-								<td>{{ application.preferred_move_in_date }}</td>
-							</tr>
-							<tr>
-								<th>Rental Period:</th>
-								<td>{{ application.rental_period_months }} month(s)</td>
-							</tr>
-						</tbody>
-					</table>
-				</div>
-			</div>
-		</div>
-		<div class="col-md-6">
-			<!-- Status Update Form (Admin / Owner) -->
-			{% if request.user.role == 'Admin' or application.property.created_by == request.user %}
-				<div class="card">
-					<div class="card-body">
-						<form method="post">
-							{% csrf_token %}
-							<div class="mb-3">
-								<label for="status" class="form-label">Update Application Status</label>
-								<select name="status" id="status" class="form-select">
-								<option value="Pending" {% if application.status == 'Pending' %}selected{% endif %}>Pending</option>
-								<option value="Accepted" {% if application.status == 'Accepted' %}selected{% endif %}>Accepted</option>
-								<option value="Rejected" {% if application.status == 'Rejected' %}selected{% endif %}>Rejected</option>
-								<option value="Moved Out" {% if application.status == 'Moved Out' %}selected{% endif %}>Moved Out</option>
-								</select>
-							</div>
-							<button type="submit" class="btn btn-primary">Save Status</button>
-						</form>
-					</div>
-				</div>
-			{% endif %}
-		</div>
-	</div>
+  <div class="list-product-header mb-4">
+    <div class="d-flex justify-content-between align-items-center flex-wrap gap-2">
+      <div class="d-flex align-items-center gap-3">
+        <h4 class="m-0">Application Details</h4>
+        <span class="badge 
+          {% if application.status == 'Accepted' %}badge-success
+          {% elif application.status == 'Rejected' %}badge-danger
+          {% elif application.status == 'Moved Out' %}badge-warning
+          {% else %}badge-secondary{% endif %}">
+          {{ application.status }}
+        </span>
+      </div>
+
+      <div class="d-flex gap-2">
+        {% if user.role in 'Admin,House Provider,User' %}
+          {% if request.user.role == 'Admin' or application.property.created_by == request.user or application.user == request.user %}
+            <a href="{% url 'backend:download_application_report' id=application.id %}" class="btn btn-info">
+              <i class="fa fa-download"></i> Download Application Report (PDF)
+            </a>
+          {% endif %}
+        {% endif %}
+
+        {% if user.role == 'User' %}
+          <a class="btn btn-secondary" href="{% url 'users:getApplications' %}">
+            <i class="fa fa-arrow-left"></i> Back to Applications
+          </a>
+        {% else %}
+          <a class="btn btn-secondary" href="{% url 'backend:getRentApplications' %}">
+            <i class="fa fa-arrow-left"></i> Back to Applications
+          </a>
+        {% endif %}
+      </div>
+    </div>
+  </div>
+
+  <div class="row g-4">
+    <!-- Property Gallery -->
+    <div class="col-md-6">
+      <div class="card">
+        <div class="card-body">
+          <div class="product-slider owl-carousel owl-theme" id="sync1">
+            {% if application.property.images.all|length %}
+              {% for image in application.property.images.all %}
+                <div class="item">
+                  <img src="{{ image.image.url }}" alt="{{ application.property.name|default:'Property image' }}">
+                </div>
+              {% endfor %}
+            {% else %}
+              <img src="https://salonlfc.com/wp-content/uploads/2018/01/image-not-found-scaled.png" alt="{{ application.property.name }}">
+            {% endif %}
+          </div>
+
+          <div class="owl-carousel owl-theme mt-2" id="sync2">
+            {% if application.property.images.all|length %}
+              {% for image in application.property.images.all %}
+                <div class="item">
+                  <img src="{{ image.image.url }}" alt="{{ application.property.name|default:'Property image' }}">
+                </div>
+              {% endfor %}
+            {% else %}
+              <img src="https://salonlfc.com/wp-content/uploads/2018/01/image-not-found-scaled.png" alt="{{ application.property.name }}">
+            {% endif %}
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Applicant & Application Details -->
+    <div class="col-md-6">
+      <!-- Applicant media -->
+      <div class="card mb-4">
+        <div class="card-header"><h6 class="m-0">Applicant Files</h6></div>
+        <div class="card-body">
+          <div class="row g-3">
+            {% if application.id_number_image %}
+              <div class="col-sm-6 text-center">
+                <label class="form-label d-block">ID Document</label>
+                <img src="{{ application.id_number_image.url }}" class="img-fluid rounded" alt="ID Document">
+              </div>
+            {% endif %}
+            {% if application.applicant_image %}
+              <div class="col-sm-6 text-center">
+                <label class="form-label d-block">Applicant Photo</label>
+                <img src="{{ application.applicant_image.url }}" class="img-fluid rounded-circle" style="width:120px" alt="Applicant Photo">
+              </div>
+            {% endif %}
+            {% if not application.id_number_image and not application.applicant_image %}
+              <div class="col-12 text-muted">No applicant files uploaded.</div>
+            {% endif %}
+          </div>
+        </div>
+      </div>
+
+      <!-- Applicant account info -->
+      <div class="card mb-4">
+        <div class="card-header"><h6 class="m-0">Applicant Account</h6></div>
+        <div class="card-body">
+          <table class="table">
+            <tbody>
+              <tr><th>Name</th><td>{{ application.user.name|default:"—" }}</td></tr>
+              <tr><th>Email</th><td>{{ application.user.email|default:"—" }}</td></tr>
+              <tr><th>Phone</th><td>{{ application.user.phone_number|default:"—" }}</td></tr>
+              <tr><th>Submitted</th><td>{{ application.created_at|date:"Y-m-d H:i" }}</td></tr>
+            </tbody>
+          </table>
+        </div>
+      </div>
+
+      <!-- Property info quick view -->
+      <div class="card mb-4">
+        <div class="card-header"><h6 class="m-0">Property</h6></div>
+        <div class="card-body">
+          <h5 class="card-title mb-1">{{ application.property.name|default:"—" }}</h5>
+          <p class="text-muted mb-3">{{ application.property.address|default:"—" }}</p>
+          <table class="table table-borderless">
+            <tbody>
+              <tr><th>City</th><td>{{ application.property.city|default:"—" }}</td></tr>
+              <tr><th>Type</th><td>{{ application.property.type|default:"—" }}</td></tr>
+              <tr><th>Category</th><td>{{ application.property.category.name|default:"—" }}</td></tr>
+              <tr><th>Price (RWF)</th><td>{{ application.property.price_rwf|intcomma|default:"—" }}</td></tr>
+            </tbody>
+          </table>
+        </div>
+      </div>
+    </div>
+
+    <!-- Full Application details (ALL fields) -->
+    <div class="col-md-6">
+      <div class="card mb-4">
+        <div class="card-header"><h6 class="m-0">Application Details</h6></div>
+        <div class="card-body">
+          <table class="table">
+            <tbody>
+              <tr><th>Preferred Move-In</th><td>{{ application.preferred_move_in_date|date:"Y-m-d"|default:"—" }}</td></tr>
+              <tr><th>Rental Period</th><td>{{ application.rental_period_months|default:"—" }} month(s)</td></tr>
+              <tr><th>Marital Status</th><td>{{ application.marital_status|default:"—" }}</td></tr>
+              <tr><th>Employment Status</th><td>{{ application.employment_status|default:"—" }}</td></tr>
+              <tr>
+                <th>Monthly Income</th>
+                <td>
+                  {% if application.monthly_income %}
+                    ${{ application.monthly_income|floatformat:2 }}
+                  {% else %}
+                    —
+                  {% endif %}
+                </td>
+              </tr>
+              <tr><th>Has Children?</th><td>{{ application.has_children|yesno:"Yes,No" }}</td></tr>
+              {% if application.has_children %}
+                <tr><th>Number of Children</th><td>{{ application.number_of_children|default:"—" }}</td></tr>
+              {% endif %}
+              <tr><th>Has Pet?</th><td>{{ application.has_pet|yesno:"Yes,No" }}</td></tr>
+              {% if application.has_pet %}
+                <tr><th>Pet Details</th><td>{{ application.pet_details|default:"—" }}</td></tr>
+              {% endif %}
+              <tr><th>Has Disability?</th><td>{{ application.has_disability|yesno:"Yes,No" }}</td></tr>
+              {% if application.has_disability %}
+                <tr><th>Disability Details</th><td>{{ application.disability_details|default:"—" }}</td></tr>
+              {% endif %}
+              {% if application.references %}
+                <tr><th>References</th><td>{{ application.references|linebreaksbr }}</td></tr>
+              {% endif %}
+              {% if application.message %}
+                <tr><th>Additional Message</th><td>{{ application.message|linebreaksbr }}</td></tr>
+              {% endif %}
+            </tbody>
+          </table>
+        </div>
+      </div>
+    </div>
+
+    <!-- Status Update (Admin / Owner) -->
+    <div class="col-md-6">
+      {% if request.user.role == 'Admin' or application.property.created_by == request.user %}
+        <div class="card mb-4">
+          <div class="card-header"><h6 class="m-0">Update Application Status</h6></div>
+          <div class="card-body">
+            <form method="post">
+              {% csrf_token %}
+              <div class="mb-3">
+                <label for="status" class="form-label">Status</label>
+                <select name="status" id="status" class="form-select">
+                  <option value="Pending"  {% if application.status == 'Pending' %}selected{% endif %}>Pending</option>
+                  <option value="Accepted" {% if application.status == 'Accepted' %}selected{% endif %}>Accepted</option>
+                  <option value="Rejected" {% if application.status == 'Rejected' %}selected{% endif %}>Rejected</option>
+                  <option value="Moved Out" {% if application.status == 'Moved Out' %}selected{% endif %}>Moved Out</option>
+                </select>
+              </div>
+              <button type="submit" class="btn btn-primary">Save Status</button>
+            </form>
+          </div>
+        </div>
+      {% endif %}
+    </div>
+  </div>
 </div>
 
 {% endblock %}
