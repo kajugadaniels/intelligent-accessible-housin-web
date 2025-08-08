@@ -9,11 +9,61 @@
             <div class="card"> 
                 <div class="card-body">
                     <div class="list-product-header">
-                        <div class="d-flex justify-content-between">
-                            <h4>Contacts</h4>
+                        <div class="d-flex justify-content-between align-items-center gap-2">
+                            <h4 class="m-0">My Contracts</h4>
+
+                            <!-- Export controls -->
+                            <div class="input-group" style="max-width: 320px;">
+                                <select id="export-format" class="form-select">
+                                    <option value="csv">Export CSV</option>
+                                    <option value="pdf">Export PDF</option>
+                                </select>
+                                <button class="btn btn-outline-primary" id="export-btn" type="button">
+                                    <i class="fa fa-download"></i> Download
+                                </button>
+                            </div>
                         </div>
                     </div>
+
+                    <!-- Filters (django-filters) -->
+                    <form method="get" class="card card-body shadow-sm mt-3">
+                        <div class="row g-3 align-items-end">
+                            <div class="col-md-3">
+                                <label class="form-label">{{ filter.form.start_date.label }}</label>
+                                {{ filter.form.start_date }}
+                            </div>
+                            <div class="col-md-3">
+                                <label class="form-label">{{ filter.form.end_date.label }}</label>
+                                {{ filter.form.end_date }}
+                            </div>
+                            <div class="col-md-3">
+                                <label class="form-label">{{ filter.form.status.label }}</label>
+                                {{ filter.form.status }}
+                            </div>
+                            <div class="col-md-3">
+                                <label class="form-label">{{ filter.form.payment_status.label }}</label>
+                                {{ filter.form.payment_status }}
+                            </div>
+
+                            <div class="col-12 d-flex gap-2 mt-2">
+                                <button type="submit" class="btn btn-primary">
+                                    <i class="fa fa-filter"></i> Apply
+                                </button>
+                                <a href="{% url 'users:getContracts' %}" class="btn btn-light border">
+                                    <i class="fa fa-undo"></i> Reset
+                                </a>
+                                <span class="ms-auto text-muted small align-self-center">
+                                    Showing <strong>{{ contracts|length }}</strong> result{{ contracts|length|pluralize }}
+                                    {% if request.GET.start_date or request.GET.end_date or request.GET.status or request.GET.payment_status %}
+                                        (filtered)
+                                    {% endif %}
+                                </span>
+                            </div>
+                        </div>
+                    </form>
+
                     <hr>
+
                     <div class="list-product">
                         <table class="table" id="project-status">
                             <thead> 
@@ -24,52 +74,167 @@
                                         </div>
                                     </th>
                                     <th><span class="f-light f-w-600">Contract Number</span></th>
-                                    <th><span class="f-light f-w-600">Tenant</span></th>
                                     <th><span class="f-light f-w-600">Property</span></th>
                                     <th><span class="f-light f-w-600">Agent</span></th>
                                     <th><span class="f-light f-w-600">Status</span></th>
+                                    <th><span class="f-light f-w-600">Payment</span></th>
+                                    <th><span class="f-light f-w-600">Created</span></th>
                                     <th><span class="f-light f-w-600">Action</span></th>
                                 </tr>
                             </thead>
-                            <tbody>
+                            <tbody id="contracts-body">
                                 {% for contract in contracts %}
-                                    <tr class="product-removes">
+                                    <tr class="product-removes contract-row"
+                                        data-id="{{ contract.id }}"
+                                        data-number="{{ contract.contract_number|default:'' }}"
+                                        data-property="{{ contract.property.name|default:'' }}"
+                                        data-agent="{{ contract.agent.name|default:'' }}"
+                                        data-status="{{ contract.status|default:'' }}"
+                                        data-payment="{{ contract.payment_status|default:'' }}"
+                                        data-created="{{ contract.created_at|date:'Y-m-d' }}">
                                         <td>
                                             <div class="form-check"> 
                                                 <input class="form-check-input checkbox-primary" type="checkbox">
                                             </div>
                                         </td>
+                                        <td><p class="f-light">{{ contract.contract_number }}</p></td>
+                                        <td><p class="f-light">{{ contract.property.name }}</p></td>
+                                        <td><p class="f-light">{{ contract.agent.name }}</p></td>
+                                        <td><p class="f-light">{{ contract.status }}</p></td>
+                                        <td><p class="f-light">{{ contract.payment_status }}</p></td>
+                                        <td><p class="f-light">{{ contract.created_at|date:"Y-m-d" }}</p></td>
                                         <td>
-                                            <p class="f-light">{{ contract.contract_number }}</p>
-                                        </td>
-                                        <td>
-                                            <p class="f-light">{{ contract.tenant.name }}</p>
-                                        </td>
-                                        <td>
-                                            <p class="f-light">{{ contract.property.name }}</p>
-                                        </td>
-                                        <td>
-                                            <p class="f-light">{{ contract.agent.name }}</p>
-                                        </td>
-                                        <td>
-                                            <p class="f-light">{{ contract.status }}</p>
-                                        </td>
-                                        <td>
-                                            <div class="product-action">
+                                            <div class="product-action d-flex flex-wrap gap-2">
                                                 <a href="{% url 'backend:showContract' contract.id %}" class="btn btn-primary">
                                                     View
                                                 </a>
+                                                {% if contract.status != 'Active' %}
+                                                    <a href="{% url 'users:acceptContract' contract.id %}" class="btn btn-success">
+                                                        Accept & Pay
+                                                    </a>
+                                                {% endif %}
                                             </div>
                                         </td>
+                                    </tr>
+                                {% empty %}
+                                    <tr>
+                                        <td colspan="8" class="text-center text-muted py-4">No contracts found.</td>
                                     </tr>
                                 {% endfor %}
                             </tbody>
                         </table>
                     </div>
+
                 </div>
             </div>
         </div>
     </div>
 </div>
+
+<!-- jsPDF (for client-side PDF) -->
+<script src="https://cdn.jsdelivr.net/npm/jspdf@2.5.1/dist/jspdf.umd.min.js" defer></script>
+<script src="https://cdn.jsdelivr.net/npm/jspdf-autotable@3.8.2/dist/jspdf.plugin.autotable.min.js" defer></script>
+
+<script>
+document.addEventListener('DOMContentLoaded', function () {
+    const exportBtn = document.getElementById('export-btn');
+    const fmtSelect = document.getElementById('export-format');
+
+    function collectData() {
+        const rows = [];
+        document.querySelectorAll('#contracts-body .contract-row').forEach(tr => {
+            rows.push({
+                ID: tr.dataset.id || '',
+                ContractNumber: tr.dataset.number || '',
+                Property: tr.dataset.property || '',
+                Agent: tr.dataset.agent || '',
+                Status: tr.dataset.status || '',
+                PaymentStatus: tr.dataset.payment || '',
+                Created: tr.dataset.created || ''
+            });
+        });
+        return rows;
+    }
+
+    function downloadBlob(filename, mime, content) {
+        const blob = new Blob([content], { type: mime });
+        const url = URL.createObjectURL(blob);
+        const a = document.createElement('a');
+        a.href = url; a.download = filename;
+        document.body.appendChild(a);
+        a.click();
+        a.remove();
+        URL.revokeObjectURL(url);
+    }
+
+    function toCSV(rows) {
+        if (!rows.length) return '';
+        const headers = Object.keys(rows[0]);
+        const escape = v => `"${String(v ?? '').replace(/"/g, '""')}"`;
+        const lines = [
+            headers.join(','),
+            ...rows.map(r => headers.map(h => escape(r[h])).join(','))
+        ];
+        return lines.join('\n');
+    }
+
+    function exportCSV() {
+        const data = collectData();
+        const params = new URLSearchParams(window.location.search);
+        const start = params.get('start_date') || '';
+        const end = params.get('end_date') || '';
+        const status = params.get('status') || '';
+        const pay = params.get('payment_status') || '';
+        const suffix = `${start ? '_' + start : ''}${end ? '_to_' + end : ''}${status ? '_status-' + status : ''}${pay ? '_pay-' + pay : ''}`;
+        downloadBlob(`my_contracts${suffix}.csv`, 'text/csv;charset=utf-8', toCSV(data));
+    }
+
+    function exportPDF() {
+        const data = collectData();
+        const { jsPDF } = window.jspdf || {};
+        if (!jsPDF || !data.length) {
+            alert('Nothing to export.');
+            return;
+        }
+        const doc = new jsPDF({ orientation: 'landscape', unit: 'pt', format: 'a4' });
+
+        const params = new URLSearchParams(window.location.search);
+        const start = params.get('start_date') || '';
+        const end = params.get('end_date') || '';
+        const status = params.get('status') || '';
+        const pay = params.get('payment_status') || '';
+
+        const titleParts = ['My Contracts'];
+        if (start || end) titleParts.push(`(${start || ''}${end ? (start ? ' to ' : '') + end : ''})`);
+        if (status) titleParts.push(`[${status}]`);
+        if (pay) titleParts.push(`[${pay}]`);
+        const title = titleParts.join(' ');
+
+        doc.setFontSize(14);
+        doc.text(title, 40, 40);
+
+        const head = [["ID","Contract #","Property","Agent","Status","Payment","Created"]];
+        const body = data.map(r => [r.ID, r.ContractNumber, r.Property, r.Agent, r.Status, r.PaymentStatus, r.Created]);
+
+        doc.autoTable({
+            head,
+            body,
+            startY: 60,
+            styles: { fontSize: 9, halign: 'left', valign: 'middle' },
+            headStyles: { fontStyle: 'bold' },
+            margin: { left: 40, right: 40 }
+        });
+
+        const suffix = `${start ? '_' + start : ''}${end ? '_to_' + end : ''}${status ? '_status-' + status : ''}${pay ? '_pay-' + pay : ''}`;
+        doc.save(`my_contracts_report${suffix}.pdf`);
+    }
+
+    exportBtn?.addEventListener('click', () => {
+        const fmt = fmtSelect?.value || 'csv';
+        if (fmt === 'pdf') exportPDF();
+        else exportCSV();
+    });
+});
+</script>
 
 {% endblock %}
