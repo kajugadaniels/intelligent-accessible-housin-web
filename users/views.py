@@ -1,9 +1,10 @@
 from users.forms import *
 from backend.models import *
-from django.db.models import Q, IntegerField
-from django.db.models.functions import Cast
+from backend.filters import *
 from django.urls import reverse
 from django.contrib import messages
+from django.db.models import IntegerField
+from django.db.models.functions import Cast
 from django.core.exceptions import PermissionDenied
 from django.utils.translation import gettext_lazy as _
 from django.contrib.auth.decorators import login_required
@@ -234,12 +235,20 @@ def notifications(request):
 
 @login_required
 def getApplications(request):
-    applications = RentApplication.objects.filter(user=request.user).order_by('-created_at')
-    
+    """
+    User's own rent applications with date/status filters.
+    """
+    if request.user.role not in ['User'] and not request.user.is_superuser:
+        raise PermissionDenied(_("You are not authorized to view applications."))
+
+    base_qs = RentApplication.objects.filter(user=request.user).order_by('-created_at')
+    app_filter = RentApplicationFilter(request.GET or None, queryset=base_qs)
+    applications = app_filter.qs
+
     context = {
         'applications': applications,
+        'filter': app_filter,
     }
-
     return render(request, 'backend/pages/users/rent-applications/index.html', context)
 
 @login_required
