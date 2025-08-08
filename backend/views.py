@@ -2,6 +2,7 @@ import random
 from users.models import *
 from backend.forms import *
 from backend.models import *
+from backend.filters import *
 from django.urls import reverse
 from .utils.pdf_reports import *
 from django.db.models import Count
@@ -437,21 +438,25 @@ def getProperties(request):
     """
     user = request.user
 
-    # Authorization: only Admin or House Provider (superuser always allowed)
+    # Authorization
     if not (user.is_superuser or user.role in ("Admin", "House Provider")):
         raise PermissionDenied(_("You are not authorized to access the Properties page."))
 
-    # Scope data by role
+    # Base queryset by role
     if user.is_superuser or user.role == "Admin":
-        properties = Property.objects.all().order_by('-created_at')
+        base_qs = Property.objects.all()
     else:  # House Provider
-        properties = Property.objects.filter(created_by=user).order_by('-created_at')
+        base_qs = Property.objects.filter(created_by=user)
+
+    prop_filter = PropertyFilter(request.GET or None, queryset=base_qs.order_by("-created_at"))
+    properties = prop_filter.qs
 
     context = {
-        'properties': properties
+        "properties": properties,
+        "filter": prop_filter,   # expose the filter (for the form)
     }
 
-    return render(request, 'backend/pages/properties/index.html', context)
+    return render(request, "backend/pages/properties/index.html", context)
 
 @login_required
 def addProperty(request):
