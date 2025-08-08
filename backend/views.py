@@ -696,16 +696,28 @@ def updateApplicationStatus(request, id):
 
 @login_required
 def getContracts(request):
-    if request.user.role == 'Admin':
-        contracts = Contract.objects.all()
-    elif request.user.role == 'House Provider':
-        contracts = Contract.objects.filter(property__created_by=request.user)
+    """
+    Contracts listing:
+    - Admins & superusers: see all contracts.
+    - House Providers: see contracts for properties they created.
+    """
+    user = request.user
+
+    if user.is_superuser or user.role == 'Admin':
+        base_qs = Contract.objects.all()
+    elif user.role == 'House Provider':
+        base_qs = Contract.objects.filter(property__created_by=user)
     else:
-        contracts = []
-        messages.error(request, "You are not authorized to view contracts.")
-    
+        # Keep this consistent with other pages
+        from django.core.exceptions import PermissionDenied
+        raise PermissionDenied(_("You are not authorized to view contracts."))
+
+    contract_filter = ContractFilter(request.GET or None, queryset=base_qs.order_by('-created_at'))
+    contracts = contract_filter.qs
+
     context = {
-        'contracts': contracts
+        'contracts': contracts,
+        'filter': contract_filter,
     }
 
     return render(request, 'backend/pages/contracts/index.html', context)
