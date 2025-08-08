@@ -3,91 +3,319 @@
 {% load humanize %}
 {% block content %}
 
+<style>
+  .toolbar .form-control, .toolbar .form-select { min-width: 160px; }
+  .toolbar .btn + .btn, .toolbar .btn + .dropdown, .toolbar .form-control + .form-control { margin-left: .5rem; }
+  .export-menu .dropdown-menu { min-width: 200px; }
+  .muted { color: #6c757d; }
+</style>
+
 <div class="container-fluid product-wrapper">
-    <div class="product-grid">
-        <div class="feature-products">
-            <div class="row">
-                <div class="list-product-header">
-                    <div class="d-flex justify-content-between">
-                        <h4>Filtered Properties</h4>
-                        {% if user.role == 'House Provider' %}
-                        <a class="btn btn-primary" href="{% url 'backend:addProperty' %}">
-                            <i class="fa fa-plus"></i> 
-                            Add Property
-                        </a>
-                        {% endif %}
-                    </div>
-                </div>
+  <div class="product-grid">
+    <div class="feature-products">
+      <div class="row">
+        <div class="list-product-header w-100">
+          <div class="d-flex flex-wrap justify-content-between align-items-center">
+            <h4 class="mb-3 mb-md-0">Filtered Properties</h4>
+
+            <div class="d-flex align-items-center toolbar">
+              <!-- Date Filters -->
+              <input type="date" id="fromDate" class="form-control" aria-label="From date">
+              <input type="date" id="toDate" class="form-control" aria-label="To date">
+
+              <button id="applyFilters" class="btn btn-outline-primary">
+                <i class="fa fa-filter"></i> Filter
+              </button>
+              <button id="resetFilters" class="btn btn-outline-secondary">
+                <i class="fa fa-undo"></i> Reset
+              </button>
+
+              <!-- Export -->
+              <div class="dropdown export-menu">
+                <button class="btn btn-primary dropdown-toggle" type="button" id="exportMenuButton" data-bs-toggle="dropdown" aria-expanded="false">
+                  <i class="fa fa-download"></i> Export
+                </button>
+                <ul class="dropdown-menu dropdown-menu-end" aria-labelledby="exportMenuButton">
+                  <li><a class="dropdown-item" href="#" id="exportCsv"><i class="fa fa-file-excel-o me-2"></i>Download CSV</a></li>
+                  <li><a class="dropdown-item" href="#" id="exportPdf"><i class="fa fa-file-pdf-o me-2"></i>Download PDF</a></li>
+                </ul>
+              </div>
+
+              {% if user.role == 'House Provider' %}
+              <a class="btn btn-success" href="{% url 'backend:addProperty' %}">
+                <i class="fa fa-plus"></i>
+                Add Property
+              </a>
+              {% endif %}
             </div>
+          </div>
+
+          <!-- Results summary -->
+          <div class="mt-2">
+            <span id="resultsSummary" class="muted">Showing {{ properties|length }} properties</span>
+          </div>
         </div>
-        <div class="product-wrapper-grid">
-            <div class="row">
-                {% for property in properties %}
-                    <div class="col-xl-3 col-sm-6 xl-4">
-                        <div class="card">
-                            <div class="product-box">
-                                <div class="product-img">
-                                    <img class="img-fluid" src="{{ property.image.url }}" alt="">
-                                    <div class="product-hover">
-                                        <ul>
-                                            <li>
-                                                <a href="{% url 'backend:showProperty' property.id %}">
-                                                    <i class="icon-eye"></i>
-                                                </a>
-                                            </li>
-                                            {% if user.role == 'House Provider' %}
-                                                <li>
-                                                    <a href="{% url 'backend:editProperty' property.id %}">
-                                                        <i class="icon-ruler-pencil"></i>
-                                                    </a>
-                                                </li>
-                                                <li>
-                                                    <a href="{% url 'backend:deleteProperty' property.id %}">
-                                                        <i class="icon-trash"></i>
-                                                    </a>
-                                                </li>
-                                            {% endif %}
-                                        </ul>
-                                    </div>
-                                </div>
-                                <div class="product-details">
-                                    <div class="d-flex mb-3">
-                                        <div class="col-md-4">
-                                            <i class="icon-home"></i>
-                                            {{ property.size }} sqf
-                                        </div>
-                                        <div class="col-md-4">
-                                            <i class="fa fa-bed"></i>
-                                            {{ property.capacity }} Rooms
-                                        </div>
-                                        <div class="col-md-4">
-                                            <i class="fa fa-bathtub"></i>
-                                            {{ property.bathroom }} Bath
-                                        </div>
-                                    </div>
-                                    <a href="{% url 'backend:showProperty' property.id %}" class="mb-3">
-                                        <h4 style="font-size: 18px;">{{ property.name }}</h4>
-                                    </a>
-                                    <p class="mb-3">
-                                        {{ property.description|truncatechars:100 }}
-                                    </p>
-                                    <div class="product-price" style="font-size: 14px;">
-                                        {{ property.price_rwf|intcomma }} RWF
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                {% empty %}
-                    <div class="col-xl-3 col-sm-6 xl-4">
-                        No property found!!!
-                        <br />
-                        <a class="btn btn-primary" href="{% url 'users:search' %}"><i class="fa fa-eye"></i> Back to searching</a>
-                    </div>
-                {% endfor %}
-            </div>
-        </div>
+      </div>
     </div>
+
+    <div class="product-wrapper-grid">
+      <div class="row" id="propertiesGrid">
+        {% for property in properties %}
+        <div class="col-xl-3 col-sm-6 xl-4 property-card-wrapper"
+             data-created-at="{{ property.created_at|date:'Y-m-d' }}"
+             data-name="{{ property.name|escape }}"
+             data-city="{{ property.city|default_if_none:'' }}"
+             data-type="{{ property.type|default_if_none:'' }}"
+             data-category="{{ property.category.name if property.category else '' }}"
+             data-size="{{ property.size|default_if_none:'' }}"
+             data-capacity="{{ property.capacity|default_if_none:'' }}"
+             data-bathroom="{{ property.bathroom|default_if_none:'' }}"
+             data-price="{{ property.price_rwf|default_if_none:0 }}"
+             data-id="{{ property.id }}">
+          <div class="card h-100">
+            <div class="product-box d-flex flex-column">
+              <div class="product-img position-relative">
+                {% if property.image %}
+                  <img class="img-fluid" src="{{ property.image.url }}" alt="{{ property.name|escape }}">
+                {% else %}
+                  <img class="img-fluid" src="{% static 'backend/assets/images/placeholder/1340x894.jpg' %}" alt="No image">
+                {% endif %}
+                <div class="product-hover">
+                  <ul>
+                    <li>
+                      <a href="{% url 'backend:showProperty' property.id %}"><i class="icon-eye"></i></a>
+                    </li>
+                    {% if user.role == 'House Provider' %}
+                      <li>
+                        <a href="{% url 'backend:editProperty' property.id %}"><i class="icon-ruler-pencil"></i></a>
+                      </li>
+                      <li>
+                        <a href="{% url 'backend:deleteProperty' property.id %}"><i class="icon-trash"></i></a>
+                      </li>
+                    {% endif %}
+                  </ul>
+                </div>
+              </div>
+
+              <div class="product-details mt-3 flex-grow-1 d-flex flex-column">
+                <div class="d-flex mb-3">
+                  <div class="col-md-4"><i class="icon-home"></i> {{ property.size }} sqf</div>
+                  <div class="col-md-4"><i class="fa fa-bed"></i> {{ property.capacity }} Rooms</div>
+                  <div class="col-md-4"><i class="fa fa-bathtub"></i> {{ property.bathroom }} Bath</div>
+                </div>
+
+                <a href="{% url 'backend:showProperty' property.id %}" class="mb-2 text-decoration-none">
+                  <h4 style="font-size: 18px;">{{ property.name }}</h4>
+                </a>
+
+                <p class="mb-2 flex-grow-1">
+                  {{ property.description|truncatechars:100 }}
+                </p>
+
+                <div class="d-flex justify-content-between align-items-center">
+                  <div class="product-price" style="font-size: 14px;">
+                    {{ property.price_rwf|intcomma }} RWF
+                  </div>
+                  <small class="text-muted">Added: {{ property.created_at|date:"Y-m-d" }}</small>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+        {% empty %}
+        <div class="col-12">
+          No property found!!!
+          <br />
+          <a class="btn btn-primary mt-2" href="{% url 'users:search' %}"><i class="fa fa-eye"></i> Back to searching</a>
+        </div>
+        {% endfor %}
+      </div>
+    </div>
+  </div>
 </div>
+
+<!-- Printable container created at runtime for PDF -->
+<div id="printArea" class="d-none"></div>
+
+<script>
+  (function () {
+    const grid = document.getElementById('propertiesGrid');
+    const fromEl = document.getElementById('fromDate');
+    const toEl = document.getElementById('toDate');
+    const applyBtn = document.getElementById('applyFilters');
+    const resetBtn = document.getElementById('resetFilters');
+    const resultsSummary = document.getElementById('resultsSummary');
+
+    const exportCsvBtn = document.getElementById('exportCsv');
+    const exportPdfBtn = document.getElementById('exportPdf');
+
+    // Helpers
+    function parseDate(value) {
+      if (!value) return null;
+      const parts = value.split('-'); // yyyy-mm-dd
+      if (parts.length !== 3) return null;
+      return new Date(Number(parts[0]), Number(parts[1]) - 1, Number(parts[2]));
+    }
+
+    function withinRange(dateStr, fromDate, toDate) {
+      if (!dateStr) return false;
+      const d = parseDate(dateStr);
+      if (!d) return false;
+      if (fromDate && d < fromDate) return false;
+      if (toDate && d > toDate) return false;
+      return true;
+    }
+
+    function setResultsSummary() {
+      const visible = grid.querySelectorAll('.property-card-wrapper:not(.d-none)').length;
+      const total = grid.querySelectorAll('.property-card-wrapper').length;
+      resultsSummary.textContent = `Showing ${visible} of ${total} properties`;
+    }
+
+    function applyFiltersFn() {
+      const fromDate = parseDate(fromEl.value);
+      const toDate = parseDate(toEl.value);
+
+      grid.querySelectorAll('.property-card-wrapper').forEach(card => {
+        const createdAt = card.getAttribute('data-created-at');
+        const show = withinRange(createdAt, fromDate, toDate);
+        // If neither from nor to selected, show all
+        if (!fromDate && !toDate) {
+          card.classList.remove('d-none');
+        } else {
+          card.classList.toggle('d-none', !show);
+        }
+      });
+
+      setResultsSummary();
+    }
+
+    function resetFiltersFn() {
+      fromEl.value = '';
+      toEl.value = '';
+      grid.querySelectorAll('.property-card-wrapper').forEach(card => card.classList.remove('d-none'));
+      setResultsSummary();
+    }
+
+    // CSV Export
+    function downloadCSV(filename, rows) {
+      const process = value => {
+        if (value === null || value === undefined) return '';
+        const s = String(value).replace(/"/g, '""');
+        return `"${s}"`;
+      };
+
+      const csvContent = [
+        rows.headers.map(process).join(','),
+        ...rows.data.map(r => r.map(process).join(','))
+      ].join('\n');
+
+      const blob = new Blob([csvContent], { type: 'text/csv;charset=utf-8;' });
+      const link = document.createElement('a');
+      link.href = URL.createObjectURL(blob);
+      link.download = filename;
+      document.body.appendChild(link);
+      link.click();
+      link.remove();
+    }
+
+    function getVisibleRows() {
+      const visibleCards = grid.querySelectorAll('.property-card-wrapper:not(.d-none)');
+      const headers = [
+        'ID', 'Name', 'Created At', 'City', 'Type', 'Category',
+        'Size (sqf)', 'Rooms', 'Bathrooms', 'Price (RWF)'
+      ];
+      const data = Array.from(visibleCards).map(card => ([
+        card.getAttribute('data-id'),
+        card.getAttribute('data-name'),
+        card.getAttribute('data-created-at'),
+        card.getAttribute('data-city') || '',
+        card.getAttribute('data-type') || '',
+        card.getAttribute('data-category') || '',
+        card.getAttribute('data-size') || '',
+        card.getAttribute('data-capacity') || '',
+        card.getAttribute('data-bathroom') || '',
+        card.getAttribute('data-price') || '0'
+      ]));
+      return { headers, data };
+    }
+
+    // PDF Export (print to PDF)
+    function downloadPDF() {
+      const { headers, data } = getVisibleRows();
+      // Build a simple printable HTML table
+      const docTitle = 'Properties Report';
+      const now = new Date();
+      const generatedOn = now.toISOString().slice(0, 19).replace('T', ' ');
+
+      let table = '<table border="1" cellspacing="0" cellpadding="6" style="width:100%; border-collapse:collapse; font-family:Arial, sans-serif; font-size:12px;">';
+      table += '<thead><tr style="background:#f0f2f5;">' + headers.map(h => `<th align="left">${h}</th>`).join('') + '</tr></thead>';
+      table += '<tbody>';
+      data.forEach(row => {
+        table += '<tr>' + row.map(col => `<td>${col || ''}</td>`).join('') + '</tr>';
+      });
+      table += '</tbody></table>';
+
+      const html = `
+        <html>
+          <head>
+            <title>${docTitle}</title>
+            <meta charset="utf-8" />
+            <style>
+              @media print {
+                @page { margin: 14mm; }
+                h1 { margin-bottom: 8px; }
+                .meta { margin-bottom: 16px; color: #555; }
+              }
+              body { font-family: Arial, sans-serif; padding: 16px; }
+              h1 { font-size: 20px; }
+              .meta { font-size: 12px; }
+            </style>
+          </head>
+          <body>
+            <h1>${docTitle}</h1>
+            <div class="meta">
+              Generated on: ${generatedOn}<br/>
+              Range: ${fromEl.value || '—'} to ${toEl.value || '—'}
+            </div>
+            ${table}
+            <script>
+              window.onload = function () {
+                window.print();
+                setTimeout(() => window.close(), 300);
+              };
+            <\/script>
+          </body>
+        </html>
+      `;
+
+      const reportWindow = window.open('', '_blank', 'noopener,noreferrer,width=1200,height=800');
+      reportWindow.document.open();
+      reportWindow.document.write(html);
+      reportWindow.document.close();
+    }
+
+    // Bind events
+    applyBtn.addEventListener('click', applyFiltersFn);
+    resetBtn.addEventListener('click', resetFiltersFn);
+
+    exportCsvBtn.addEventListener('click', function (e) {
+      e.preventDefault();
+      const rows = getVisibleRows();
+      const from = fromEl.value || 'all';
+      const to = toEl.value || 'all';
+      const filename = `properties_${from}_to_${to}.csv`;
+      downloadCSV(filename, rows);
+    });
+
+    exportPdfBtn.addEventListener('click', function (e) {
+      e.preventDefault();
+      downloadPDF();
+    });
+
+    // Initialize summary on load
+    setResultsSummary();
+  })();
+</script>
 
 {% endblock %}
