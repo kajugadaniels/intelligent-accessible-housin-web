@@ -430,10 +430,22 @@ def deleteAmenity(request, id):
 
 @login_required
 def getProperties(request):
-    if request.user.role != 'House Provider':
+    """
+    Properties listing:
+    - Admins (and superusers): can view all properties.
+    - House Providers: can view only properties they created.
+    """
+    user = request.user
+
+    # Authorization: only Admin or House Provider (superuser always allowed)
+    if not (user.is_superuser or user.role in ("Admin", "House Provider")):
         raise PermissionDenied(_("You are not authorized to access the Properties page."))
 
-    properties = Property.objects.filter(created_by=request.user).order_by('-created_at')
+    # Scope data by role
+    if user.is_superuser or user.role == "Admin":
+        properties = Property.objects.all().order_by('-created_at')
+    else:  # House Provider
+        properties = Property.objects.filter(created_by=user).order_by('-created_at')
 
     context = {
         'properties': properties
