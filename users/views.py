@@ -302,12 +302,18 @@ def sendApplication(request, id):
 @login_required
 def getContracts(request):
     """
-    Retrieve all contracts for the logged-in user.
+    Retrieve all contracts for the logged-in user with date/status/payment filters.
     """
-    contracts = Contract.objects.filter(tenant=request.user).order_by('-created_at')
+    if request.user.role not in ['User'] and not request.user.is_superuser:
+        raise PermissionDenied(_("You are not authorized to view contracts."))
+
+    base_qs = Contract.objects.filter(tenant=request.user).order_by('-created_at')
+    contract_filter = ContractFilter(request.GET or None, queryset=base_qs)
+    contracts = contract_filter.qs
 
     context = {
         'contracts': contracts,
+        'filter': contract_filter,
     }
 
     return render(request, 'backend/pages/users/contracts/index.html', context)
