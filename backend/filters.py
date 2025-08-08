@@ -47,3 +47,40 @@ class RentApplicationFilter(django_filters.FilterSet):
     class Meta:
         model = RentApplication
         fields = ["start_date", "end_date", "status"]
+
+class ContractFilter(django_filters.FilterSet):
+    start_date = django_filters.DateFilter(
+        field_name="created_at__date",
+        lookup_expr="gte",
+        label="From",
+        widget=forms.DateInput(attrs={"type": "date", "class": "form-control"})
+    )
+    end_date = django_filters.DateFilter(
+        field_name="created_at__date",
+        lookup_expr="lte",
+        label="To",
+        widget=forms.DateInput(attrs={"type": "date", "class": "form-control"})
+    )
+    status = django_filters.ChoiceFilter(
+        field_name="status",
+        label="Contract Status",
+        choices=(
+            ("Active", "Active"),
+            ("Terminated", "Terminated"),
+            ("Expired", "Expired"),
+            ("Pending", "Pending"),
+        ),
+        empty_label="All",
+        widget=forms.Select(attrs={"class": "form-select"})
+    )
+    payment_status = django_filters.ChoiceFilter(
+        field_name="payment_status",
+        label="Payment Status",
+        choices=(("Paid", "Paid"), ("Pending", "Pending"), ("Overdue", "Overdue")),
+        empty_label="All",
+        widget=forms.Select(attrs={"class": "form-select"})
+    )
+
+    class Meta:
+        model = Contract
+        fields = ["start_date", "end_date", "status", "payment_status"]
