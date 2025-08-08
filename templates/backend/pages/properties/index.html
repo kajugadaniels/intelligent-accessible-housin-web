@@ -87,7 +87,7 @@
                          data-created="{{ property.created_at|date:'Y-m-d' }}"
                          data-city="{{ property.city }}"
                          data-type="{{ property.type }}"
-                         data-category="{{ property.category.name if property.category }}"
+                         data-category="{{ property.category.name|default:'' }}"
                          data-size="{{ property.size }}"
                          data-capacity="{{ property.capacity }}"
                          data-bathroom="{{ property.bathroom }}"
