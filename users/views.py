@@ -2,6 +2,7 @@ from users.forms import *
 from backend.models import *
 from backend.filters import *
 from django.urls import reverse
+from django.db import transaction
 from django.contrib import messages
 from django.db.models import IntegerField
 from django.db.models.functions import Cast
@@ -258,37 +259,29 @@ def sendApplication(request, id):
 
     property_obj = get_object_or_404(Property, id=id)
 
-    # Check if the user has already applied to this property
+    # Prevent duplicate active applications
     existing_application = RentApplication.objects.filter(
-        user=request.user,
-        property=property_obj
-    ).first()
+        user=request.user, property=property_obj
+    ).order_by('-created_at').first()
 
-    # If there's an existing application, check the status
-    if existing_application:
-        if existing_application.status in ['Pending', 'Accepted']:
-            messages.warning(request, "You have already applied for this property.")
-            return redirect('backend:showProperty', id=id)
-        elif existing_application.status in ['Rejected', 'Moved Out']:
-            # Allow the user to reapply if the status is Rejected or Moved Out
-            pass
-        else:
-            messages.warning(request, "Invalid application status.")
-            return redirect('backend:showProperty', id=id)
+    if existing_application and existing_application.status in ['Pending', 'Accepted']:
+        messages.warning(request, _("You have already applied for this property."))
+        return redirect('backend:showProperty', id=id)
 
-    # If the user has not applied yet or has a rejected/moved-out application, allow them to apply
     if request.method == 'POST':
-        form = RentApplicationForm(request.POST)
+        # IMPORTANT: include request.FILES so images are saved to MEDIA
+        form = RentApplicationForm(request.POST, request.FILES)
         if form.is_valid():
-            application = form.save(commit=False)
-            application.user = request.user
-            application.property = property_obj
-            application.save()
+            with transaction.atomic():
+                application = form.save(commit=False)
+                application.user = request.user
+                application.property = property_obj
+                application.save()  # Saving persists id_number_image & applicant_image to media/
 
-            messages.success(request, "Your rent application has been submitted successfully.")
+            messages.success(request, _("Your rent application has been submitted successfully."))
             return redirect('backend:showProperty', id=id)
         else:
-            messages.error(request, "Please correct the errors below.")
+            messages.error(request, _("Please correct the errors below."))
     else:
         form = RentApplicationForm()
 
